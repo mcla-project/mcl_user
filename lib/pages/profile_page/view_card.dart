@@ -37,10 +37,13 @@ class ViewCardPage extends StatelessWidget {
                         Text(
                           userInfo.name,
                           style: const TextStyle(
-                              fontSize: 20, fontWeight: FontWeight.bold,  color: Colors.white),
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white),
                         ),
                         Text(userInfo.username,
-                            style: const TextStyle(fontSize: 16,  color: Colors.white)),
+                            style: const TextStyle(
+                                fontSize: 16, color: Colors.white)),
                       ],
                     ),
                   ],
@@ -49,48 +52,72 @@ class ViewCardPage extends StatelessWidget {
             ),
             Container(
               margin: const EdgeInsets.all(10.0),
+              padding: const EdgeInsets.all(10.0),
               decoration: BoxDecoration(
                 color: Colors.grey[200],
                 borderRadius: BorderRadius.circular(10),
               ),
               child: Column(
-                children: [
-                  TextField(
-                    decoration: const InputDecoration(
-                      labelText: 'Name',
-                      border: OutlineInputBorder(),
+                children: <Widget>[
+                  Container(
+                    margin: const EdgeInsets.only(bottom: 10.0),
+                    decoration: BoxDecoration(
+                      color: Colors.grey[200],
+                      borderRadius: BorderRadius.circular(10),
                     ),
-                    readOnly: true,
-                    controller: TextEditingController(text: userInfo.name),
+                    child: InputDecorator(
+                      decoration: InputDecoration(
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10.0),
+                        ),
+                      ),
+                      child: Text(userInfo.name),
+                    ),
                   ),
-                  const SizedBox(height: 10),
-                  TextField(
-                    decoration: const InputDecoration(
-                      labelText: 'School/Office',
-                      border: OutlineInputBorder(),
+                  Container(
+                    margin: const EdgeInsets.only(bottom: 10.0),
+                    decoration: BoxDecoration(
+                      color: Colors.grey[200],
+                      borderRadius: BorderRadius.circular(10),
                     ),
-                    readOnly: true,
-                    controller:
-                        TextEditingController(text: userInfo.schoolOffice),
+                    child: InputDecorator(
+                      decoration: InputDecoration(
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10.0),
+                        ),
+                      ),
+                      child: Text(userInfo.schoolOffice),
+                    ),
                   ),
-                  const SizedBox(height: 10),
-                  TextField(
-                    decoration: const InputDecoration(
-                      labelText: 'Address',
-                      border: OutlineInputBorder(),
+                                    Container(
+                    margin: const EdgeInsets.only(bottom: 10.0),
+                    decoration: BoxDecoration(
+                      color: Colors.grey[200],
+                      borderRadius: BorderRadius.circular(10),
                     ),
-                    readOnly: true,
-                    controller: TextEditingController(text: userInfo.address),
+                    child: InputDecorator(
+                      decoration: InputDecoration(
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10.0),
+                        ),
+                      ),
+                      child: Text(userInfo.address),
+                    ),
                   ),
-                  const SizedBox(height: 10),
-                  TextField(
-                    decoration: const InputDecoration(
-                      labelText: 'Contact Number',
-                      border: OutlineInputBorder(),
+                                    Container(
+                    margin: const EdgeInsets.only(bottom: 10.0),
+                    decoration: BoxDecoration(
+                      color: Colors.grey[200],
+                      borderRadius: BorderRadius.circular(10),
                     ),
-                    readOnly: true,
-                    controller:
-                        TextEditingController(text: userInfo.contactNumber),
+                    child: InputDecorator(
+                      decoration: InputDecoration(
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10.0),
+                        ),
+                      ),
+                      child: Text(userInfo.contactNumber),
+                    ),
                   ),
                 ],
               ),
