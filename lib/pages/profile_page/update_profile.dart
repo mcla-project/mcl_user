@@ -1,19 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:mcl_user/components/user_info.dart';
+import 'package:mcl_user/pages/home.dart';
 
-import 'update_profile.dart';
-
-class PersonalInfoPage extends StatelessWidget {
-  final UserInfo userInfo;
+class UpdateProfilePage extends StatelessWidget {
   final Function(Widget) navigateToPage;
+  const UpdateProfilePage({Key? key, required this.navigateToPage,}) : super(key: key);
 
-  const PersonalInfoPage({super.key, required this.userInfo, required this.navigateToPage,});
-
-  @override
+@override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Personal Information'),
+        title: const Text('Update Information'),
       ),
       body: SingleChildScrollView(
         child: Column(
@@ -24,28 +20,28 @@ class PersonalInfoPage extends StatelessWidget {
                 color: const Color(0xFF013822),
                 borderRadius: BorderRadius.circular(10),
               ),
-              child: Padding(
-                padding: const EdgeInsets.all(16.0),
+              child: const Padding(
+                padding: EdgeInsets.all(16.0),
                 child: Row(
                   children: [
-                    const CircleAvatar(
+                    CircleAvatar(
                       radius: 40,
                       backgroundImage:
                           NetworkImage('https://via.placeholder.com/150'),
                     ),
-                    const SizedBox(width: 20),
+                    SizedBox(width: 20),
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          userInfo.name,
-                          style: const TextStyle(
+                          'Name',
+                          style: TextStyle(
                               fontSize: 20,
                               fontWeight: FontWeight.bold,
                               color: Colors.white),
                         ),
-                        Text(userInfo.username,
-                            style: const TextStyle(
+                        Text('Username',
+                            style: TextStyle(
                                 fontSize: 16, color: Colors.white)),
                       ],
                     ),
@@ -74,7 +70,7 @@ class PersonalInfoPage extends StatelessWidget {
                           borderRadius: BorderRadius.circular(10.0),
                         ),
                       ),
-                      child: Text(userInfo.name),
+                      child: const Text('Name'),
                     ),
                   ),
                   Container(
@@ -89,7 +85,7 @@ class PersonalInfoPage extends StatelessWidget {
                           borderRadius: BorderRadius.circular(10.0),
                         ),
                       ),
-                      child: Text(userInfo.schoolOffice),
+                      child: const Text('School/Office'),
                     ),
                   ),
                   Container(
@@ -104,7 +100,7 @@ class PersonalInfoPage extends StatelessWidget {
                           borderRadius: BorderRadius.circular(10.0),
                         ),
                       ),
-                      child: Text(userInfo.address),
+                      child: const Text('Address'),
                     ),
                   ),
                   Container(
@@ -119,7 +115,7 @@ class PersonalInfoPage extends StatelessWidget {
                           borderRadius: BorderRadius.circular(10.0),
                         ),
                       ),
-                      child: Text(userInfo.contactNumber),
+                      child: const Text('Contact Number'),
                     ),
                   ),
                 ],
@@ -136,7 +132,7 @@ class PersonalInfoPage extends StatelessWidget {
                           const Color(0xFF013822)),
                     ),
                     onPressed: () {
-                      navigateToPage(UpdateProfilePage(navigateToPage: navigateToPage));
+                      navigateToPage(const HomePage());
                     },
                     child: const Text(
                       'Update Profile',
@@ -152,3 +148,4 @@ class PersonalInfoPage extends StatelessWidget {
     );
   }
 }
+

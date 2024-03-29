@@ -11,7 +11,8 @@ class ProfilePage extends StatelessWidget {
   final Function(Widget) navigateToPage;
   final Function(int) changePage;
 
-  const ProfilePage({super.key, required this.navigateToPage, required this.changePage});
+  const ProfilePage(
+      {super.key, required this.navigateToPage, required this.changePage});
 
   @override
   Widget build(BuildContext context) {
@@ -74,7 +75,16 @@ class ProfilePage extends StatelessWidget {
                       leading: const Icon(Icons.person),
                       title: const Text('Personal Information'),
                       onTap: () {
-                        navigateToPage(const PersonalInfoPage());
+                        navigateToPage(PersonalInfoPage(
+                          userInfo: UserInfo(
+                            name: 'Merlin',
+                            username: 'merlin123',
+                            schoolOffice: 'PLM School',
+                            address: '123 Main Street',
+                            contactNumber: '555-1234',
+                          ),
+                          navigateToPage: navigateToPage,
+                        ));
                         // Navigate to Personal Information page
                       },
                     ),
@@ -88,7 +98,8 @@ class ProfilePage extends StatelessWidget {
                       leading: const Icon(Icons.credit_card),
                       title: const Text('View Card'),
                       onTap: () {
-                        navigateToPage(ViewCardPage(userInfo: UserInfo(
+                        navigateToPage(ViewCardPage(
+                            userInfo: UserInfo(
                           name: 'Merlin',
                           username: 'merlin123',
                           schoolOffice: 'PLM School',

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mcl_user/pages/profile_page/update_profile.dart';
 import 'app_bar.dart';
 import 'navigation_bar.dart';
 import '../pages/home.dart';
@@ -6,6 +7,7 @@ import '../pages/profile.dart';
 import '../pages/recents.dart';
 import '../pages/scanner.dart';
 import '../pages/favorites.dart';
+import '../pages/profile_page/personal_info.dart';
 
 class BaseLayout extends StatefulWidget {
   const BaseLayout({super.key});
@@ -23,6 +25,7 @@ class BaseLayoutState extends State<BaseLayout> {
     const ScannerPage(),
     const FavoritesPage(),
     ProfilePage(navigateToPage: navigateToPage, changePage: changePage), // Navigate to the profile page subpages
+    UpdateProfilePage(navigateToPage: navigateToPage), // Navigate to the UpdateProfileScreen
   ];
 
   // Handles the bottom navigation bar tap event 
