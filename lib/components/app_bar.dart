@@ -6,7 +6,9 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   @override
   Widget build(BuildContext context) {
     return AppBar(
+      automaticallyImplyLeading: false,
       backgroundColor: const Color(0xFF013822),
+      iconTheme: const IconThemeData(color: Color(0xFF013822)),
       title: Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
