@@ -89,7 +89,7 @@ class ViewCardPage extends StatelessWidget {
                       child: Text(userInfo.schoolOffice),
                     ),
                   ),
-                                    Container(
+                  Container(
                     margin: const EdgeInsets.only(bottom: 10.0),
                     decoration: BoxDecoration(
                       color: Colors.grey[200],
@@ -104,7 +104,7 @@ class ViewCardPage extends StatelessWidget {
                       child: Text(userInfo.address),
                     ),
                   ),
-                                    Container(
+                  Container(
                     margin: const EdgeInsets.only(bottom: 10.0),
                     decoration: BoxDecoration(
                       color: Colors.grey[200],
