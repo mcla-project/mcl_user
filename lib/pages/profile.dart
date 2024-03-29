@@ -1,10 +1,16 @@
 import 'package:flutter/material.dart';
-import '/personalinfo.dart';
+import 'package:mcl_user/pages/profile_page/about_us.dart';
+import 'package:mcl_user/pages/profile_page/feedback.dart';
+import 'package:mcl_user/pages/profile_page/logout.dart';
+import 'package:mcl_user/pages/profile_page/visits.dart';
+import 'profile_page/personal_info.dart';
+import 'profile_page/view_card.dart';
 
 class ProfilePage extends StatelessWidget {
   final Function(Widget) navigateToPage;
+  final Function(int) changePage;
 
-  const ProfilePage({super.key, required this.navigateToPage});
+  const ProfilePage({super.key, required this.navigateToPage, required this.changePage});
 
   @override
   Widget build(BuildContext context) {
@@ -81,6 +87,7 @@ class ProfilePage extends StatelessWidget {
                       leading: const Icon(Icons.credit_card),
                       title: const Text('View Card'),
                       onTap: () {
+                        navigateToPage(const ViewCardPage());
                         // Navigate to View Card page
                       },
                     ),
@@ -94,6 +101,7 @@ class ProfilePage extends StatelessWidget {
                       leading: const Icon(Icons.info),
                       title: const Text('About Us'),
                       onTap: () {
+                        navigateToPage(const AboutUsPage());
                         // Navigate to About Us page
                       },
                     ),
@@ -107,6 +115,7 @@ class ProfilePage extends StatelessWidget {
                       leading: const Icon(Icons.favorite),
                       title: const Text('Favorites'),
                       onTap: () {
+                        changePage(3);
                         // Navigate to Favorites page
                       },
                     ),
@@ -120,6 +129,7 @@ class ProfilePage extends StatelessWidget {
                       leading: const Icon(Icons.history),
                       title: const Text('Visits'),
                       onTap: () {
+                        navigateToPage(const VisitsPage());
                         // Navigate to Visits page
                       },
                     ),
@@ -133,6 +143,7 @@ class ProfilePage extends StatelessWidget {
                       leading: const Icon(Icons.feedback),
                       title: const Text('Feedback'),
                       onTap: () {
+                        navigateToPage(const FeedbackPage());
                         // Navigate to Feedback page
                       },
                     ),
@@ -146,6 +157,7 @@ class ProfilePage extends StatelessWidget {
                       leading: const Icon(Icons.logout),
                       title: const Text('Logout'),
                       onTap: () {
+                        navigateToPage(const LogoutPage());
                         // Perform logout
                       },
                     ),

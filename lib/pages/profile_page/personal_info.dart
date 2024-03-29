@@ -7,11 +7,11 @@ class PersonalInfoPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Home'),
+        title: const Text('Personal Information'),
       ),
       body: const Center(
         child: Text(
-          'Hello',
+          'Hallooo',
           style: TextStyle(fontSize: 24),
         ),
       ),

@@ -17,7 +17,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
             style: TextStyle(
               color: Colors.white,
               fontSize: 20,
-              fontFamily: 'Nunito', // ADD FONT
+              fontFamily: 'Nunito', // TODO: add Nunito font
               fontWeight: FontWeight.bold,
             ),
           ),

@@ -22,13 +22,17 @@ class BaseLayoutState extends State<BaseLayout> {
     const RecentsPage(),
     const ScannerPage(),
     const FavoritesPage(),
-    ProfilePage(navigateToPage: navigateToPage), // Pass the navigateToPage method dynamically
+    ProfilePage(navigateToPage: navigateToPage, changePage: changePage), // Navigate to the profile page subpages
   ];
 
   void _onItemTapped(int index) {
     setState(() {
       _currentIndex = index;
     });
+  }
+
+  void changePage(int index) {
+    _onItemTapped(index);
   }
 
   void navigateToPage(Widget page) {
