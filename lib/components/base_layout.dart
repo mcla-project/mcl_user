@@ -25,6 +25,7 @@ class BaseLayoutState extends State<BaseLayout> {
     ProfilePage(navigateToPage: navigateToPage, changePage: changePage), // Navigate to the profile page subpages
   ];
 
+  // Handles the bottom navigation bar tap event 
   void _onItemTapped(int index) {
     // Check if the current page is not the first page
     bool isSecondPage = Navigator.of(context).canPop();
@@ -37,11 +38,12 @@ class BaseLayoutState extends State<BaseLayout> {
       _currentIndex = index;
     });
   }
-
+  // Handles the Favorite page tap event on Profile page
   void changePage(int index) {
     _onItemTapped(index);
   }
 
+  // Navigation for the profile page subpages
   void navigateToPage(Widget page) {
     Navigator.push(
       context,

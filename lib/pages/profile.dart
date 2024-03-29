@@ -5,6 +5,7 @@ import 'package:mcl_user/pages/profile_page/logout.dart';
 import 'package:mcl_user/pages/profile_page/visits.dart';
 import 'profile_page/personal_info.dart';
 import 'profile_page/view_card.dart';
+import 'package:mcl_user/components/user_info.dart';
 
 class ProfilePage extends StatelessWidget {
   final Function(Widget) navigateToPage;
@@ -87,7 +88,13 @@ class ProfilePage extends StatelessWidget {
                       leading: const Icon(Icons.credit_card),
                       title: const Text('View Card'),
                       onTap: () {
-                        navigateToPage(const ViewCardPage());
+                        navigateToPage(ViewCardPage(userInfo: UserInfo(
+                          name: 'Merlin',
+                          username: 'merlin123',
+                          schoolOffice: 'PLM School',
+                          address: '123 Main Street',
+                          contactNumber: '555-1234',
+                        )));
                         // Navigate to View Card page
                       },
                     ),
