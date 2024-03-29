@@ -26,6 +26,13 @@ class BaseLayoutState extends State<BaseLayout> {
   ];
 
   void _onItemTapped(int index) {
+    // Check if the current page is not the first page
+    bool isSecondPage = Navigator.of(context).canPop();
+    if (isSecondPage) {
+      // Pop the current page until it reaches the first page
+      Navigator.of(context).popUntil((route) => route.isFirst);
+    }
+    // Set the current index determined by the bottom navigation bar
     setState(() {
       _currentIndex = index;
     });
