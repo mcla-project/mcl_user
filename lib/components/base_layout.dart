@@ -7,7 +7,6 @@ import '../pages/profile.dart';
 import '../pages/recents.dart';
 import '../pages/scanner.dart';
 import '../pages/favorites.dart';
-import '../pages/profile_page/personal_info.dart';
 
 class BaseLayout extends StatefulWidget {
   const BaseLayout({super.key});
