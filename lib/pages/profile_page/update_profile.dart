@@ -3,9 +3,12 @@ import 'package:mcl_user/pages/home.dart';
 
 class UpdateProfilePage extends StatelessWidget {
   final Function(Widget) navigateToPage;
-  const UpdateProfilePage({Key? key, required this.navigateToPage,}) : super(key: key);
+  const UpdateProfilePage({
+    Key? key,
+    required this.navigateToPage,
+  }) : super(key: key);
 
-@override
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
@@ -41,8 +44,8 @@ class UpdateProfilePage extends StatelessWidget {
                               color: Colors.white),
                         ),
                         Text('Username',
-                            style: TextStyle(
-                                fontSize: 16, color: Colors.white)),
+                            style:
+                                TextStyle(fontSize: 16, color: Colors.white)),
                       ],
                     ),
                   ],
@@ -60,62 +63,55 @@ class UpdateProfilePage extends StatelessWidget {
                 children: <Widget>[
                   Container(
                     margin: const EdgeInsets.only(bottom: 10.0),
-                    decoration: BoxDecoration(
-                      color: Colors.grey[200],
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    child: InputDecorator(
+                    child: TextField(
                       decoration: InputDecoration(
+                        labelText: 'Name',
+                        fillColor: Colors.grey[200],
+                        filled: true,
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(10.0),
                         ),
                       ),
-                      child: const Text('Name'),
                     ),
                   ),
                   Container(
                     margin: const EdgeInsets.only(bottom: 10.0),
-                    decoration: BoxDecoration(
-                      color: Colors.grey[200],
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    child: InputDecorator(
+                    child: TextField(
                       decoration: InputDecoration(
+                        labelText: 'School/Office',
+                        fillColor: Colors.grey[200],
+                        filled: true,
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(10.0),
                         ),
                       ),
-                      child: const Text('School/Office'),
                     ),
                   ),
                   Container(
                     margin: const EdgeInsets.only(bottom: 10.0),
-                    decoration: BoxDecoration(
-                      color: Colors.grey[200],
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    child: InputDecorator(
+                    child: TextField(
                       decoration: InputDecoration(
+                        labelText: 'Address',
+                        fillColor: Colors.grey[200],
+                        filled: true,
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(10.0),
                         ),
                       ),
-                      child: const Text('Address'),
                     ),
                   ),
                   Container(
                     margin: const EdgeInsets.only(bottom: 10.0),
-                    decoration: BoxDecoration(
-                      color: Colors.grey[200],
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    child: InputDecorator(
+                    child: TextField(
                       decoration: InputDecoration(
+                        labelText: 'Contact Number',
+                        fillColor: Colors.grey[200],
+                        filled: true,
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(10.0),
                         ),
                       ),
-                      child: const Text('Contact Number'),
+                      keyboardType: TextInputType.phone,
                     ),
                   ),
                 ],
@@ -148,4 +144,3 @@ class UpdateProfilePage extends StatelessWidget {
     );
   }
 }
-

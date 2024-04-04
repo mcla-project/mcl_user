@@ -9,6 +9,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
     double appBarHeight = 90.0;
 
     return AppBar(
+      automaticallyImplyLeading: false,
       backgroundColor:
           Colors.transparent, // Ensures no color is behind the ellipse.
       elevation: 0, // Removes the shadow.
