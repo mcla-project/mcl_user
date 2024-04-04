@@ -1,10 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:mcl_user/components/user_info.dart';
 import 'components/base_layout.dart';
 import 'pages/profile_page/view_card.dart'; // Import the base layout
 
-
 void main() {
+  SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.light.copyWith(
+    statusBarColor: Colors.transparent, // Transparent status bar
+    statusBarIconBrightness: Brightness.dark, // Dark icons on the status bar
+  ));
   runApp(MyApp(
     home: ViewCardPage(
       userInfo: UserInfo(
