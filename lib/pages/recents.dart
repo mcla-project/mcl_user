@@ -9,11 +9,20 @@ class RecentsPage extends StatelessWidget {
       appBar: AppBar(
         title: const Text('Recents'),
       ),
-      body: const Center(
-        child: Text(
-          'Recentususus',
-          style: TextStyle(fontSize: 24),
-        ),
+      body: const Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: <Widget>[
+          Text(
+            'Recentususus',
+            style: TextStyle(fontSize: 24),
+          ),
+          TextField(
+            decoration: InputDecoration(
+              border: OutlineInputBorder(),
+              labelText: 'Enter some text',
+            ),
+          ),
+        ],
       ),
     );
   }
