@@ -115,7 +115,7 @@ class HomePage extends StatelessWidget {
                 ],
               ),
               Container(
-                width: 312,
+                width: 350,
                 height: 95,
                 padding: const EdgeInsets.only(bottom: 8),
                 clipBehavior: Clip.antiAlias,
@@ -194,7 +194,7 @@ class HomePage extends StatelessWidget {
               ),
               const SizedBox(height: 16), // Add spacing between the containers
               Container(
-                width: 312,
+                width: 350,
                 height: 95,
                 padding: const EdgeInsets.only(bottom: 8),
                 clipBehavior: Clip.antiAlias,
@@ -273,7 +273,7 @@ class HomePage extends StatelessWidget {
               ),
               const SizedBox(height: 16), // Add spacing between the containers
               Container(
-                width: 312,
+                width: 350,
                 height: 88,
                 padding: const EdgeInsets.only(bottom: 8),
                 clipBehavior: Clip.antiAlias,
