@@ -11,8 +11,13 @@ class ProfilePage extends StatelessWidget {
   final Function(Widget) navigateToPage;
   final Function(int) changePage;
 
+  final UserInfo userInfo;
+
   const ProfilePage(
-      {super.key, required this.navigateToPage, required this.changePage});
+      {super.key,
+      required this.navigateToPage,
+      required this.changePage,
+      required this.userInfo});
 
   @override
   Widget build(BuildContext context) {
@@ -29,29 +34,31 @@ class ProfilePage extends StatelessWidget {
                 color: const Color(0xFF013822),
                 borderRadius: BorderRadius.circular(10),
               ),
-              child: const Padding(
-                padding: EdgeInsets.all(16.0),
+              child: Padding(
+                padding: const EdgeInsets.all(16.0),
                 child: Row(
                   children: [
-                    CircleAvatar(
+                    const CircleAvatar(
                       radius: 40,
                       backgroundImage:
                           NetworkImage('https://via.placeholder.com/150'),
                     ),
-                    SizedBox(width: 20),
+                    const SizedBox(width: 20),
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          'Name',
-                          style: TextStyle(
+                          userInfo.name,
+                          style: const TextStyle(
                               fontSize: 20,
                               fontWeight: FontWeight.bold,
                               color: Colors.white),
                         ),
-                        Text('Username',
-                            style:
-                                TextStyle(fontSize: 16, color: Colors.white)),
+                        Text(
+                          userInfo.username,
+                          style: const TextStyle(
+                              fontSize: 16, color: Colors.white),
+                        ),
                       ],
                     ),
                   ],
@@ -75,17 +82,18 @@ class ProfilePage extends StatelessWidget {
                       leading: const Icon(Icons.person),
                       title: const Text('Personal Information'),
                       onTap: () {
-                        navigateToPage(PersonalInfoPage(
-                          userInfo: UserInfo(
-                            name: 'Merlin',
-                            username: 'merlin123',
-                            schoolOffice: 'PLM School',
-                            address: '123 Main Street',
-                            contactNumber: '555-1234',
+                        navigateToPage(
+                          PersonalInfoPage(
+                            userInfo: UserInfo(
+                              name: 'Merlin',
+                              username: 'merlin123',
+                              schoolOffice: 'PLM School',
+                              address: '123 Main Street',
+                              contactNumber: '555-1234',
+                            ),
+                            navigateToPage: navigateToPage,
                           ),
-                          navigateToPage: navigateToPage,
-                        ));
-                        // Navigate to Personal Information page
+                        ); // Navigate to Personal Information page
                       },
                     ),
                   ),
@@ -98,15 +106,17 @@ class ProfilePage extends StatelessWidget {
                       leading: const Icon(Icons.credit_card),
                       title: const Text('View Card'),
                       onTap: () {
-                        navigateToPage(ViewCardPage(
+                        navigateToPage(
+                          ViewCardPage(
                             userInfo: UserInfo(
-                          name: 'Merlin',
-                          username: 'merlin123',
-                          schoolOffice: 'PLM School',
-                          address: '123 Main Street',
-                          contactNumber: '555-1234',
-                        )));
-                        // Navigate to View Card page
+                              name: 'Merlin',
+                              username: 'merlin123',
+                              schoolOffice: 'PLM School',
+                              address: '123 Main Street',
+                              contactNumber: '555-1234',
+                            ),
+                          ),
+                        ); // Navigate to View Card page
                       },
                     ),
                   ),
@@ -119,8 +129,9 @@ class ProfilePage extends StatelessWidget {
                       leading: const Icon(Icons.info),
                       title: const Text('About Us'),
                       onTap: () {
-                        navigateToPage(const AboutUsPage());
-                        // Navigate to About Us page
+                        navigateToPage(
+                          const AboutUsPage(),
+                        ); // Navigate to About Us page
                       },
                     ),
                   ),

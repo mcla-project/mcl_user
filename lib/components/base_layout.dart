@@ -7,6 +7,7 @@ import '../pages/profile.dart';
 import '../pages/recents.dart';
 import '../pages/scanner.dart';
 import '../pages/favorites.dart';
+import 'package:mcl_user/components/user_info.dart';
 
 class BaseLayout extends StatefulWidget {
   const BaseLayout({super.key});
@@ -19,15 +20,27 @@ class BaseLayoutState extends State<BaseLayout> {
   int _currentIndex = 0;
 
   List<Widget> get _pages => [
-    const HomePage(),
-    const RecentsPage(),
-    const ScannerPage(),
-    const FavoritesPage(),
-    ProfilePage(navigateToPage: navigateToPage, changePage: changePage), // Navigate to the profile page subpages
-    UpdateProfilePage(navigateToPage: navigateToPage), // Navigate to the UpdateProfileScreen
-  ];
+        const HomePage(),
+        const RecentsPage(),
+        const ScannerPage(),
+        const FavoritesPage(),
+        ProfilePage(
+          navigateToPage: navigateToPage,
+          changePage: changePage,
+          userInfo: UserInfo(
+            name: 'Merlin',
+            username: 'merlin123',
+            schoolOffice: 'PLM School',
+            address: '123 Main Street',
+            contactNumber: '555-1234',
+          ),
+        ), // Navigate to the profile page subpages
+        UpdateProfilePage(
+            navigateToPage:
+                navigateToPage), // Navigate to the UpdateProfileScreen
+      ];
 
-  // Handles the bottom navigation bar tap event 
+  // Handles the bottom navigation bar tap event
   void _onItemTapped(int index) {
     // Check if the current page is not the first page
     bool isSecondPage = Navigator.of(context).canPop();
@@ -40,6 +53,7 @@ class BaseLayoutState extends State<BaseLayout> {
       _currentIndex = index;
     });
   }
+
   // Handles the Favorite page tap event on Profile page
   void changePage(int index) {
     _onItemTapped(index);
@@ -49,14 +63,15 @@ class BaseLayoutState extends State<BaseLayout> {
   void navigateToPage(Widget page) {
     Navigator.push(
       context,
-      MaterialPageRoute(builder: (context) => Scaffold(
-        appBar: const CustomAppBar(),
-        body: page,
-        bottomNavigationBar: CustomNavigationBar(
-          currentIndex: _currentIndex,
-          onTap: _onItemTapped,
-        ),
-      )),
+      MaterialPageRoute(
+          builder: (context) => Scaffold(
+                appBar: const CustomAppBar(),
+                body: page,
+                bottomNavigationBar: CustomNavigationBar(
+                  currentIndex: _currentIndex,
+                  onTap: _onItemTapped,
+                ),
+              )),
     );
   }
 

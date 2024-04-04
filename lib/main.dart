@@ -1,21 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:mcl_user/components/user_info.dart';
 import 'components/base_layout.dart';
-import 'pages/profile_page/view_card.dart'; // Import the base layout
+// Import the base layout
 
 void main() {
-
-  runApp(MyApp(
-    home: ViewCardPage(
-      userInfo: UserInfo(
-        name: 'Merlin',
-        username: 'merlin123',
-        schoolOffice: 'PLM School',
-        address: '123 Main Street',
-        contactNumber: '555-1234',
-      ),
+  runApp(
+    const MyApp(
+      home: BaseLayout(),
     ),
-  ));
+  );
 }
 
 class MyApp extends StatefulWidget {

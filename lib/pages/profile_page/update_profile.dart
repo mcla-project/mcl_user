@@ -3,6 +3,7 @@ import 'package:mcl_user/pages/home.dart';
 
 class UpdateProfilePage extends StatelessWidget {
   final Function(Widget) navigateToPage;
+  
   const UpdateProfilePage({
     Key? key,
     required this.navigateToPage,
