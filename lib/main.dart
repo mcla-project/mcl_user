@@ -22,10 +22,10 @@ class _MyAppState extends State<MyApp> {
         canvasColor: const Color(0xFF013822),
       ),
       title: 'Manila City Library',
-      initialRoute: '/', // Set the initial route to the splash screen
+      initialRoute: '/', 
       routes: {
-        '/': (context) => const AnimatedSplashScreen(), // Splash screen route
-        '/base_layout': (context) => const BaseLayout(), // Base layout route
+        '/': (context) => const AnimatedSplashScreen(), 
+        '/base_layout': (context) => const BaseLayout(), 
       },
     );
   }
