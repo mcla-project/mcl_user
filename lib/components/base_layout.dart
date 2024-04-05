@@ -17,6 +17,7 @@ class BaseLayout extends StatefulWidget {
 }
 
 class BaseLayoutState extends State<BaseLayout> {
+  final int _profilePageIndex = 4;
   int _currentIndex = 0;
 
   List<Widget> get _pages => [
@@ -42,16 +43,17 @@ class BaseLayoutState extends State<BaseLayout> {
 
   // Handles the bottom navigation bar tap event
   void _onItemTapped(int index) {
-    // Check if the current page is not the first page
-    bool isSecondPage = Navigator.of(context).canPop();
-    if (isSecondPage) {
-      // Pop the current page until it reaches the first page
+    
+    // Check if the current index is the profile page index
+    if (_currentIndex == _profilePageIndex && index == _profilePageIndex) {
+      // Pop the current page until it reaches the first page of the profile
       Navigator.of(context).popUntil((route) => route.isFirst);
+    } else {
+      // Set the current index determined by the bottom navigation bar
+      setState(() {
+        _currentIndex = index;
+      });
     }
-    // Set the current index determined by the bottom navigation bar
-    setState(() {
-      _currentIndex = index;
-    });
   }
 
   // Handles the Favorite page tap event on Profile page

@@ -1,20 +1,22 @@
 import 'package:flutter/material.dart';
-import './confirm_profile.dart';
 import 'package:mcl_user/components/user_info.dart';
+import '../../components/base_layout.dart';
 
-class UpdateProfilePage extends StatelessWidget {
+class ConfirmProfilePage extends StatelessWidget {
+  final UserInfo userInfo;
   final Function(Widget) navigateToPage;
 
-  const UpdateProfilePage({
-    Key? key,
+  const ConfirmProfilePage({
+    super.key,
+    required this.userInfo,
     required this.navigateToPage,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Update Information'),
+        title: const Text('Confirm Personal Information'),
       ),
       body: SingleChildScrollView(
         child: Column(
@@ -25,29 +27,29 @@ class UpdateProfilePage extends StatelessWidget {
                 color: const Color(0xFF013822),
                 borderRadius: BorderRadius.circular(10),
               ),
-              child: const Padding(
-                padding: EdgeInsets.all(16.0),
+              child: Padding(
+                padding: const EdgeInsets.all(16.0),
                 child: Row(
                   children: [
-                    CircleAvatar(
+                    const CircleAvatar(
                       radius: 40,
                       backgroundImage:
                           NetworkImage('https://via.placeholder.com/150'),
                     ),
-                    SizedBox(width: 20),
+                    const SizedBox(width: 20),
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          'Name',
-                          style: TextStyle(
+                          userInfo.name,
+                          style: const TextStyle(
                               fontSize: 20,
                               fontWeight: FontWeight.bold,
                               color: Colors.white),
                         ),
-                        Text('Username',
-                            style:
-                                TextStyle(fontSize: 16, color: Colors.white)),
+                        Text(userInfo.username,
+                            style: const TextStyle(
+                                fontSize: 16, color: Colors.white)),
                       ],
                     ),
                   ],
@@ -65,55 +67,62 @@ class UpdateProfilePage extends StatelessWidget {
                 children: <Widget>[
                   Container(
                     margin: const EdgeInsets.only(bottom: 10.0),
-                    child: TextField(
+                    decoration: BoxDecoration(
+                      color: Colors.grey[200],
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    child: InputDecorator(
                       decoration: InputDecoration(
-                        labelText: 'Name',
-                        fillColor: Colors.grey[200],
-                        filled: true,
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(10.0),
                         ),
                       ),
+                      child: Text(userInfo.name),
                     ),
                   ),
                   Container(
                     margin: const EdgeInsets.only(bottom: 10.0),
-                    child: TextField(
+                    decoration: BoxDecoration(
+                      color: Colors.grey[200],
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    child: InputDecorator(
                       decoration: InputDecoration(
-                        labelText: 'School/Office',
-                        fillColor: Colors.grey[200],
-                        filled: true,
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(10.0),
                         ),
                       ),
+                      child: Text(userInfo.schoolOffice),
                     ),
                   ),
                   Container(
                     margin: const EdgeInsets.only(bottom: 10.0),
-                    child: TextField(
+                    decoration: BoxDecoration(
+                      color: Colors.grey[200],
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    child: InputDecorator(
                       decoration: InputDecoration(
-                        labelText: 'Address',
-                        fillColor: Colors.grey[200],
-                        filled: true,
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(10.0),
                         ),
                       ),
+                      child: Text(userInfo.address),
                     ),
                   ),
                   Container(
                     margin: const EdgeInsets.only(bottom: 10.0),
-                    child: TextField(
+                    decoration: BoxDecoration(
+                      color: Colors.grey[200],
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    child: InputDecorator(
                       decoration: InputDecoration(
-                        labelText: 'Contact Number',
-                        fillColor: Colors.grey[200],
-                        filled: true,
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(10.0),
                         ),
                       ),
-                      keyboardType: TextInputType.phone,
+                      child: Text(userInfo.contactNumber),
                     ),
                   ),
                 ],
@@ -130,22 +139,12 @@ class UpdateProfilePage extends StatelessWidget {
                           const Color(0xFF013822)),
                     ),
                     onPressed: () {
-                      Navigator.of(context).pushReplacement(MaterialPageRoute(
-                        builder: (_) =>
-                          ConfirmProfilePage(
-                            userInfo: UserInfo(
-                              name: 'Merlin',
-                              username: 'merlin123',
-                              schoolOffice: 'PLM School',
-                              address: '123 Main Street',
-                              contactNumber: '555-1234',
-                            ),
-                            navigateToPage: navigateToPage,
-                          ),
-                      ));
+                      Navigator.of(context).pushReplacement(
+                        MaterialPageRoute(builder: (_) => const BaseLayout()),
+                      );
                     },
                     child: const Text(
-                      'Update Profile',
+                      'Save Profile',
                       style: TextStyle(color: Colors.white),
                     ),
                   ),
