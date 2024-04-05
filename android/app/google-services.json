@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "815166244171",
+    "project_id": "mcla-51bb1",
+    "storage_bucket": "mcla-51bb1.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:815166244171:android:cd021ff2acd920e68b14ce",
+        "android_client_info": {
+          "package_name": "com.example.mcl_user"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBrARV7z1KYs26jFIbkavG4lPvbewcL3Y8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
