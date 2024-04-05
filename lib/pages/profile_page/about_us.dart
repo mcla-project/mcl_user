@@ -11,7 +11,7 @@ class AboutUsPage extends StatelessWidget {
       ),
       body: const Center(
         child: Text(
-          'Hallooo',
+          'Content to be placed here.',
           style: TextStyle(fontSize: 24),
         ),
       ),

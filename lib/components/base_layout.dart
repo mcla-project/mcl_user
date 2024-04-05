@@ -43,16 +43,17 @@ class BaseLayoutState extends State<BaseLayout> {
 
   // Handles the bottom navigation bar tap event
   void _onItemTapped(int index) {
-    
     // Check if the current index is the profile page index
     if (_currentIndex == _profilePageIndex && index == _profilePageIndex) {
       // Pop the current page until it reaches the first page of the profile
       Navigator.of(context).popUntil((route) => route.isFirst);
     } else {
       // Set the current index determined by the bottom navigation bar
-      setState(() {
-        _currentIndex = index;
-      });
+      setState(
+        () {
+          _currentIndex = index;
+        },
+      );
     }
   }
 
@@ -66,14 +67,15 @@ class BaseLayoutState extends State<BaseLayout> {
     Navigator.push(
       context,
       MaterialPageRoute(
-          builder: (context) => Scaffold(
-                appBar: const CustomAppBar(),
-                body: page,
-                bottomNavigationBar: CustomNavigationBar(
-                  currentIndex: _currentIndex,
-                  onTap: _onItemTapped,
-                ),
-              )),
+        builder: (context) => Scaffold(
+          appBar: const CustomAppBar(),
+          body: page,
+          bottomNavigationBar: CustomNavigationBar(
+            currentIndex: _currentIndex,
+            onTap: _onItemTapped,
+          ),
+        ),
+      ),
     );
   }
 

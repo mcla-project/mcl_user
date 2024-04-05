@@ -11,7 +11,7 @@ class FavoritesPage extends StatelessWidget {
       ),
       body: const Center(
         child: Text(
-          'Favoritesususus',
+          'Content to be placed here.',
           style: TextStyle(fontSize: 24),
         ),
       ),
