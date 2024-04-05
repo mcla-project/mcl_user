@@ -1,4 +1,6 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:mcl_user/user_auth/firebase_auth_implementation/firebase_auth_services.dart';
 import '../../components/base_layout.dart';
 
 class SignUpScreen extends StatefulWidget {
@@ -11,6 +13,20 @@ class SignUpScreen extends StatefulWidget {
 class SignUpScreenState extends State<SignUpScreen> {
   bool _obscureTextPassword = true;
   bool _obscureTextConfirmPassword = true;
+
+  final FirebaseAuthService _auth = FirebaseAuthService();
+
+  final TextEditingController _usernameController = TextEditingController();
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+
+  @override
+  void dispose() {
+    _usernameController.dispose();
+    _emailController.dispose();
+    _passwordController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -45,6 +61,7 @@ class SignUpScreenState extends State<SignUpScreen> {
                 SizedBox(
                   width: 350, // Adjust the width as needed
                   child: TextFormField(
+                    controller: _usernameController,
                     decoration: const InputDecoration(
                       hintText: 'Full Name',
                       border: OutlineInputBorder(),
@@ -69,6 +86,7 @@ class SignUpScreenState extends State<SignUpScreen> {
                 SizedBox(
                   width: 350, // Adjust the width as needed
                   child: TextFormField(
+                    controller: _emailController,
                     decoration: const InputDecoration(
                       hintText: 'Email',
                       border: OutlineInputBorder(),
@@ -81,6 +99,7 @@ class SignUpScreenState extends State<SignUpScreen> {
                 SizedBox(
                   width: 350,
                   child: TextFormField(
+                    controller: _passwordController,
                     obscureText: _obscureTextPassword,
                     decoration: InputDecoration(
                       hintText: 'Password',
@@ -152,7 +171,7 @@ class SignUpScreenState extends State<SignUpScreen> {
                 SizedBox(
                   width: 350,
                   child: ElevatedButton(
-                    onPressed: () => navigateToBaseLayout(context),
+                    onPressed: () => _signUp(),
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.green.shade900,
                       shape: RoundedRectangleBorder(
@@ -172,10 +191,26 @@ class SignUpScreenState extends State<SignUpScreen> {
       ),
     );
   }
+
+  void _signUp() async {
+    String username = _usernameController.text;
+    String email = _emailController.text;
+    String password = _passwordController.text;
+
+    User? user = await _auth.sigUpWithEmailAndPassword(email, password);
+
+    if (user != null) {
+      print('Sign up successful');
+      navigateToBaseLayout(context);
+    }
+    else {
+      print('Sign up failed');
+  }
 }
 
 void navigateToBaseLayout(BuildContext context) {
   Navigator.of(context).pushReplacement(
     MaterialPageRoute(builder: (_) => const BaseLayout()),
   );
+}
 }
