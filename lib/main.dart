@@ -8,7 +8,7 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   if (kIsWeb) {
     await Firebase.initializeApp(
-        options: const FirebaseOptions(
+      options: const FirebaseOptions(
       apiKey: "AIzaSyD_4uLrDvoiPhfPK8aw4QtwlwxCA6mAFls",
       appId: "1:815166244171:web:f523c6b7f9b89ab88b14ce",
       messagingSenderId: "815166244171",
