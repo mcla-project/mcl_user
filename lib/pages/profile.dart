@@ -130,7 +130,8 @@ class ProfilePage extends StatelessWidget {
                       title: const Text('About Us'),
                       onTap: () {
                         navigateToPage(
-                          const AboutUsPage(),
+                           AboutUsPage(userInfo: userInfo, // Pass the userInfo received in the ProfilePage constructor
+                            navigateToPage: navigateToPage,),
                         ); // Navigate to About Us page
                       },
                     ),
