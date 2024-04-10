@@ -173,7 +173,10 @@ class ProfilePage extends StatelessWidget {
                       leading: const Icon(Icons.feedback),
                       title: const Text('Feedback'),
                       onTap: () {
-                        navigateToPage(const FeedbackPage());
+                        navigateToPage(
+                          FeedbackPage(userInfo: userInfo, // Pass the userInfo received in the ProfilePage constructor
+                            navigateToPage: navigateToPage,),
+                        );
                         // Navigate to Feedback page
                       },
                     ),
