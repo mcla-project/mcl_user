@@ -32,7 +32,7 @@ class FirstLoginScreen extends StatelessWidget {
                     children: [
                       ElevatedButton(
                         onPressed: () {
-                          Navigator.pushReplacement(
+                          Navigator.push(
                             context,
                             MaterialPageRoute(
                                 builder: (context) => const NextLoginScreen()),
@@ -54,7 +54,7 @@ class FirstLoginScreen extends StatelessWidget {
                       const SizedBox(height: 10),
                       ElevatedButton(
                         onPressed: () {
-                          Navigator.pushReplacement(
+                          Navigator.push(
                             context,
                             MaterialPageRoute(
                                 builder: (context) => const SignUpScreen()),
@@ -97,8 +97,18 @@ class NextLoginScreenState extends State<NextLoginScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return PopScope(
+      canPop: true,
+      onPopInvoked: (bool didPop) async {
+      },
+    child: Scaffold(
       appBar: AppBar(
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
+        ),
         title: const Text('Login'),
       ),
       body: SingleChildScrollView(
@@ -176,7 +186,8 @@ class NextLoginScreenState extends State<NextLoginScreen> {
           ],
         ),
       ),
-    );
+    )
+  );
   }
 }
 
