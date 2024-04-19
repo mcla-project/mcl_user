@@ -7,7 +7,7 @@ class RecentsPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Favorites'),
+        title: const Text('Recents'),
       ),
       body: ListView(
         padding: const EdgeInsets.all(20),
