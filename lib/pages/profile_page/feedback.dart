@@ -112,7 +112,7 @@ import 'package:mcl_user/components/user_info.dart';
                             ),
                             children: <TextSpan>[
                               TextSpan(
-                                text: 'We’ve been working hard on improving our application, so your feedback is important to us.',
+                                text: 'Weve been working hard on improving our application, so your feedback is important to us.',
                               ),
                             ],
                           ),
@@ -125,7 +125,7 @@ import 'package:mcl_user/components/user_info.dart';
                             direction: Axis.horizontal,
                             allowHalfRating: true,
                             itemCount: 5,
-                            itemPadding: EdgeInsets.symmetric(horizontal: 4.0),
+                            itemPadding: const EdgeInsets.symmetric(horizontal: 4.0),
                             itemBuilder: (context, _) => const Icon(
                               Icons.star,
                               color: Colors.amber,
