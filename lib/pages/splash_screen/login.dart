@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import '../../components/base_layout.dart';
 import 'signup.dart';
 
@@ -95,99 +96,155 @@ class NextLoginScreen extends StatefulWidget {
 class NextLoginScreenState extends State<NextLoginScreen> {
   bool _obscureText = true;
 
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+  bool _isSigning = false;
+
+  Future<void> _signIn() async {
+    setState(() {
+      _isSigning = true;
+    });
+
+    String email = _emailController.text;
+    String password = _passwordController.text;
+
+    try {
+      UserCredential userCredential = await _auth.signInWithEmailAndPassword(
+        email: email,
+        password: password,
+      );
+
+      setState(() {
+        _isSigning = false;
+      });
+
+      if (userCredential.user != null) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text("User is successfully signed in"),
+          ),
+        );
+        Navigator.pushNamed(context, "/home");
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text("Some error occurred"),
+          ),
+        );
+      }
+    } catch (e) {
+      print("Error signing in: $e");
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text("Error signing in: $e"),
+        ),
+      );
+      setState(() {
+        _isSigning = false;
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return PopScope(
-      canPop: true,
-      onPopInvoked: (bool didPop) async {
-      },
-    child: Scaffold(
-      appBar: AppBar(
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back),
-          onPressed: () {
-            Navigator.of(context).pop();
-          },
-        ),
-        title: const Text('Login'),
-      ),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(20.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
+        canPop: true,
+        onPopInvoked: (bool didPop) async {},
+        child: Scaffold(
+          appBar: AppBar(
+            leading: IconButton(
+              icon: const Icon(Icons.arrow_back),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+            title: const Text('Login'),
+          ),
+          body: SingleChildScrollView(
+            padding: const EdgeInsets.all(20.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Center(
-                  child: Image.asset(
-                    'images/mnlcitylib_logo.png',
-                    width: 200,
-                    height: 200,
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Center(
+                      child: Image.asset(
+                        'images/mnlcitylib_logo.png',
+                        width: 200,
+                        height: 200,
+                      ),
+                    ),
+                    const SizedBox(height: 20),
+                    const Text(
+                      'WELCOME BACK',
+                      style: TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 20),
+                // Email field
+                TextFormField(
+                  controller: _emailController,
+                  decoration: const InputDecoration(
+                    labelText: 'Email',
+                    border: OutlineInputBorder(),
                   ),
                 ),
                 const SizedBox(height: 20),
-                const Text(
-                  'WELCOME BACK',
-                  style: TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
+                // Password field
+                TextFormField(
+                  controller: _passwordController,
+                  decoration: InputDecoration(
+                    labelText: 'Password',
+                    border: const OutlineInputBorder(),
+                    suffixIcon: IconButton(
+                      icon: Icon(
+                        _obscureText ? Icons.visibility : Icons.visibility_off,
+                      ),
+                      onPressed: () {
+                        setState(() {
+                          _obscureText = !_obscureText;
+                        });
+                      },
+                    ),
                   ),
+                  obscureText: _obscureText,
+                ),
+                const SizedBox(height: 20),
+                // Login button
+                SizedBox(
+                  width: double.infinity,
+                  child: _isSigning
+                      ? CircularProgressIndicator()
+                      : ElevatedButton(
+                          onPressed: _signIn,
+                          child: Text(
+                            'Sign In',
+                            style: TextStyle(fontSize: 20, color: Colors.white),
+                          ),
+                        ),
+                  // style: ElevatedButton.styleFrom(
+                  //   padding: const EdgeInsets.symmetric(vertical: 15),
+                  //   backgroundColor: Colors.green.shade900,
+                  //   shape: RoundedRectangleBorder(
+                  //     borderRadius: BorderRadius.circular(10),
+                  //   ),
+                  // ),
+                  // child: const Text(
+                  //   'Sign In',
+                  //   style: TextStyle(fontSize: 20, color: Colors.white),
+                  // ),
                 ),
               ],
             ),
-            const SizedBox(height: 20),
-            // Email field
-            TextFormField(
-              decoration: const InputDecoration(
-                labelText: 'Email',
-                border: OutlineInputBorder(),
-              ),
-            ),
-            const SizedBox(height: 20),
-            // Password field
-            TextFormField(
-              decoration: InputDecoration(
-                labelText: 'Password',
-                border: const OutlineInputBorder(),
-                suffixIcon: IconButton(
-                  icon: Icon(
-                    _obscureText ? Icons.visibility : Icons.visibility_off,
-                  ),
-                  onPressed: () {
-                    setState(() {
-                      _obscureText = !_obscureText;
-                    });
-                  },
-                ),
-              ),
-              obscureText: _obscureText,
-            ),
-            const SizedBox(height: 20),
-            // Login button
-            SizedBox(
-              width: double.infinity,
-              child: ElevatedButton(
-                onPressed: () => navigateToBaseLayout(context),
-                style: ElevatedButton.styleFrom(
-                  padding: const EdgeInsets.symmetric(vertical: 15),
-                  backgroundColor: Colors.green.shade900,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                ),
-                child: const Text(
-                  'Sign In',
-                  style: TextStyle(fontSize: 20, color: Colors.white),
-                ),
-              ),
-            ),
-          ],
-        ),
-      ),
-    )
-  );
+          ),
+        ));
   }
 }
 
