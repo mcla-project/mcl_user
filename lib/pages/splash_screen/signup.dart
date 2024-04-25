@@ -162,7 +162,13 @@ class SignUpScreenState extends State<SignUpScreen> {
                     SizedBox(
                       width: 350,
                       child: ElevatedButton(
-                        onPressed: () => navigateToBaseLayout(context),
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => EmailPage()),
+                          );
+                        },
                         style: ElevatedButton.styleFrom(
                           backgroundColor: Colors.green.shade900,
                           shape: RoundedRectangleBorder(

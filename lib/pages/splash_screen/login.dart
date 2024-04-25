@@ -62,7 +62,8 @@ class FirstLoginScreen extends StatelessWidget {
                           );
                           Navigator.push(
                             context,
-                            MaterialPageRoute(builder: (context) => EmailPage()),
+                            MaterialPageRoute(
+                                builder: (context) => EmailPage()),
                           );
                         },
                         style: ElevatedButton.styleFrom(
