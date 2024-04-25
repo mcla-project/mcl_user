@@ -30,8 +30,18 @@ class SignUpScreenState extends State<SignUpScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return PopScope(
+      canPop: true,
+      onPopInvoked: (bool didPop) async {
+      },
+    child: Scaffold(
       appBar: AppBar(
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
+        ),
         title: const Text('Sign Up'),
       ),
       body: Padding(
@@ -189,6 +199,7 @@ class SignUpScreenState extends State<SignUpScreen> {
           ),
         ),
       ),
+    )
     );
   }
 
