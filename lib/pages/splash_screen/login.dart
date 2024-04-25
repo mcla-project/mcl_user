@@ -60,6 +60,10 @@ class FirstLoginScreen extends StatelessWidget {
                             MaterialPageRoute(
                                 builder: (context) => const SignUpScreen()),
                           );
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(builder: (context) => EmailPage()),
+                          );
                         },
                         style: ElevatedButton.styleFrom(
                           backgroundColor: Colors
