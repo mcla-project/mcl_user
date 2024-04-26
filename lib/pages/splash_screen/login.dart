@@ -15,13 +15,8 @@ class LoginScreenState extends State<LoginScreen> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   final FirebaseAuth _auth = FirebaseAuth.instance;
-  bool _isSigning = false;
 
   Future<void> _signIn() async {
-    setState(() {
-      _isSigning = true;
-    });
-
     String email = _emailController.text;
     String password = _passwordController.text;
 
@@ -30,10 +25,6 @@ class LoginScreenState extends State<LoginScreen> {
         email: email,
         password: password,
       );
-
-      setState(() {
-        _isSigning = false;
-      });
 
       if (userCredential.user != null) {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -56,21 +47,8 @@ class LoginScreenState extends State<LoginScreen> {
           content: Text("Error signing in: $e"),
         ),
       );
-      setState(() {
-        _isSigning = false;
-      });
     }
   }
-
-  // Future signIn() async {
-  //   try {
-  //   await FirebaseAuth.instance.signInWithEmailAndPassword(
-  //     email: _emailController.text.trim(),
-  //     password: _passwordController.text.trim(),
-  //   );
-  //   }
-
-  // }
 
 @override
 void dispose() {
@@ -151,26 +129,6 @@ void dispose() {
                 ),
                 const SizedBox(height: 20),
                 // Login button
-
-                // Padding(
-                //   padding: const EdgeInsets.symmetric(vertical: 15),
-                //   child: Container(
-                //     padding: const EdgeInsets.all(20),
-                //     decoration: BoxDecoration(
-                //       color: Colors.green.shade900,
-                //       borderRadius: BorderRadius.circular(10),
-                //     ),
-                //     child: const Text(
-                //       'Sign In',
-                //       style: TextStyle(fontSize: 25, color: Colors.white),
-                //     ),
-                //   ),
-                // )
-
-                // _isSigning
-                //       ? const CircularProgressIndicator()
-                //       : ElevatedButton(
-                //           onPressed: _signIn,
                 SizedBox(
                   width: double.infinity,
                   child: GestureDetector(
@@ -182,23 +140,11 @@ void dispose() {
                         borderRadius: BorderRadius.circular(10),
                       ),
                       child: const Text(
-                        'Sign In',
+                        'Log In',
                         style: TextStyle(fontSize: 20, color: Colors.white),
                       ),
                     ),
                   ),
-                  // style: ElevatedButton.styleFrom(
-                  //   padding: const EdgeInsets.symmetric(vertical: 15),
-                  //   backgroundColor: Colors.green.shade900,
-                  //   shape: RoundedRectangleBorder(
-                  //     borderRadius: BorderRadius.circular(10),
-                  //   ),
-                  // ),
-                  // child: const Text(
-                  //   'Sign In',
-                  //   style: TextStyle(fontSize: 20, color: Colors.white),
-                  // ),
-                  // ),
                 ),
               ],
             ),
