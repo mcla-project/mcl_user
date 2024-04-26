@@ -2,7 +2,9 @@
     <application
         android:label="mcl_user"
         android:icon="@mipmap/ic_launcher"
-        android:name="androidx.multidex.MultiDexApplication">
+        android:name="androidx.multidex.MultiDexApplication"
+        android:usesCleartextTraffic="true">
+        
         <!-- android:name="${applicationName}" -->
 
         <activity
