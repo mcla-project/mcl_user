@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:mcl_user/pages/profile_page/about_us.dart';
 import 'package:mcl_user/pages/profile_page/feedback.dart';
 import 'package:mcl_user/pages/profile_page/logout.dart';
@@ -7,7 +9,7 @@ import 'profile_page/personal_info.dart';
 import 'profile_page/view_card.dart';
 import 'package:mcl_user/components/user_info.dart';
 
-class ProfilePage extends StatelessWidget {
+class ProfilePage extends StatefulWidget {
   final Function(Widget) navigateToPage;
   final Function(int) changePage;
 
@@ -19,6 +21,11 @@ class ProfilePage extends StatelessWidget {
       required this.changePage,
       required this.userInfo});
 
+  @override
+  State<ProfilePage> createState() => _ProfilePageState();
+}
+
+class _ProfilePageState extends State<ProfilePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -48,14 +55,14 @@ class ProfilePage extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          userInfo.name,
+                          widget.userInfo.name,
                           style: const TextStyle(
                               fontSize: 20,
                               fontWeight: FontWeight.bold,
                               color: Colors.white),
                         ),
                         Text(
-                          userInfo.username,
+                          widget.userInfo.username,
                           style: const TextStyle(
                               fontSize: 16, color: Colors.white),
                         ),
@@ -82,7 +89,7 @@ class ProfilePage extends StatelessWidget {
                       leading: const Icon(Icons.person),
                       title: const Text('Personal Information'),
                       onTap: () {
-                        navigateToPage(
+                        widget.navigateToPage(
                           PersonalInfoPage(
                             userInfo: UserInfo(
                               name: 'Merlin',
@@ -91,7 +98,7 @@ class ProfilePage extends StatelessWidget {
                               address: '123 Main Street',
                               contactNumber: '555-1234',
                             ),
-                            navigateToPage: navigateToPage,
+                            navigateToPage: widget.navigateToPage,
                           ),
                         ); // Navigate to Personal Information page
                       },
@@ -106,7 +113,7 @@ class ProfilePage extends StatelessWidget {
                       leading: const Icon(Icons.credit_card),
                       title: const Text('View Card'),
                       onTap: () {
-                        navigateToPage(
+                        widget.navigateToPage(
                           ViewCardPage(
                             userInfo: UserInfo(
                               name: 'Merlin',
@@ -129,9 +136,9 @@ class ProfilePage extends StatelessWidget {
                       leading: const Icon(Icons.info),
                       title: const Text('About Us'),
                       onTap: () {
-                        navigateToPage(
-                           AboutUsPage(userInfo: userInfo, // Pass the userInfo received in the ProfilePage constructor
-                            navigateToPage: navigateToPage,),
+                        widget.navigateToPage(
+                           AboutUsPage(userInfo: widget.userInfo, // Pass the userInfo received in the ProfilePage constructor
+                            navigateToPage: widget.navigateToPage,),
                         ); // Navigate to About Us page
                       },
                     ),
@@ -145,7 +152,7 @@ class ProfilePage extends StatelessWidget {
                       leading: const Icon(Icons.favorite),
                       title: const Text('Favorites'),
                       onTap: () {
-                        changePage(3);
+                        widget.changePage(3);
                         // Navigate to Favorites page
                       },
                     ),
@@ -159,7 +166,7 @@ class ProfilePage extends StatelessWidget {
                       leading: const Icon(Icons.history),
                       title: const Text('Visits'),
                       onTap: () {
-                        navigateToPage(const VisitsPage());
+                        widget.navigateToPage(const VisitsPage());
                         // Navigate to Visits page
                       },
                     ),
@@ -173,9 +180,9 @@ class ProfilePage extends StatelessWidget {
                       leading: const Icon(Icons.feedback),
                       title: const Text('Feedback'),
                       onTap: () {
-                        navigateToPage(
-                          FeedbackPage(userInfo: userInfo, // Pass the userInfo received in the ProfilePage constructor
-                            navigateToPage: navigateToPage,),
+                        widget.navigateToPage(
+                          FeedbackPage(userInfo: widget.userInfo, // Pass the userInfo received in the ProfilePage constructor
+                            navigateToPage: widget.navigateToPage,),
                         );
                         // Navigate to Feedback page
                       },
@@ -190,7 +197,7 @@ class ProfilePage extends StatelessWidget {
                       leading: const Icon(Icons.logout),
                       title: const Text('Logout'),
                       onTap: () {
-                        navigateToPage(const LogoutPage());
+                        widget.navigateToPage(const LogoutPage());
                         // Perform logout
                       },
                     ),
@@ -202,5 +209,42 @@ class ProfilePage extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  Stream<List<UserModel>> _readData(){
+    final userCollection = FirebaseFirestore.instance.collection("users");
+
+    return userCollection.snapshots().map((qureySnapshot)
+    => qureySnapshot.docs.map((e)
+    => UserModel.fromSnapshot(e),).toList());
+  }
+
+}
+
+class UserModel{
+  final String? username;
+  final String? adress;
+  final int? age;
+  final String? id;
+
+  UserModel({this.id,this.username, this.adress, this.age});
+
+
+  static UserModel fromSnapshot(DocumentSnapshot<Map<String, dynamic>> snapshot){
+    return UserModel(
+      username: snapshot['username'],
+      adress: snapshot['adress'],
+      age: snapshot['age'],
+      id: snapshot['id'],
+    );
+  }
+
+  Map<String, dynamic> toJson(){
+    return {
+      "username": username,
+      "age": age,
+      "id": id,
+      "adress": adress,
+    };
   }
 }
