@@ -2,10 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:mcl_user/components/user_info.dart';
 
 class AboutUsPage extends StatelessWidget {
-  final UserInfo userInfo;
+  // final UserInfo userInfo;
   final Function(Widget) navigateToPage;
 
-  const AboutUsPage({super.key, required this.userInfo, required this.navigateToPage,});
+  //  required this.userInfo,
+  const AboutUsPage({super.key, required this.navigateToPage,});
 
   @override
   Widget build(BuildContext context) {
@@ -35,13 +36,13 @@ class AboutUsPage extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          userInfo.name,
+                          "userInfo.name",
                           style: const TextStyle(
                               fontSize: 20,
                               fontWeight: FontWeight.bold,
                               color: Colors.white),
                         ),
-                        Text(userInfo.username,
+                        Text("userInfo.username",
                             style: const TextStyle(
                                 fontSize: 16, color: Colors.white)),
                       ],

@@ -2,12 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:mcl_user/components/user_info.dart';
 
-  class FeedbackPage extends StatelessWidget {
-  final UserInfo userInfo;
+class FeedbackPage extends StatelessWidget {
+  // final UserInfo userInfo;
   final Function(Widget) navigateToPage;
 
-  const FeedbackPage({super.key, required this.userInfo, required this.navigateToPage,});
+  const FeedbackPage({
+    super.key,
+    required this.navigateToPage,
+  });
 
+  //  required this.userInfo,
 
   @override
   Widget build(BuildContext context) {
@@ -30,20 +34,21 @@ import 'package:mcl_user/components/user_info.dart';
                   children: [
                     const CircleAvatar(
                       radius: 40,
-                      backgroundImage: NetworkImage('https://via.placeholder.com/150'),
+                      backgroundImage:
+                          NetworkImage('https://via.placeholder.com/150'),
                     ),
                     const SizedBox(width: 20),
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          userInfo.name,
+                          'userInfo.name',
                           style: const TextStyle(
                               fontSize: 20,
                               fontWeight: FontWeight.bold,
                               color: Colors.white),
                         ),
-                        Text(userInfo.username,
+                        Text('userInfo.username',
                             style: const TextStyle(
                                 fontSize: 16, color: Colors.white)),
                       ],
@@ -66,8 +71,10 @@ import 'package:mcl_user/components/user_info.dart';
                     child: const Row(
                       children: [
                         Padding(
-                          padding: EdgeInsets.only(left: 20), // Add space to the left of the icon
-                          child: Icon(IconData(0xf631, fontFamily: 'MaterialIcons'),
+                          padding: EdgeInsets.only(
+                              left: 20), // Add space to the left of the icon
+                          child: Icon(
+                            IconData(0xf631, fontFamily: 'MaterialIcons'),
                             size: 35,
                             color: Color.fromRGBO(1, 56, 34, 1.0),
                           ),
@@ -84,7 +91,6 @@ import 'package:mcl_user/components/user_info.dart';
                       ],
                     ),
                   ),
-
                   Container(
                     margin: const EdgeInsets.all(15.0),
                     padding: const EdgeInsets.fromLTRB(10.0, 0.0, 10.0, 10.0),
@@ -98,10 +104,10 @@ import 'package:mcl_user/components/user_info.dart';
                         const Center(
                           child: Text(
                             'Rate Your Experience',
-                            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+                            style: TextStyle(
+                                fontWeight: FontWeight.bold, fontSize: 20),
                           ),
                         ),
-
                         RichText(
                           textAlign: TextAlign.center,
                           text: const TextSpan(
@@ -112,12 +118,12 @@ import 'package:mcl_user/components/user_info.dart';
                             ),
                             children: <TextSpan>[
                               TextSpan(
-                                text: 'Weve been working hard on improving our application, so your feedback is important to us.',
+                                text:
+                                    'Weve been working hard on improving our application, so your feedback is important to us.',
                               ),
                             ],
                           ),
                         ),
-
                         Center(
                           child: RatingBar.builder(
                             initialRating: 3,
@@ -125,7 +131,8 @@ import 'package:mcl_user/components/user_info.dart';
                             direction: Axis.horizontal,
                             allowHalfRating: true,
                             itemCount: 5,
-                            itemPadding: const EdgeInsets.symmetric(horizontal: 4.0),
+                            itemPadding:
+                                const EdgeInsets.symmetric(horizontal: 4.0),
                             itemBuilder: (context, _) => const Icon(
                               Icons.star,
                               color: Colors.amber,
@@ -135,9 +142,9 @@ import 'package:mcl_user/components/user_info.dart';
                             },
                           ),
                         ),
-
                         const Padding(
-                          padding: EdgeInsets.symmetric(horizontal: 1.0, vertical: 8.0),
+                          padding: EdgeInsets.symmetric(
+                              horizontal: 1.0, vertical: 8.0),
                           child: TextField(
                             decoration: InputDecoration(
                               border: OutlineInputBorder(),
@@ -157,4 +164,4 @@ import 'package:mcl_user/components/user_info.dart';
       ),
     );
   }
-  }
+}

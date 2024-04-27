@@ -4,10 +4,11 @@ import 'package:mcl_user/components/user_info.dart';
 import 'update_profile.dart';
 
 class PersonalInfoPage extends StatelessWidget {
-  final UserInfo userInfo;
+  // final UserInfo userInfo;
   final Function(Widget) navigateToPage;
+  // , required this.userInfo,
 
-  const PersonalInfoPage({super.key, required this.userInfo, required this.navigateToPage,});
+  const PersonalInfoPage({super.key, required this.navigateToPage,});
 
   @override
   Widget build(BuildContext context) {
@@ -38,13 +39,13 @@ class PersonalInfoPage extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          userInfo.name,
+                          "userInfo.name",
                           style: const TextStyle(
                               fontSize: 20,
                               fontWeight: FontWeight.bold,
                               color: Colors.white),
                         ),
-                        Text(userInfo.username,
+                        Text("userInfo.username",
                             style: const TextStyle(
                                 fontSize: 16, color: Colors.white)),
                       ],
@@ -74,7 +75,7 @@ class PersonalInfoPage extends StatelessWidget {
                           borderRadius: BorderRadius.circular(10.0),
                         ),
                       ),
-                      child: Text(userInfo.name),
+                      child: Text("userInfo.name"),
                     ),
                   ),
                   Container(
@@ -89,7 +90,7 @@ class PersonalInfoPage extends StatelessWidget {
                           borderRadius: BorderRadius.circular(10.0),
                         ),
                       ),
-                      child: Text(userInfo.schoolOffice),
+                      child: Text("userInfo.schoolOffice"),
                     ),
                   ),
                   Container(
@@ -104,7 +105,7 @@ class PersonalInfoPage extends StatelessWidget {
                           borderRadius: BorderRadius.circular(10.0),
                         ),
                       ),
-                      child: Text(userInfo.address),
+                      child: Text("userInfo.address"),
                     ),
                   ),
                   Container(
@@ -119,7 +120,7 @@ class PersonalInfoPage extends StatelessWidget {
                           borderRadius: BorderRadius.circular(10.0),
                         ),
                       ),
-                      child: Text(userInfo.contactNumber),
+                      child: Text("userInfo.contactNumber"),
                     ),
                   ),
                 ],

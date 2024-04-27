@@ -1,23 +1,45 @@
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:mcl_user/pages/profile_page/about_us.dart';
 import 'package:mcl_user/pages/profile_page/feedback.dart';
-import 'package:mcl_user/pages/profile_page/logout.dart';
+// import 'package:mcl_user/pages/profile_page/logout.dart';
 import 'package:mcl_user/pages/profile_page/visits.dart';
+import 'package:mcl_user/pages/splash_screen/login.dart';
 import 'profile_page/personal_info.dart';
 import 'profile_page/view_card.dart';
 import 'package:mcl_user/components/user_info.dart';
 
-class ProfilePage extends StatelessWidget {
+class ProfilePage extends StatefulWidget {
   final Function(Widget) navigateToPage;
   final Function(int) changePage;
 
-  final UserInfo userInfo;
+  // final UserInfo userInfo;
 
   const ProfilePage(
-      {super.key,
-      required this.navigateToPage,
-      required this.changePage,
-      required this.userInfo});
+      {super.key, required this.navigateToPage, required this.changePage});
+  // required this.userInfo
+
+  @override
+  State<ProfilePage> createState() => _ProfilePageState();
+}
+
+class _ProfilePageState extends State<ProfilePage> {
+  final user = FirebaseAuth.instance.currentUser!;
+
+  List<String> docIDs = [];
+
+  Future getDocID() async {
+    await FirebaseFirestore.instance
+        .collection('users')
+        .get()
+        .then((snapshot) => snapshot.docs.forEach((document) {
+              print(document.reference);
+              docIDs.add(document.reference.id);
+            }));
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -48,14 +70,14 @@ class ProfilePage extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          userInfo.name,
+                          "userInfo.name",
                           style: const TextStyle(
                               fontSize: 20,
                               fontWeight: FontWeight.bold,
                               color: Colors.white),
                         ),
                         Text(
-                          userInfo.username,
+                          "userInfo.username",
                           style: const TextStyle(
                               fontSize: 16, color: Colors.white),
                         ),
@@ -82,16 +104,16 @@ class ProfilePage extends StatelessWidget {
                       leading: const Icon(Icons.person),
                       title: const Text('Personal Information'),
                       onTap: () {
-                        navigateToPage(
+                        widget.navigateToPage(
                           PersonalInfoPage(
-                            userInfo: UserInfo(
-                              name: 'Merlin',
-                              username: 'merlin123',
-                              schoolOffice: 'PLM School',
-                              address: '123 Main Street',
-                              contactNumber: '555-1234',
-                            ),
-                            navigateToPage: navigateToPage,
+                            // userInfo: UserInfo(
+                            //   name: 'Merlin',
+                            //   username: 'merlin123',
+                            //   schoolOffice: 'PLM School',
+                            //   address: '123 Main Street',
+                            //   contactNumber: '555-1234',
+                            // ),
+                            navigateToPage: widget.navigateToPage,
                           ),
                         ); // Navigate to Personal Information page
                       },
@@ -106,16 +128,16 @@ class ProfilePage extends StatelessWidget {
                       leading: const Icon(Icons.credit_card),
                       title: const Text('View Card'),
                       onTap: () {
-                        navigateToPage(
+                        widget.navigateToPage(
                           ViewCardPage(
-                            userInfo: UserInfo(
-                              name: 'Merlin',
-                              username: 'merlin123',
-                              schoolOffice: 'PLM School',
-                              address: '123 Main Street',
-                              contactNumber: '555-1234',
-                            ),
-                          ),
+                              // userInfo: UserInfo(
+                              //   name: 'Merlin',
+                              //   username: 'merlin123',
+                              //   schoolOffice: 'PLM School',
+                              //   address: '123 Main Street',
+                              //   contactNumber: '555-1234',
+                              // ),
+                              ),
                         ); // Navigate to View Card page
                       },
                     ),
@@ -129,9 +151,12 @@ class ProfilePage extends StatelessWidget {
                       leading: const Icon(Icons.info),
                       title: const Text('About Us'),
                       onTap: () {
-                        navigateToPage(
-                           AboutUsPage(userInfo: userInfo, // Pass the userInfo received in the ProfilePage constructor
-                            navigateToPage: navigateToPage,),
+                        widget.navigateToPage(
+                          AboutUsPage(
+                            // userInfo:
+                            // userInfo, // Pass the userInfo received in the ProfilePage constructor
+                            navigateToPage: widget.navigateToPage,
+                          ),
                         ); // Navigate to About Us page
                       },
                     ),
@@ -145,7 +170,7 @@ class ProfilePage extends StatelessWidget {
                       leading: const Icon(Icons.favorite),
                       title: const Text('Favorites'),
                       onTap: () {
-                        changePage(3);
+                        widget.changePage(3);
                         // Navigate to Favorites page
                       },
                     ),
@@ -159,7 +184,7 @@ class ProfilePage extends StatelessWidget {
                       leading: const Icon(Icons.history),
                       title: const Text('Visits'),
                       onTap: () {
-                        navigateToPage(const VisitsPage());
+                        widget.navigateToPage(const VisitsPage());
                         // Navigate to Visits page
                       },
                     ),
@@ -173,9 +198,12 @@ class ProfilePage extends StatelessWidget {
                       leading: const Icon(Icons.feedback),
                       title: const Text('Feedback'),
                       onTap: () {
-                        navigateToPage(
-                          FeedbackPage(userInfo: userInfo, // Pass the userInfo received in the ProfilePage constructor
-                            navigateToPage: navigateToPage,),
+                        widget.navigateToPage(
+                          FeedbackPage(
+                            // userInfo:
+                            //     userInfo, // Pass the userInfo received in the ProfilePage constructor
+                            navigateToPage: widget.navigateToPage,
+                          ),
                         );
                         // Navigate to Feedback page
                       },
@@ -190,7 +218,11 @@ class ProfilePage extends StatelessWidget {
                       leading: const Icon(Icons.logout),
                       title: const Text('Logout'),
                       onTap: () {
-                        navigateToPage(const LogoutPage());
+                        FirebaseAuth.instance.signOut();
+                        Navigator.of(context).pushReplacement(
+                          MaterialPageRoute(
+                              builder: (context) => const LoginScreen()),
+                        );
                         // Perform logout
                       },
                     ),
