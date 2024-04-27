@@ -58,10 +58,12 @@ class _ProfilePageState extends State<ProfilePage> {
                           children: [
                             UserInfoWidget(
                                 getDocData: userDataService.getDocData,
-                                fieldName: 'first_name'),
+                                fieldName: 'first_name',
+                                color: Colors.white),
                             UserInfoWidget(
                                 getDocData: userDataService.getDocData,
-                                fieldName: 'last_name'),
+                                fieldName: 'last_name',
+                                color: Colors.white),
                           ],
                         ),
                         Text(
