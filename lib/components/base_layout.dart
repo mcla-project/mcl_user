@@ -7,7 +7,7 @@ import '../pages/profile.dart';
 import '../pages/recents.dart';
 import '../pages/scanner.dart';
 import '../pages/favorites.dart';
-import 'package:mcl_user/components/user_info.dart';
+// import 'package:mcl_user/components/user_info.dart';
 
 class BaseLayout extends StatefulWidget {
   const BaseLayout({super.key});
@@ -28,13 +28,13 @@ class BaseLayoutState extends State<BaseLayout> {
         ProfilePage(
           navigateToPage: navigateToPage,
           changePage: changePage,
-          userInfo: UserInfo(
-            name: 'Merlin',
-            username: 'merlin123',
-            schoolOffice: 'PLM School',
-            address: '123 Main Street',
-            contactNumber: '555-1234',
-          ),
+          // userInfo: UserInfo(
+          //   name: 'Merlin',
+          //   username: 'merlin123',
+          //   schoolOffice: 'PLM School',
+          //   address: '123 Main Street',
+          //   contactNumber: '555-1234',
+          // ),
         ), // Navigate to the profile page subpages
         UpdateProfilePage(
             navigateToPage:

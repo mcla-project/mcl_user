@@ -1,111 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import '../../components/base_layout.dart';
-import 'signup.dart';
 
-class FirstLoginScreen extends StatelessWidget {
-  const FirstLoginScreen({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.white,
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          Expanded(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Padding(
-                  padding: const EdgeInsets.only(bottom: 12.0),
-                  child: Image.asset(
-                    'images/mnlcitylib_logo.png',
-                    width: 200,
-                    height: 200,
-                  ),
-                ),
-                Container(
-                  padding: const EdgeInsets.all(20),
-                  child: Column(
-                    children: [
-                      ElevatedButton(
-                        onPressed: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => const NextLoginScreen()),
-                          );
-                        },
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors
-                              .green.shade900, // Set the button color to green
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(
-                                10), // Set the corner radius
-                          ),
-                        ),
-                        child: const Text(
-                          'Login',
-                          style: TextStyle(fontSize: 25, color: Colors.white),
-                        ),
-                      ),
-                      const SizedBox(height: 10),
-                      ElevatedButton(
-                        onPressed: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => const SignUpScreen()),
-                          );
-                        },
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors
-                              .green.shade900, // Set the button color to green
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(
-                                10), // Set the corner radius
-                          ),
-                        ),
-                        child: const Text(
-                          'Sign Up',
-                          style: TextStyle(fontSize: 25, color: Colors.white),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class NextLoginScreen extends StatefulWidget {
-  const NextLoginScreen({Key? key}) : super(key: key);
+class LoginScreen extends StatefulWidget {
+  const LoginScreen({Key? key}) : super(key: key);
 
   @override
-  NextLoginScreenState createState() => NextLoginScreenState();
+  LoginScreenState createState() => LoginScreenState();
 }
 
-class NextLoginScreenState extends State<NextLoginScreen> {
+class LoginScreenState extends State<LoginScreen> {
   bool _obscureText = true;
 
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   final FirebaseAuth _auth = FirebaseAuth.instance;
-  bool _isSigning = false;
 
   Future<void> _signIn() async {
-    setState(() {
-      _isSigning = true;
-    });
-
     String email = _emailController.text;
     String password = _passwordController.text;
 
@@ -115,20 +26,16 @@ class NextLoginScreenState extends State<NextLoginScreen> {
         password: password,
       );
 
-      setState(() {
-        _isSigning = false;
-      });
-
       if (userCredential.user != null) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
+          const SnackBar(
             content: Text("User is successfully signed in"),
           ),
         );
-        Navigator.pushNamed(context, "/home");
+        Navigator.pushNamed(context, "/base_layout");
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
+          const SnackBar(
             content: Text("Some error occurred"),
           ),
         );
@@ -140,11 +47,15 @@ class NextLoginScreenState extends State<NextLoginScreen> {
           content: Text("Error signing in: $e"),
         ),
       );
-      setState(() {
-        _isSigning = false;
-      });
     }
   }
+
+@override
+void dispose() {
+  _emailController.dispose();
+  _passwordController.dispose();
+  super.dispose();
+}
 
   @override
   Widget build(BuildContext context) {
@@ -192,7 +103,7 @@ class NextLoginScreenState extends State<NextLoginScreen> {
                 TextFormField(
                   controller: _emailController,
                   decoration: const InputDecoration(
-                    labelText: 'Email',
+                    hintText: 'Email',
                     border: OutlineInputBorder(),
                   ),
                 ),
@@ -201,7 +112,7 @@ class NextLoginScreenState extends State<NextLoginScreen> {
                 TextFormField(
                   controller: _passwordController,
                   decoration: InputDecoration(
-                    labelText: 'Password',
+                    hintText: 'Password',
                     border: const OutlineInputBorder(),
                     suffixIcon: IconButton(
                       icon: Icon(
@@ -220,26 +131,20 @@ class NextLoginScreenState extends State<NextLoginScreen> {
                 // Login button
                 SizedBox(
                   width: double.infinity,
-                  child: _isSigning
-                      ? CircularProgressIndicator()
-                      : ElevatedButton(
-                          onPressed: _signIn,
-                          child: Text(
-                            'Sign In',
-                            style: TextStyle(fontSize: 20, color: Colors.white),
-                          ),
-                        ),
-                  // style: ElevatedButton.styleFrom(
-                  //   padding: const EdgeInsets.symmetric(vertical: 15),
-                  //   backgroundColor: Colors.green.shade900,
-                  //   shape: RoundedRectangleBorder(
-                  //     borderRadius: BorderRadius.circular(10),
-                  //   ),
-                  // ),
-                  // child: const Text(
-                  //   'Sign In',
-                  //   style: TextStyle(fontSize: 20, color: Colors.white),
-                  // ),
+                  child: GestureDetector(
+                    onTap: _signIn,
+                    child: Container(
+                      padding: const EdgeInsets.all(20),
+                      decoration: BoxDecoration(
+                        color: Colors.green.shade900,
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      child: const Text(
+                        'Log In',
+                        style: TextStyle(fontSize: 20, color: Colors.white),
+                      ),
+                    ),
+                  ),
                 ),
               ],
             ),
