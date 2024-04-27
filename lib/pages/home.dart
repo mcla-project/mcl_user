@@ -51,7 +51,7 @@ class _HomePageState extends State<HomePage> {
                             Expanded(
                               child: TextField(
                                 decoration: InputDecoration(
-                                  hintText: 'Find Books' + user.email!,
+                                  hintText: 'Find Books${user.email!}',
                                   border: InputBorder.none,
                                   contentPadding:
                                       const EdgeInsets.symmetric(vertical: 16),
