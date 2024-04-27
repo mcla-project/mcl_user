@@ -1,18 +1,12 @@
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_core/firebase_core.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:mcl_user/pages/profile_page/about_us.dart';
 import 'package:mcl_user/pages/profile_page/feedback.dart';
-// import 'package:mcl_user/pages/profile_page/logout.dart';
 import 'package:mcl_user/pages/profile_page/visits.dart';
 import 'package:mcl_user/pages/splash_screen/login.dart';
 import 'profile_page/personal_info.dart';
 import 'profile_page/view_card.dart';
-import 'package:mcl_user/components/user_info.dart';
 
 class ProfilePage extends StatefulWidget {
   final Function(Widget) navigateToPage;
@@ -31,16 +25,20 @@ class ProfilePage extends StatefulWidget {
 class _ProfilePageState extends State<ProfilePage> {
   final user = FirebaseAuth.instance.currentUser!;
 
-  List<String> docIDs = [];
+  List<String> docIDS = [];
+  Map<String, dynamic> userData = {};
 
-  Future getDocID() async {
-    await FirebaseFirestore.instance
-        .collection('users')
-        .get()
-        .then((snapshot) => snapshot.docs.forEach((document) {
-              print(document.reference);
-              docIDs.add(document.reference.id);
-            }));
+  Future<Map<String, dynamic>> getDocData() async {
+    Map<String, dynamic> userData = {};
+    await FirebaseFirestore.instance.collection('users').get().then(
+          (snapshot) => snapshot.docs.forEach((element) {
+            if (element['email'] == user.email) {
+              docIDS.add(element.id);
+              userData = element.data() as Map<String, dynamic>;
+            }
+          }),
+        );
+    return userData;
   }
 
   @override
@@ -71,15 +69,23 @@ class _ProfilePageState extends State<ProfilePage> {
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(
-                          "userInfo.name",
-                          style: const TextStyle(
-                              fontSize: 20,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.white),
+                        FutureBuilder<Map<String, dynamic>>(
+                          future: getDocData(),
+                          builder: (BuildContext context,
+                              AsyncSnapshot<Map<String, dynamic>> snapshot) {
+                            if (snapshot.connectionState ==
+                                ConnectionState.waiting) {
+                              return CircularProgressIndicator();
+                            } else {
+                              if (snapshot.hasError)
+                                return Text('Error: ${snapshot.error}');
+                              else
+                                return Text('Name: ${snapshot.data?['first_name']}');
+                            }
+                          },
                         ),
                         Text(
-                          "userInfo.username",
+                          user.email!,
                           style: const TextStyle(
                               fontSize: 16, color: Colors.white),
                         ),
@@ -131,7 +137,7 @@ class _ProfilePageState extends State<ProfilePage> {
                       title: const Text('View Card'),
                       onTap: () {
                         widget.navigateToPage(
-                          ViewCardPage(
+                          const ViewCardPage(
                               // userInfo: UserInfo(
                               //   name: 'Merlin',
                               //   username: 'merlin123',
@@ -236,42 +242,5 @@ class _ProfilePageState extends State<ProfilePage> {
         ),
       ),
     );
-  }
-
-  Stream<List<UserModel>> _readData(){
-    final userCollection = FirebaseFirestore.instance.collection("users");
-
-    return userCollection.snapshots().map((qureySnapshot)
-    => qureySnapshot.docs.map((e)
-    => UserModel.fromSnapshot(e),).toList());
-  }
-
-}
-
-class UserModel{
-  final String? username;
-  final String? adress;
-  final int? age;
-  final String? id;
-
-  UserModel({this.id,this.username, this.adress, this.age});
-
-
-  static UserModel fromSnapshot(DocumentSnapshot<Map<String, dynamic>> snapshot){
-    return UserModel(
-      username: snapshot['username'],
-      adress: snapshot['adress'],
-      age: snapshot['age'],
-      id: snapshot['id'],
-    );
-  }
-
-  Map<String, dynamic> toJson(){
-    return {
-      "username": username,
-      "age": age,
-      "id": id,
-      "adress": adress,
-    };
   }
 }
