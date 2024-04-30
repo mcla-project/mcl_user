@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'login.dart';
+import 'welcome_screen.dart';
 
 
 class AnimatedSplashScreen extends StatefulWidget {
@@ -250,7 +250,7 @@ class NextOnboardingScreen extends StatelessWidget {
                       Navigator.pushReplacement(
                         context,
                         MaterialPageRoute(
-                            builder: (context) => const FirstLoginScreen()),
+                            builder: (context) => const WelcomeScreen()),
                       );
                     },
                     child: const Icon(Icons.arrow_forward),
