@@ -1,6 +1,7 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import '../../components/base_layout.dart';
-import 'package:pin_code_fields/pin_code_fields.dart';
 
 class SignUpScreen extends StatefulWidget {
   const SignUpScreen({Key? key}) : super(key: key);
@@ -12,6 +13,27 @@ class SignUpScreen extends StatefulWidget {
 class SignUpScreenState extends State<SignUpScreen> {
   bool _obscureTextPassword = true;
   bool _obscureTextConfirmPassword = true;
+
+  // final FirebaseAuthService _auth = FirebaseAuthService();
+
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+  final TextEditingController _firstnameController = TextEditingController();
+  final TextEditingController _lastnameController = TextEditingController();
+  final TextEditingController _phoneController = TextEditingController();
+  final TextEditingController _confirmpasswordController =
+      TextEditingController();
+
+  @override
+  void dispose() {
+    _emailController.dispose();
+    _passwordController.dispose();
+    _firstnameController.dispose();
+    _lastnameController.dispose();
+    _phoneController.dispose();
+    _confirmpasswordController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -55,8 +77,9 @@ class SignUpScreenState extends State<SignUpScreen> {
                     SizedBox(
                       width: 350, // Adjust the width as needed
                       child: TextFormField(
+                        controller: _firstnameController,
                         decoration: const InputDecoration(
-                          hintText: 'Full Name',
+                          hintText: 'First Name',
                           border: OutlineInputBorder(),
                           contentPadding: EdgeInsets.symmetric(
                               vertical: 10.0, horizontal: 15.0),
@@ -67,6 +90,20 @@ class SignUpScreenState extends State<SignUpScreen> {
                     SizedBox(
                       width: 350, // Adjust the width as needed
                       child: TextFormField(
+                        controller: _lastnameController,
+                        decoration: const InputDecoration(
+                          hintText: 'Last Name',
+                          border: OutlineInputBorder(),
+                          contentPadding: EdgeInsets.symmetric(
+                              vertical: 10.0, horizontal: 15.0),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 10),
+                    SizedBox(
+                      width: 350, // Adjust the width as needed
+                      child: TextFormField(
+                        controller: _phoneController,
                         decoration: const InputDecoration(
                           hintText: 'Phone Number',
                           border: OutlineInputBorder(),
@@ -79,6 +116,7 @@ class SignUpScreenState extends State<SignUpScreen> {
                     SizedBox(
                       width: 350, // Adjust the width as needed
                       child: TextFormField(
+                        controller: _emailController,
                         decoration: const InputDecoration(
                           hintText: 'Email',
                           border: OutlineInputBorder(),
@@ -91,6 +129,7 @@ class SignUpScreenState extends State<SignUpScreen> {
                     SizedBox(
                       width: 350,
                       child: TextFormField(
+                        controller: _passwordController,
                         obscureText: _obscureTextPassword,
                         decoration: InputDecoration(
                           hintText: 'Password',
@@ -118,6 +157,7 @@ class SignUpScreenState extends State<SignUpScreen> {
                     SizedBox(
                       width: 350,
                       child: TextFormField(
+                        controller: _confirmpasswordController,
                         obscureText: _obscureTextConfirmPassword,
                         decoration: InputDecoration(
                           hintText: 'Confirm Password',
@@ -162,13 +202,7 @@ class SignUpScreenState extends State<SignUpScreen> {
                     SizedBox(
                       width: 350,
                       child: ElevatedButton(
-                        onPressed: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => EmailPage()),
-                          );
-                        },
+                        onPressed: () => _signUp(),
                         style: ElevatedButton.styleFrom(
                           backgroundColor: Colors.green.shade900,
                           shape: RoundedRectangleBorder(
@@ -188,165 +222,56 @@ class SignUpScreenState extends State<SignUpScreen> {
           ),
         ));
   }
-}
 
-void navigateToBaseLayout(BuildContext context) {
-  Navigator.of(context).pushReplacement(
-    MaterialPageRoute(builder: (_) => const BaseLayout()),
-  );
-}
+  // Sign up user and store data in Firebase
+  void _signUp() async {
+    if (passwordConfirmed()) {
+      await FirebaseAuth.instance.createUserWithEmailAndPassword(
+        email: _emailController.text.trim(),
+        password: _passwordController.text.trim(),
+      );
 
-class EmailPage extends StatefulWidget {
-  @override
-  _EmailPageState createState() => _EmailPageState();
-}
+      addUserDetails(
+        _firstnameController.text.trim(),
+        _lastnameController.text.trim(),
+        _emailController.text.trim(),
+        _phoneController.text.trim(),
+      );
 
-class _EmailPageState extends State<EmailPage> {
-  final _formKey = GlobalKey<FormState>();
-  late String _email;
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-        appBar: AppBar(
-          title: Text('Email Verification'),
-        ),
-        body: Padding(
-            padding: const EdgeInsets.all(20.0),
-            child: Center(
-              child: SingleChildScrollView(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    SizedBox(
-                      width: 200,
-                      height: 200,
-                      child: Image.asset(
-                        'assets/liblogo.png',
-                      ),
-                    ),
-                    const SizedBox(height: 50),
-                    const Text(
-                      'Enter you email address to receive a \nverification code',
-                      style: TextStyle(
-                        fontSize: 14,
-                      ),
-                      textAlign: TextAlign.center,
-                    ),
-                    const SizedBox(height: 30),
-                    SizedBox(
-                      width: 350,
-                      child: TextFormField(
-                        obscureText: true,
-                        decoration: InputDecoration(
-                          hintText: 'Email Address',
-                          border: OutlineInputBorder(),
-                          contentPadding: const EdgeInsets.symmetric(
-                            vertical: 10.0,
-                            horizontal: 15.0,
-                          ),
-                        ),
-                      ),
-                    ),
-                    const SizedBox(height: 30),
-                    SizedBox(
-                      width: 350,
-                      child: ElevatedButton(
-                        onPressed: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(builder: (context) => OtpPage()),
-                          );
-                        },
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors
-                              .green.shade900, // Set the button color to green
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(
-                                10), // Set the corner radius
-                          ),
-                        ),
-                        child: const Text(
-                          'Send Code',
-                          style: TextStyle(fontSize: 20, color: Colors.white),
-                        ),
-                      ),
-                    )
-                  ],
-                ),
-              ),
-            )));
+      navigateToBaseLayout(context);
+    }
   }
-}
 
-class OtpPage extends StatefulWidget {
-  @override
-  _OtpPageState createState() => _OtpPageState();
-}
+  // Check if the password and confirm password match
+  bool passwordConfirmed() {
+    if (_passwordController.text.trim() ==
+        _confirmpasswordController.text.trim()) {
+      return true;
+    } else {
+      return false;
+    }
+  }
 
-class _OtpPageState extends State<OtpPage> {
-  late String _otp;
+  // Store user details in Firestore
+  Future addUserDetails(String firstName, String lastName, String email,
+      String phoneNumber) async {
+    await FirebaseFirestore.instance.collection('users').add({
+      'first_name': firstName,
+      'last_name': lastName,
+      'email': email,
+      'phone_number': phoneNumber,
+      'address': 'Islang Pantropiko 000',
+      'birthday': Timestamp.fromDate(DateTime(2003, 12, 31)),
+      'library_card_number': '202103',
+      'occupation': 'Student',
+      'sex': 'Female',
+      'created_at': DateTime.now(),
+    });
+  }
 
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-        appBar: AppBar(
-          title: Text('OTP Verification'),
-        ),
-        body: Center(
-            child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-              SizedBox(
-                width: 200,
-                height: 200,
-                child: Image.asset(
-                  'assets/liblogo.png',
-                ),
-              ),
-              const SizedBox(height: 5),
-              const Text(
-                'Code has sent to your email address. \nPlease enter the code below to verify.',
-                style: TextStyle(
-                  fontSize: 14,
-                ),
-                textAlign: TextAlign.center,
-              ),
-              Padding(
-                padding: const EdgeInsets.all(50.0),
-                child: PinCodeTextField(
-                  appContext: context,
-                  length: 6,
-                  onChanged: (value) {
-                    _otp = value;
-                  },
-                ),
-              ),
-              const SizedBox(height: 5),
-              SizedBox(
-                width: 350,
-                child: ElevatedButton(
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => OtpPage()),
-                    );
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor:
-                        Colors.green.shade900, // Set the button color to green
-                    shape: RoundedRectangleBorder(
-                      borderRadius:
-                          BorderRadius.circular(10), // Set the corner radius
-                    ),
-                  ),
-                  child: const Text(
-                    'Verify',
-                    style: TextStyle(fontSize: 20, color: Colors.white),
-                  ),
-                ),
-              )
-            ])));
+  void navigateToBaseLayout(BuildContext context) {
+    Navigator.of(context).pushReplacement(
+      MaterialPageRoute(builder: (_) => const BaseLayout()),
+    );
   }
 }
