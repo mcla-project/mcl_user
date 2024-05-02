@@ -1,26 +1,21 @@
+// import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_core/firebase_core.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:mcl_user/pages/profile_page/about_us.dart';
 import 'package:mcl_user/pages/profile_page/feedback.dart';
-// import 'package:mcl_user/pages/profile_page/logout.dart';
 import 'package:mcl_user/pages/profile_page/visits.dart';
 import 'package:mcl_user/pages/splash_screen/login.dart';
 import 'profile_page/personal_info.dart';
 import 'profile_page/view_card.dart';
-import 'package:mcl_user/components/user_info.dart';
+import '../utils/get_user_information.dart';
+import '../utils/get_user.dart';
 
 class ProfilePage extends StatefulWidget {
   final Function(Widget) navigateToPage;
   final Function(int) changePage;
 
-  // final UserInfo userInfo;
-
   const ProfilePage(
       {super.key, required this.navigateToPage, required this.changePage});
-  // required this.userInfo
 
   @override
   State<ProfilePage> createState() => _ProfilePageState();
@@ -29,17 +24,7 @@ class ProfilePage extends StatefulWidget {
 class _ProfilePageState extends State<ProfilePage> {
   final user = FirebaseAuth.instance.currentUser!;
 
-  List<String> docIDs = [];
-
-  Future getDocID() async {
-    await FirebaseFirestore.instance
-        .collection('users')
-        .get()
-        .then((snapshot) => snapshot.docs.forEach((document) {
-              print(document.reference);
-              docIDs.add(document.reference.id);
-            }));
-  }
+  UserDataService userDataService = UserDataService();
 
   @override
   Widget build(BuildContext context) {
@@ -69,15 +54,20 @@ class _ProfilePageState extends State<ProfilePage> {
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(
-                          "userInfo.name",
-                          style: const TextStyle(
-                              fontSize: 20,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.white),
+                        Row(
+                          children: [
+                            UserInfoWidget(
+                                getDocData: userDataService.getDocData,
+                                fieldName: 'first_name',
+                                color: Colors.white),
+                            UserInfoWidget(
+                                getDocData: userDataService.getDocData,
+                                fieldName: 'last_name',
+                                color: Colors.white),
+                          ],
                         ),
                         Text(
-                          "userInfo.username",
+                          user.email!,
                           style: const TextStyle(
                               fontSize: 16, color: Colors.white),
                         ),
@@ -106,13 +96,6 @@ class _ProfilePageState extends State<ProfilePage> {
                       onTap: () {
                         widget.navigateToPage(
                           PersonalInfoPage(
-                            // userInfo: UserInfo(
-                            //   name: 'Merlin',
-                            //   username: 'merlin123',
-                            //   schoolOffice: 'PLM School',
-                            //   address: '123 Main Street',
-                            //   contactNumber: '555-1234',
-                            // ),
                             navigateToPage: widget.navigateToPage,
                           ),
                         ); // Navigate to Personal Information page
@@ -129,15 +112,7 @@ class _ProfilePageState extends State<ProfilePage> {
                       title: const Text('View Card'),
                       onTap: () {
                         widget.navigateToPage(
-                          ViewCardPage(
-                              // userInfo: UserInfo(
-                              //   name: 'Merlin',
-                              //   username: 'merlin123',
-                              //   schoolOffice: 'PLM School',
-                              //   address: '123 Main Street',
-                              //   contactNumber: '555-1234',
-                              // ),
-                              ),
+                          const ViewCardPage(),
                         ); // Navigate to View Card page
                       },
                     ),
@@ -153,8 +128,6 @@ class _ProfilePageState extends State<ProfilePage> {
                       onTap: () {
                         widget.navigateToPage(
                           AboutUsPage(
-                            // userInfo:
-                            // userInfo, // Pass the userInfo received in the ProfilePage constructor
                             navigateToPage: widget.navigateToPage,
                           ),
                         ); // Navigate to About Us page
@@ -200,8 +173,6 @@ class _ProfilePageState extends State<ProfilePage> {
                       onTap: () {
                         widget.navigateToPage(
                           FeedbackPage(
-                            // userInfo:
-                            //     userInfo, // Pass the userInfo received in the ProfilePage constructor
                             navigateToPage: widget.navigateToPage,
                           ),
                         );

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:mcl_user/components/user_info.dart';
 
 class ViewCardPage extends StatelessWidget {
   // final UserInfo userInfo;
@@ -21,28 +20,28 @@ class ViewCardPage extends StatelessWidget {
                 color: const Color(0xFF013822),
                 borderRadius: BorderRadius.circular(10),
               ),
-              child: Padding(
-                padding: const EdgeInsets.all(16.0),
+              child: const Padding(
+                padding: EdgeInsets.all(16.0),
                 child: Row(
                   children: [
-                    const CircleAvatar(
+                    CircleAvatar(
                       radius: 40,
                       backgroundImage:
                           NetworkImage('https://via.placeholder.com/150'),
                     ),
-                    const SizedBox(width: 20),
+                    SizedBox(width: 20),
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
                           "userInfo.name",
-                          style: const TextStyle(
+                          style: TextStyle(
                               fontSize: 20,
                               fontWeight: FontWeight.bold,
                               color: Colors.white),
                         ),
                         Text("userInfo.username",
-                            style: const TextStyle(
+                            style: TextStyle(
                                 fontSize: 16, color: Colors.white)),
                       ],
                     ),
@@ -71,7 +70,7 @@ class ViewCardPage extends StatelessWidget {
                           borderRadius: BorderRadius.circular(10.0),
                         ),
                       ),
-                      child: Text("userInfo.name"),
+                      child: const Text("userInfo.name"),
                     ),
                   ),
                   Container(
@@ -86,7 +85,7 @@ class ViewCardPage extends StatelessWidget {
                           borderRadius: BorderRadius.circular(10.0),
                         ),
                       ),
-                      child: Text("userInfo.schoolOffice"),
+                      child: const Text("userInfo.schoolOffice"),
                     ),
                   ),
                   Container(
@@ -101,7 +100,7 @@ class ViewCardPage extends StatelessWidget {
                           borderRadius: BorderRadius.circular(10.0),
                         ),
                       ),
-                      child: Text("userInfo.address"),
+                      child: const Text("userInfo.address"),
                     ),
                   ),
                   Container(
@@ -116,7 +115,7 @@ class ViewCardPage extends StatelessWidget {
                           borderRadius: BorderRadius.circular(10.0),
                         ),
                       ),
-                      child: Text("userInfo.contactNumber"),
+                      child: const Text("userInfo.contactNumber"),
                     ),
                   ),
                 ],

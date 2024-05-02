@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class HomePage extends StatefulWidget {
@@ -8,6 +9,8 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+
+  final user = FirebaseAuth.instance.currentUser!;
 
   @override
   Widget build(BuildContext context) {
@@ -48,7 +51,7 @@ class _HomePageState extends State<HomePage> {
                             Expanded(
                               child: TextField(
                                 decoration: InputDecoration(
-                                  hintText: 'Find Books',
+                                  hintText: 'Find Books${user.email!}',
                                   border: InputBorder.none,
                                   contentPadding:
                                       const EdgeInsets.symmetric(vertical: 16),

@@ -1,14 +1,22 @@
 import 'package:flutter/material.dart';
-import 'package:mcl_user/components/user_info.dart';
-
+import '../../utils/get_user.dart';
+import '../../utils/get_user_information.dart';
 import 'update_profile.dart';
 
-class PersonalInfoPage extends StatelessWidget {
-  // final UserInfo userInfo;
+class PersonalInfoPage extends StatefulWidget {
   final Function(Widget) navigateToPage;
-  // , required this.userInfo,
 
-  const PersonalInfoPage({super.key, required this.navigateToPage,});
+  const PersonalInfoPage({
+    super.key,
+    required this.navigateToPage,
+  });
+
+  @override
+  State<PersonalInfoPage> createState() => _PersonalInfoPageState();
+}
+
+class _PersonalInfoPageState extends State<PersonalInfoPage> {
+  final UserDataService userDataService = UserDataService();
 
   @override
   Widget build(BuildContext context) {
@@ -38,16 +46,21 @@ class PersonalInfoPage extends StatelessWidget {
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(
-                          "userInfo.name",
-                          style: const TextStyle(
-                              fontSize: 20,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.white),
+                        Row(
+                          children: [
+                            UserInfoWidget(
+                                getDocData: userDataService.getDocData,
+                                fieldName: 'first_name',
+                                color: Colors.white),
+                            UserInfoWidget(
+                                getDocData: userDataService.getDocData,
+                                fieldName: 'last_name',
+                                color: Colors.white),
+                          ],
                         ),
-                        Text("userInfo.username",
-                            style: const TextStyle(
-                                fontSize: 16, color: Colors.white)),
+                        const Text("userInfo.username",
+                            style:
+                                TextStyle(fontSize: 16, color: Colors.white)),
                       ],
                     ),
                   ],
@@ -75,7 +88,11 @@ class PersonalInfoPage extends StatelessWidget {
                           borderRadius: BorderRadius.circular(10.0),
                         ),
                       ),
-                      child: Text("userInfo.name"),
+                      child: UserInfoWidget(
+                        getDocData: userDataService.getDocData,
+                        fieldName: 'first_name',
+                        color: Colors.black,
+                      ),
                     ),
                   ),
                   Container(
@@ -90,7 +107,11 @@ class PersonalInfoPage extends StatelessWidget {
                           borderRadius: BorderRadius.circular(10.0),
                         ),
                       ),
-                      child: Text("userInfo.schoolOffice"),
+                      child: UserInfoWidget(
+                        getDocData: userDataService.getDocData,
+                        fieldName: 'occupation',
+                        color: Colors.black,
+                      ),
                     ),
                   ),
                   Container(
@@ -105,7 +126,11 @@ class PersonalInfoPage extends StatelessWidget {
                           borderRadius: BorderRadius.circular(10.0),
                         ),
                       ),
-                      child: Text("userInfo.address"),
+                      child: UserInfoWidget(
+                        getDocData: userDataService.getDocData,
+                        fieldName: 'address',
+                        color: Colors.black,
+                      ),
                     ),
                   ),
                   Container(
@@ -120,7 +145,11 @@ class PersonalInfoPage extends StatelessWidget {
                           borderRadius: BorderRadius.circular(10.0),
                         ),
                       ),
-                      child: Text("userInfo.contactNumber"),
+                      child: UserInfoWidget(
+                        getDocData: userDataService.getDocData,
+                        fieldName: 'phone_number',
+                        color: Colors.black,
+                      ),
                     ),
                   ),
                 ],
@@ -137,7 +166,8 @@ class PersonalInfoPage extends StatelessWidget {
                           const Color(0xFF013822)),
                     ),
                     onPressed: () {
-                      navigateToPage(UpdateProfilePage(navigateToPage: navigateToPage));
+                      widget.navigateToPage(UpdateProfilePage(
+                          navigateToPage: widget.navigateToPage));
                     },
                     child: const Text(
                       'Update Profile',
