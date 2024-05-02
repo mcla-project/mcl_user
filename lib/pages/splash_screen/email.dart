@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../components/base_layout.dart';
 import 'otp.dart';
 
 class EmailPage extends StatefulWidget {
@@ -64,12 +65,6 @@ class EmailPageState extends State<EmailPage> {
                       context,
                       MaterialPageRoute(builder: (context) => const OtpPage()),
                     ),
-                    // onPressed: () {
-                    //   Navigator.push(
-                    //     context,
-                    //     MaterialPageRoute(builder: (context) => const OtpPage()),
-                    //   );
-                    // },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors
                           .green.shade900, // Set the button color to green
@@ -78,8 +73,32 @@ class EmailPageState extends State<EmailPage> {
                             BorderRadius.circular(10), // Set the corner radius
                       ),
                     ),
+
                     child: const Text(
                       'Send Code',
+                      style: TextStyle(fontSize: 20, color: Colors.white),
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 30),
+                SizedBox(
+                  width: 350,
+                  child: ElevatedButton(
+                    onPressed: () => Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => const BaseLayout()),
+                    ),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors
+                          .green.shade900, // Set the button color to green
+                      shape: RoundedRectangleBorder(
+                        borderRadius:
+                            BorderRadius.circular(10), // Set the corner radius
+                      ),
+                    ),
+
+                    child: const Text(
+                      'Home',
                       style: TextStyle(fontSize: 20, color: Colors.white),
                     ),
                   ),

@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 class UserInfoWidget extends StatelessWidget {
   final Future<Map<String, dynamic>> Function() getDocData;
   final String fieldName;
-  final Color color; // Add a color parameter
+  final Color color;
 
   const UserInfoWidget({super.key, required this.getDocData, required this.fieldName, required this.color});
 
@@ -23,7 +23,7 @@ class UserInfoWidget extends StatelessWidget {
             return Text(
               '${snapshot.data?[fieldName]}',
               style: TextStyle(
-                color: color, // Use the color parameter
+                color: color,
               ),
             );
           }

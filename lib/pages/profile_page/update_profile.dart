@@ -1,14 +1,29 @@
 import 'package:flutter/material.dart';
-import './confirm_profile.dart';
-import 'package:mcl_user/components/user_info.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:mcl_user/components/base_layout.dart';
+import '../../utils/get_doc_id.dart';
+import '../../utils/get_user.dart';
+import '../../utils/get_user_information.dart';
 
-class UpdateProfilePage extends StatelessWidget {
+class UpdateProfilePage extends StatefulWidget {
   final Function(Widget) navigateToPage;
 
   const UpdateProfilePage({
     Key? key,
     required this.navigateToPage,
   }) : super(key: key);
+
+  @override
+  State<UpdateProfilePage> createState() => _UpdateProfilePageState();
+}
+
+class _UpdateProfilePageState extends State<UpdateProfilePage> {
+  final UserDataService userDataService = UserDataService();
+  final TextEditingController _firstnameController = TextEditingController();
+  final TextEditingController _lastnameController = TextEditingController();
+  final TextEditingController _occupationController = TextEditingController();
+  final TextEditingController _addressController = TextEditingController();
+  final TextEditingController _phoneController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -25,27 +40,32 @@ class UpdateProfilePage extends StatelessWidget {
                 color: const Color(0xFF013822),
                 borderRadius: BorderRadius.circular(10),
               ),
-              child: const Padding(
-                padding: EdgeInsets.all(16.0),
+              child: Padding(
+                padding: const EdgeInsets.all(16.0),
                 child: Row(
                   children: [
-                    CircleAvatar(
+                    const CircleAvatar(
                       radius: 40,
                       backgroundImage:
                           NetworkImage('https://via.placeholder.com/150'),
                     ),
-                    SizedBox(width: 20),
+                    const SizedBox(width: 20),
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(
-                          'Name',
-                          style: TextStyle(
-                              fontSize: 20,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.white),
+                        Row(
+                          children: [
+                            UserInfoWidget(
+                                getDocData: userDataService.getDocData,
+                                fieldName: 'first_name',
+                                color: Colors.white),
+                            UserInfoWidget(
+                                getDocData: userDataService.getDocData,
+                                fieldName: 'last_name',
+                                color: Colors.white),
+                          ],
                         ),
-                        Text('Username',
+                        const Text('Username',
                             style:
                                 TextStyle(fontSize: 16, color: Colors.white)),
                       ],
@@ -65,9 +85,10 @@ class UpdateProfilePage extends StatelessWidget {
                 children: <Widget>[
                   Container(
                     margin: const EdgeInsets.only(bottom: 10.0),
-                    child: TextField(
+                    child: TextFormField(
+                      controller: _firstnameController,
                       decoration: InputDecoration(
-                        labelText: 'Name',
+                        labelText: 'First Name',
                         fillColor: Colors.grey[200],
                         filled: true,
                         border: OutlineInputBorder(
@@ -78,7 +99,22 @@ class UpdateProfilePage extends StatelessWidget {
                   ),
                   Container(
                     margin: const EdgeInsets.only(bottom: 10.0),
-                    child: TextField(
+                    child: TextFormField(
+                      controller: _lastnameController,
+                      decoration: InputDecoration(
+                        labelText: 'Last Name',
+                        fillColor: Colors.grey[200],
+                        filled: true,
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10.0),
+                        ),
+                      ),
+                    ),
+                  ),
+                  Container(
+                    margin: const EdgeInsets.only(bottom: 10.0),
+                    child: TextFormField(
+                      controller: _occupationController,
                       decoration: InputDecoration(
                         labelText: 'School/Office',
                         fillColor: Colors.grey[200],
@@ -91,7 +127,8 @@ class UpdateProfilePage extends StatelessWidget {
                   ),
                   Container(
                     margin: const EdgeInsets.only(bottom: 10.0),
-                    child: TextField(
+                    child: TextFormField(
+                      controller: _addressController,
                       decoration: InputDecoration(
                         labelText: 'Address',
                         fillColor: Colors.grey[200],
@@ -104,7 +141,8 @@ class UpdateProfilePage extends StatelessWidget {
                   ),
                   Container(
                     margin: const EdgeInsets.only(bottom: 10.0),
-                    child: TextField(
+                    child: TextFormField(
+                      controller: _phoneController,
                       decoration: InputDecoration(
                         labelText: 'Contact Number',
                         fillColor: Colors.grey[200],
@@ -129,23 +167,9 @@ class UpdateProfilePage extends StatelessWidget {
                       backgroundColor: MaterialStateProperty.all<Color>(
                           const Color(0xFF013822)),
                     ),
-                    onPressed: () {
-                      Navigator.of(context).pushReplacement(MaterialPageRoute(
-                        builder: (_) =>
-                          ConfirmProfilePage(
-                            userInfo: UserInfo(
-                              name: 'Merlin',
-                              username: 'merlin123',
-                              schoolOffice: 'PLM School',
-                              address: '123 Main Street',
-                              contactNumber: '555-1234',
-                            ),
-                            navigateToPage: navigateToPage,
-                          ),
-                      ));
-                    },
+                    onPressed: updateUserProfile,
                     child: const Text(
-                      'Update Profile',
+                      'Save Changes',
                       style: TextStyle(color: Colors.white),
                     ),
                   ),
@@ -156,5 +180,33 @@ class UpdateProfilePage extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  void updateUserProfile() async {
+    final DocIDService docIDService = DocIDService();
+    try {
+      String? userID = await docIDService.getDocId();
+      await FirebaseFirestore.instance.collection('users').doc(userID).update({
+        'first_name': _firstnameController.text.trim(),
+        'last_name': _lastnameController.text.trim(),
+        'occupation': _occupationController.text.trim(),
+        'address': _addressController.text.trim(),
+        'phone_number': _phoneController.text.trim(),
+      }).then((_) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text("User is successfully signed in"),
+          ),
+        );
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => const BaseLayout()),
+        );
+      }).catchError((error) {
+        print('Failed to update profile: $error');
+      });
+    } catch (e) {
+      print(e);
+    }
   }
 }
