@@ -26,7 +26,7 @@ class OtpPageState extends State<OtpPage> {
                 width: 200,
                 height: 200,
                 child: Image.asset(
-                  'assets/liblogo.png',
+                  'images/mnlcitylib_logo.png',
                 ),
               ),
               const SizedBox(height: 5),

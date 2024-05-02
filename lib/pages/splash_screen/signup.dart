@@ -226,23 +226,42 @@ class SignUpScreenState extends State<SignUpScreen> {
 
   // Sign up user and store data in Firebase
   void _signUp() async {
-    if (passwordConfirmed()) {
+    if (!passwordConfirmed()) {
+      // You could use a dialog or a snackbar to alert the user here
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+        content: Text('Passwords do not match!'),
+        backgroundColor: Colors.red,
+      ));
+      return; // Exit the function if the passwords do not match
+    }
+
+    try {
+      // Attempt to create the user with email and password
       await FirebaseAuth.instance.createUserWithEmailAndPassword(
         email: _emailController.text.trim(),
         password: _passwordController.text.trim(),
       );
 
-      addUserDetails(
+      // On successful creation, add user details to Firestore
+      await addUserDetails(
         _firstnameController.text.trim(),
         _lastnameController.text.trim(),
         _emailController.text.trim(),
         _phoneController.text.trim(),
       );
 
+      // After successful registration, navigate to the EmailPage
       Navigator.push(
         context,
-        MaterialPageRoute(builder: (context) => EmailPage()),
+        MaterialPageRoute(builder: (context) => const EmailPage()),
       );
+    } catch (e) {
+      // Handle errors in case of a failure
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text('Failed to sign up: $e'),
+        backgroundColor: Colors.red,
+      ));
+      print('Failed to sign up: $e'); // For debugging, print the error
     }
   }
 
@@ -259,7 +278,6 @@ class SignUpScreenState extends State<SignUpScreen> {
   // Store user details in Firestore
   Future addUserDetails(String firstName, String lastName, String email,
       String phoneNumber) async {
-
     await FirebaseFirestore.instance.collection('users').add({
       'first_name': firstName,
       'last_name': lastName,
@@ -271,7 +289,6 @@ class SignUpScreenState extends State<SignUpScreen> {
       'occupation': 'Student',
       'sex': 'Female',
       'created_at': DateTime.now(),
-      
     });
   }
 
