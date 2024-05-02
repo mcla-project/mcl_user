@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import '../../components/base_layout.dart';
+import 'email.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({Key? key}) : super(key: key);
@@ -32,7 +33,10 @@ class LoginScreenState extends State<LoginScreen> {
             content: Text("User is successfully signed in"),
           ),
         );
-        Navigator.pushNamed(context, "/base_layout");
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => EmailPage()),
+        );
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
@@ -50,12 +54,12 @@ class LoginScreenState extends State<LoginScreen> {
     }
   }
 
-@override
-void dispose() {
-  _emailController.dispose();
-  _passwordController.dispose();
-  super.dispose();
-}
+  @override
+  void dispose() {
+    _emailController.dispose();
+    _passwordController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {

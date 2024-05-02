@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import '../../components/base_layout.dart';
+import 'email.dart';
 
 class SignUpScreen extends StatefulWidget {
   const SignUpScreen({Key? key}) : super(key: key);
@@ -238,7 +239,10 @@ class SignUpScreenState extends State<SignUpScreen> {
         _phoneController.text.trim(),
       );
 
-      navigateToBaseLayout(context);
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => EmailPage()),
+      );
     }
   }
 
