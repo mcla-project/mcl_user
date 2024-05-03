@@ -287,6 +287,7 @@ class SignUpScreenState extends State<SignUpScreen> {
       'library_card_number': '202103',
       'occupation': 'Student',
       'sex': 'Female',
+      'photo_url': 'https://via.placeholder.com/150',
       'created_at': DateTime.now(),
     });
   }

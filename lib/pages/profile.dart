@@ -1,12 +1,15 @@
 // import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:mcl_user/pages/profile_page/about_us.dart';
 import 'package:mcl_user/pages/profile_page/feedback.dart';
 import 'package:mcl_user/pages/profile_page/visits.dart';
 import 'package:mcl_user/pages/splash_screen/login.dart';
 import 'profile_page/personal_info.dart';
 import 'profile_page/view_card.dart';
+import '../utils/get_profile_photo.dart';
 import '../utils/get_user_information.dart';
 import '../utils/get_user.dart';
 
@@ -45,11 +48,10 @@ class _ProfilePageState extends State<ProfilePage> {
                 padding: const EdgeInsets.all(16.0),
                 child: Row(
                   children: [
-                    const CircleAvatar(
-                      radius: 40,
-                      backgroundImage:
-                          NetworkImage('https://via.placeholder.com/150'),
-                    ),
+                    UserInfoWidget(
+                        getDocData: userDataService.getDocData,
+                        fieldName: 'photo_url',
+                        color: Colors.white),
                     const SizedBox(width: 20),
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -66,11 +68,10 @@ class _ProfilePageState extends State<ProfilePage> {
                                 color: Colors.white),
                           ],
                         ),
-                        Text(
-                          user.email!,
-                          style: const TextStyle(
-                              fontSize: 16, color: Colors.white),
-                        ),
+                        UserInfoWidget(
+                            getDocData: userDataService.getDocData,
+                            fieldName: 'library_card_number',
+                            color: Colors.white),
                       ],
                     ),
                   ],
@@ -205,5 +206,18 @@ class _ProfilePageState extends State<ProfilePage> {
         ),
       ),
     );
+  }
+
+  Future<String> getUserProfileImageUrl(String userId) async {
+    try {
+      String imageUrl = await FirebaseStorage.instance
+          .ref(
+              'user_profiles/$userId/profile.jpg') // Assuming a standard path format
+          .getDownloadURL();
+      return imageUrl;
+    } catch (e) {
+      print("Failed to load user image: $e");
+      return 'https://via.placeholder.com/150'; // Fallback image URL
+    }
   }
 }
