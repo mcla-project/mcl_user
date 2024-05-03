@@ -37,11 +37,10 @@ class _PersonalInfoPageState extends State<PersonalInfoPage> {
                 padding: const EdgeInsets.all(16.0),
                 child: Row(
                   children: [
-                    const CircleAvatar(
-                      radius: 40,
-                      backgroundImage:
-                          NetworkImage('https://via.placeholder.com/150'),
-                    ),
+                    UserInfoWidget(
+                        getDocData: userDataService.getDocData,
+                        fieldName: 'photo_url',
+                        color: Colors.white),
                     const SizedBox(width: 20),
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -58,9 +57,10 @@ class _PersonalInfoPageState extends State<PersonalInfoPage> {
                                 color: Colors.white),
                           ],
                         ),
-                        const Text("userInfo.username",
-                            style:
-                                TextStyle(fontSize: 16, color: Colors.white)),
+                        UserInfoWidget(
+                            getDocData: userDataService.getDocData,
+                            fieldName: 'library_card_number',
+                            color: Colors.white),
                       ],
                     ),
                   ],
@@ -109,7 +109,45 @@ class _PersonalInfoPageState extends State<PersonalInfoPage> {
                       ),
                       child: UserInfoWidget(
                         getDocData: userDataService.getDocData,
+                        fieldName: 'last_name',
+                        color: Colors.black,
+                      ),
+                    ),
+                  ),
+                  Container(
+                    margin: const EdgeInsets.only(bottom: 10.0),
+                    decoration: BoxDecoration(
+                      color: Colors.grey[200],
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    child: InputDecorator(
+                      decoration: InputDecoration(
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10.0),
+                        ),
+                      ),
+                      child: UserInfoWidget(
+                        getDocData: userDataService.getDocData,
                         fieldName: 'occupation',
+                        color: Colors.black,
+                      ),
+                    ),
+                  ),
+                  Container(
+                    margin: const EdgeInsets.only(bottom: 10.0),
+                    decoration: BoxDecoration(
+                      color: Colors.grey[200],
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    child: InputDecorator(
+                      decoration: InputDecoration(
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10.0),
+                        ),
+                      ),
+                      child: UserInfoWidget(
+                        getDocData: userDataService.getDocData,
+                        fieldName: 'office',
                         color: Colors.black,
                       ),
                     ),
@@ -148,6 +186,44 @@ class _PersonalInfoPageState extends State<PersonalInfoPage> {
                       child: UserInfoWidget(
                         getDocData: userDataService.getDocData,
                         fieldName: 'phone_number',
+                        color: Colors.black,
+                      ),
+                    ),
+                  ),
+                  Container(
+                    margin: const EdgeInsets.only(bottom: 10.0),
+                    decoration: BoxDecoration(
+                      color: Colors.grey[200],
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    child: InputDecorator(
+                      decoration: InputDecoration(
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10.0),
+                        ),
+                      ),
+                      child: UserInfoWidget(
+                        getDocData: userDataService.getDocData,
+                        fieldName: 'birthday',
+                        color: Colors.black,
+                      ),
+                    ),
+                  ),
+                  Container(
+                    margin: const EdgeInsets.only(bottom: 10.0),
+                    decoration: BoxDecoration(
+                      color: Colors.grey[200],
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    child: InputDecorator(
+                      decoration: InputDecoration(
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10.0),
+                        ),
+                      ),
+                      child: UserInfoWidget(
+                        getDocData: userDataService.getDocData,
+                        fieldName: 'sex',
                         color: Colors.black,
                       ),
                     ),

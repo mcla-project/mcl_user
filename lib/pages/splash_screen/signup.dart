@@ -402,6 +402,7 @@ class SignUpScreenState extends State<SignUpScreen> {
       'occupation': occupation,
       'office': office,
       'sex': sex,
+      'photo_url': 'https://via.placeholder.com/150',
       'created_at': DateTime.now(),
     });
   }
