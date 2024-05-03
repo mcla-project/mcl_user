@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import '../../components/base_layout.dart';
 import 'email.dart';
@@ -24,6 +25,11 @@ class SignUpScreenState extends State<SignUpScreen> {
   final TextEditingController _lastnameController = TextEditingController();
   final TextEditingController _phoneController = TextEditingController();
   final TextEditingController _confirmpasswordController = TextEditingController();
+  final TextEditingController _addressController = TextEditingController();
+  final TextEditingController _occupationController = TextEditingController();
+  final TextEditingController _officeController = TextEditingController();
+  final TextEditingController _sexController = TextEditingController();
+  final TextEditingController _birthdateController = TextEditingController();
 
   @override
   void dispose() {
@@ -33,6 +39,11 @@ class SignUpScreenState extends State<SignUpScreen> {
     _lastnameController.dispose();
     _phoneController.dispose();
     _confirmpasswordController.dispose();
+    _addressController.dispose();
+    _occupationController.dispose();
+    _officeController.dispose();
+    _sexController.dispose();
+    _birthdateController.dispose();
     super.dispose();
   }
 
@@ -184,6 +195,77 @@ class SignUpScreenState extends State<SignUpScreen> {
                       ),
                     ),
                     const SizedBox(height: 10),
+                    SizedBox(
+                      width: 350, // Adjust the width as needed
+                      child: TextFormField(
+                        controller: _addressController,
+                        decoration: const InputDecoration(
+                          hintText: 'Address',
+                          border: OutlineInputBorder(),
+                          contentPadding: EdgeInsets.symmetric(
+                              vertical: 10.0, horizontal: 15.0),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 10),
+                    SizedBox(
+                      width: 350, // Adjust the width as needed
+                      child: TextFormField(
+                        controller: _occupationController,
+                        decoration: const InputDecoration(
+                          hintText: 'Occupation',
+                          border: OutlineInputBorder(),
+                          contentPadding: EdgeInsets.symmetric(
+                              vertical: 10.0, horizontal: 15.0),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 10),
+                    SizedBox(
+                      width: 350, // Adjust the width as needed
+                      child: TextFormField(
+                        controller: _officeController,
+                        decoration: const InputDecoration(
+                          hintText: 'Office/School',
+                          border: OutlineInputBorder(),
+                          contentPadding: EdgeInsets.symmetric(
+                              vertical: 10.0, horizontal: 15.0),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 10),
+                    SizedBox(
+                      width: 350, // Adjust the width as needed
+                      child: TextFormField(
+                        controller: _sexController,
+                        decoration: const InputDecoration(
+                          hintText: 'Sex',
+                          border: OutlineInputBorder(),
+                          contentPadding: EdgeInsets.symmetric(
+                              vertical: 10.0, horizontal: 15.0),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 10),
+                    SizedBox(
+                      width: 350, // Adjust the width as needed
+                      child: TextFormField(
+                        controller: _birthdateController,
+                        decoration: const InputDecoration(
+                          hintText: 'Birthday (YYYY-MM-DD)',
+                          border: OutlineInputBorder(),
+                          contentPadding: EdgeInsets.symmetric(vertical: 10.0, horizontal: 15.0),
+                        ),
+                        keyboardType: TextInputType.datetime, // Set keyboard type to handle dates
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Please enter your birthday';
+                          }
+                          return null;
+                        },
+                      ),
+                    ),
+                    const SizedBox(height: 10),
                     Row(
                       children: [
                         Checkbox(
@@ -274,6 +356,11 @@ class SignUpScreenState extends State<SignUpScreen> {
         _lastnameController.text.trim(),
         _emailController.text.trim(),
         _phoneController.text.trim(),
+        _addressController.text.trim(),
+        _occupationController.text.trim(),
+        _officeController.text.trim(),
+        _sexController.text.trim(),
+        _birthdateController.text.trim(),
       );
 
       // After successful registration, navigate to the EmailPage
@@ -303,17 +390,18 @@ class SignUpScreenState extends State<SignUpScreen> {
 
   // Store user details in Firestore
   Future addUserDetails(String firstName, String lastName, String email,
-      String phoneNumber) async {
+      String phoneNumber, String address, String occupation, String sex, String birthdate, String office) async {
     await FirebaseFirestore.instance.collection('users').add({
       'first_name': firstName,
       'last_name': lastName,
       'email': email,
       'phone_number': phoneNumber,
-      'address': 'Islang Pantropiko 000',
+      'address': address,
       'birthday': Timestamp.fromDate(DateTime(2003, 12, 31)),
       'library_card_number': '202103',
-      'occupation': 'Student',
-      'sex': 'Female',
+      'occupation': occupation,
+      'office': office,
+      'sex': sex,
       'created_at': DateTime.now(),
     });
   }
