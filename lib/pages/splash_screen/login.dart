@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import '../../components/base_layout.dart';
@@ -139,33 +140,51 @@ class LoginScreenState extends State<LoginScreen> {
                 ),
                 obscureText: _obscureText,
               ),
-              const SizedBox(height: 20),
-              // Login button
-              SizedBox(
-                width: double.infinity,
+              const SizedBox(height: 10),
+              Center(
                 child: GestureDetector(
                   onTap: _signIn,
-                  child: Container(
-                    padding: const EdgeInsets.all(20),
-                    decoration: BoxDecoration(
-                      color: Colors.green.shade900,
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    child: const Text(
-                      'Log In',
-                      style: TextStyle(fontSize: 20, color: Colors.white),
+                  child: SizedBox(
+                    width: 350,
+                    child: ElevatedButton(
+                      onPressed: _signIn,
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.green.shade900,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                      ),
+                      child: const Padding(
+                        padding: EdgeInsets.all(10),
+                        child: Text(
+                          'Log In',
+                          style: TextStyle(fontSize: 20, color: Colors.white),
+                        ),
+                      ),
                     ),
                   ),
                 ),
               ),
               const SizedBox(height: 10), // Add some space
-              GestureDetector(
-                onTap: _navigateToSignUpScreen, // Navigate to SignUpScreen
-                child: Text(
-                  'Not a member? Sign Up',
-                  style: TextStyle(
-                    color: Colors.blue,
-                    decoration: TextDecoration.underline,
+              Center(
+                child: GestureDetector(
+                  onTap: _navigateToSignUpScreen, // Navigate to SignUpScreen
+                  child: RichText(
+                    text: const TextSpan(
+                        text: 'Not a member? ',
+                        style: TextStyle(
+                          color: Colors.black,
+                        ),
+                        children: <TextSpan>[
+                          TextSpan(
+                              text: 'Sign Up',
+                              style: TextStyle(
+                                color: Colors.blue,
+                                fontWeight: FontWeight.bold,
+                              )
+                          )
+                        ]
+                    ),
                   ),
                 ),
               ),

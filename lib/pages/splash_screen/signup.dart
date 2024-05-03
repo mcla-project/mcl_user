@@ -224,11 +224,21 @@ class SignUpScreenState extends State<SignUpScreen> {
                           MaterialPageRoute(builder: (context) => const LoginScreen()),
                         );
                       },
-                      child: const Text(
-                        'I am a member! Login now',
-                        style: TextStyle(
-                          decoration: TextDecoration.underline,
-                          color: Colors.blue,
+                      child: RichText(
+                        text: const TextSpan(
+                          text: 'I am a member! ',
+                          style: TextStyle(
+                            color: Colors.black,
+                          ),
+                          children: <TextSpan>[
+                            TextSpan(
+                              text: 'Login',
+                              style: TextStyle(
+                                color: Colors.blue,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ],
                         ),
                       ),
                     ),
