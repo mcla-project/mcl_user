@@ -22,8 +22,7 @@ class SignUpScreenState extends State<SignUpScreen> {
   final TextEditingController _firstnameController = TextEditingController();
   final TextEditingController _lastnameController = TextEditingController();
   final TextEditingController _phoneController = TextEditingController();
-  final TextEditingController _confirmpasswordController =
-      TextEditingController();
+  final TextEditingController _confirmpasswordController = TextEditingController();
 
   @override
   void dispose() {

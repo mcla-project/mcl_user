@@ -1,18 +1,19 @@
-// user_data_service.dart
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
-class UserDataService {
+class DocIDService {
   final user = FirebaseAuth.instance.currentUser!;
-  Future<Map<String, dynamic>> getDocData() async {
-    Map<String, dynamic> userData = {};
+
+  Future<String> getDocId() async {
+    String docId = '';
     await FirebaseFirestore.instance.collection('users').get().then((snapshot) {
       for (var element in snapshot.docs) {
         if (element['email'] == user.email) {
-          userData = element.data();
+          docId = element.id;
+          break;
         }
       }
     });
-    return userData;
+    return docId;
   }
 }
