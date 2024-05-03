@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import '../../components/base_layout.dart';
 import 'email.dart';
+import 'login.dart';
 
 class SignUpScreen extends StatefulWidget {
   const SignUpScreen({Key? key}) : super(key: key);
@@ -170,7 +171,7 @@ class SignUpScreenState extends State<SignUpScreen> {
                             onTap: () {
                               setState(() {
                                 _obscureTextConfirmPassword =
-                                    !_obscureTextConfirmPassword;
+                                !_obscureTextConfirmPassword;
                               });
                             },
                             child: Icon(
@@ -214,7 +215,23 @@ class SignUpScreenState extends State<SignUpScreen> {
                           style: TextStyle(fontSize: 20, color: Colors.white),
                         ),
                       ),
-                    )
+                    ),
+                    const SizedBox(height: 10),
+                    GestureDetector(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => const LoginScreen()),
+                        );
+                      },
+                      child: const Text(
+                        'I am a member! Login now',
+                        style: TextStyle(
+                          decoration: TextDecoration.underline,
+                          color: Colors.blue,
+                        ),
+                      ),
+                    ),
                   ],
                 ),
               ),

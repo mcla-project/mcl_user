@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import '../../components/base_layout.dart';
 import 'email.dart';
+import 'signup.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({Key? key}) : super(key: key);
@@ -54,6 +55,13 @@ class LoginScreenState extends State<LoginScreen> {
     }
   }
 
+  void _navigateToSignUpScreen() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => SignUpScreen()), // Navigate to SignUpScreen
+    );
+  }
+
   @override
   void dispose() {
     _emailController.dispose();
@@ -64,96 +72,108 @@ class LoginScreenState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     return PopScope(
-        canPop: true,
-        onPopInvoked: (bool didPop) async {},
-        child: Scaffold(
-          appBar: AppBar(
-            leading: IconButton(
-              icon: const Icon(Icons.arrow_back),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
-            title: const Text('Login'),
+      canPop: true,
+      onPopInvoked: (bool didPop) async {},
+      child: Scaffold(
+        appBar: AppBar(
+          leading: IconButton(
+            icon: const Icon(Icons.arrow_back),
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
           ),
-          body: SingleChildScrollView(
-            padding: const EdgeInsets.all(20.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Center(
-                      child: Image.asset(
-                        'images/mnlcitylib_logo.png',
-                        width: 200,
-                        height: 200,
-                      ),
-                    ),
-                    const SizedBox(height: 20),
-                    const Text(
-                      'WELCOME BACK',
-                      style: TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 20),
-                // Email field
-                TextFormField(
-                  controller: _emailController,
-                  decoration: const InputDecoration(
-                    hintText: 'Email',
-                    border: OutlineInputBorder(),
-                  ),
-                ),
-                const SizedBox(height: 20),
-                // Password field
-                TextFormField(
-                  controller: _passwordController,
-                  decoration: InputDecoration(
-                    hintText: 'Password',
-                    border: const OutlineInputBorder(),
-                    suffixIcon: IconButton(
-                      icon: Icon(
-                        _obscureText ? Icons.visibility : Icons.visibility_off,
-                      ),
-                      onPressed: () {
-                        setState(() {
-                          _obscureText = !_obscureText;
-                        });
-                      },
+          title: const Text('Login'),
+        ),
+        body: SingleChildScrollView(
+          padding: const EdgeInsets.all(20.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Center(
+                    child: Image.asset(
+                      'images/mnlcitylib_logo.png',
+                      width: 200,
+                      height: 200,
                     ),
                   ),
-                  obscureText: _obscureText,
+                  const SizedBox(height: 20),
+                  const Text(
+                    'WELCOME BACK',
+                    style: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 20),
+              // Email field
+              TextFormField(
+                controller: _emailController,
+                decoration: const InputDecoration(
+                  hintText: 'Email',
+                  border: OutlineInputBorder(),
                 ),
-                const SizedBox(height: 20),
-                // Login button
-                SizedBox(
-                  width: double.infinity,
-                  child: GestureDetector(
-                    onTap: _signIn,
-                    child: Container(
-                      padding: const EdgeInsets.all(20),
-                      decoration: BoxDecoration(
-                        color: Colors.green.shade900,
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      child: const Text(
-                        'Log In',
-                        style: TextStyle(fontSize: 20, color: Colors.white),
-                      ),
+              ),
+              const SizedBox(height: 20),
+              // Password field
+              TextFormField(
+                controller: _passwordController,
+                decoration: InputDecoration(
+                  hintText: 'Password',
+                  border: const OutlineInputBorder(),
+                  suffixIcon: IconButton(
+                    icon: Icon(
+                      _obscureText ? Icons.visibility : Icons.visibility_off,
+                    ),
+                    onPressed: () {
+                      setState(() {
+                        _obscureText = !_obscureText;
+                      });
+                    },
+                  ),
+                ),
+                obscureText: _obscureText,
+              ),
+              const SizedBox(height: 20),
+              // Login button
+              SizedBox(
+                width: double.infinity,
+                child: GestureDetector(
+                  onTap: _signIn,
+                  child: Container(
+                    padding: const EdgeInsets.all(20),
+                    decoration: BoxDecoration(
+                      color: Colors.green.shade900,
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    child: const Text(
+                      'Log In',
+                      style: TextStyle(fontSize: 20, color: Colors.white),
                     ),
                   ),
                 ),
-              ],
-            ),
+              ),
+              const SizedBox(height: 10), // Add some space
+              GestureDetector(
+                onTap: _navigateToSignUpScreen, // Navigate to SignUpScreen
+                child: Text(
+                  'Not a member? Sign Up',
+                  style: TextStyle(
+                    color: Colors.blue,
+                    decoration: TextDecoration.underline,
+                  ),
+                ),
+              ),
+            ],
           ),
-        ));
+        ),
+      ),
+    );
   }
 }
 
