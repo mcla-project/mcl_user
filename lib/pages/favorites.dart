@@ -13,9 +13,9 @@ class FavoritesPage extends StatefulWidget {
 class _FavoritesPageState extends State<FavoritesPage> {
   final DocIDService docIDService = DocIDService();
   List<Map<String, dynamic>> favoriteBooks = [];
-  Set<String> bookmarkedIds = Set();
+  Set<String> bookmarkedIds = {};
   bool isLoading = true;
-  Map<String, dynamic>? userData; // Declare userData at the class level
+  Map<String, dynamic>? userData;
 
   @override
   void initState() {
@@ -24,6 +24,8 @@ class _FavoritesPageState extends State<FavoritesPage> {
   }
 
   Future<void> fetchFavoriteBooks() async {
+    if (!mounted) return;
+
     setState(() {
       isLoading = true;
     });
@@ -78,10 +80,12 @@ class _FavoritesPageState extends State<FavoritesPage> {
       }
     }
 
-    setState(() {
-      favoriteBooks = booksWithAuthors;
-      isLoading = false;
-    });
+    if (mounted) {
+      setState(() {
+        favoriteBooks = booksWithAuthors;
+        isLoading = false;
+      });
+    }
   }
 
   @override
@@ -101,7 +105,7 @@ class _FavoritesPageState extends State<FavoritesPage> {
                     child: SizedBox(
                       width: 265,
                       child: Text(
-                        'RECENTLY VIEWED',
+                        'FAVORITE READS',
                         textAlign: TextAlign.center,
                         style: TextStyle(
                           color: Colors.black,
