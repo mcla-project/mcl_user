@@ -12,7 +12,9 @@ class FavoritesPage extends StatefulWidget {
 class _FavoritesPageState extends State<FavoritesPage> {
   final DocIDService docIDService = DocIDService();
   List<Map<String, dynamic>> favoriteBooks = [];
+  Set<String> bookmarkedIds = Set();
   bool isLoading = true;
+  Map<String, dynamic>? userData; // Declare userData at the class level
 
   @override
   void initState() {
@@ -33,10 +35,15 @@ class _FavoritesPageState extends State<FavoritesPage> {
       return;
     }
 
-    DocumentSnapshot userDoc =
-        await FirebaseFirestore.instance.collection('users').doc(docId).get();
+    DocumentSnapshot userDoc = await FirebaseFirestore.instance.collection('users').doc(docId).get();
     Map<String, dynamic>? userData = userDoc.data() as Map<String, dynamic>?;
     List<dynamic> bookIds = userData?['favorites'] ?? [];
+
+    if (userData != null && userData.containsKey('favorites')) {
+      bookmarkedIds = Set.from(bookIds);
+    }
+    // List<dynamic> bookIds = userData?['favorites'] ?? [];
+    // bookmarkedIds = Set.from(bookIds); // Populate bookmarkedIds
 
     List<Map<String, dynamic>> booksWithAuthors = [];
     for (var bookId in bookIds) {
@@ -109,16 +116,43 @@ class _FavoritesPageState extends State<FavoritesPage> {
                 }
                 // Use the fetched book data directly
                 Map<String, dynamic> bookData = favoriteBooks[index - 1];
+                bool isBookmarked =
+                    userData?['favorites'].contains(bookData['id']) ?? false;
                 return bookItem(
                   title: bookData['title'] ?? 'No title',
                   authors: bookData['authors'].join(", ") ?? 'No authors',
                   summary: bookData['synopsis'] ?? 'No summary available',
                   imagePath: bookData['book_cover'] ??
                       'https://via.placeholder.com/150',
+                  isBookmarked: isBookmarked,
+                  bookId: bookData['id'],
                 );
               },
             ),
     );
+  }
+
+  void toggleBookmark(String bookId) {
+    setState(() {
+      if (bookmarkedIds.contains(bookId)) {
+        bookmarkedIds.remove(bookId);
+      } else {
+        bookmarkedIds.add(bookId);
+      }
+      // Update the Firestore document asynchronously
+      updateFavoritesInFirestore(bookId);
+    });
+  }
+
+  Future<void> updateFavoritesInFirestore(String bookId) async {
+    String? docId = await docIDService.getDocId();
+    if (docId != null) {
+      List<String> updatedFavorites = bookmarkedIds.toList();
+      await FirebaseFirestore.instance
+          .collection('users')
+          .doc(docId)
+          .update({'favorites': updatedFavorites});
+    }
   }
 
   Widget bookItem({
@@ -126,7 +160,10 @@ class _FavoritesPageState extends State<FavoritesPage> {
     required String authors,
     required String summary,
     required String imagePath,
+    required bool isBookmarked,
+    required String bookId,
   }) {
+    bool isBookmarked = bookmarkedIds.contains(bookId);
     return Column(
       children: [
         const SizedBox(height: 20),
@@ -148,18 +185,28 @@ class _FavoritesPageState extends State<FavoritesPage> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(title,
-                      style: const TextStyle(
-                          fontSize: 16, fontWeight: FontWeight.w500)),
+                  Text(
+                    title,
+                    style: const TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
                   const SizedBox(height: 2),
-                  Text(authors, // Displaying multiple authors
-                      style: const TextStyle(
-                          fontSize: 12, fontWeight: FontWeight.w400)),
+                  Text(
+                    authors,
+                    style: const TextStyle(
+                      fontSize: 12,
+                      fontWeight: FontWeight.w400,
+                    ),
+                  ),
                   const SizedBox(height: 5),
                   Text(
                     summary,
                     style: const TextStyle(
-                        fontSize: 10, fontWeight: FontWeight.w500),
+                      fontSize: 10,
+                      fontWeight: FontWeight.w500,
+                    ),
                     overflow: TextOverflow.ellipsis,
                     maxLines: 4,
                   ),
@@ -167,10 +214,10 @@ class _FavoritesPageState extends State<FavoritesPage> {
               ),
             ),
             IconButton(
-              icon: const Icon(Icons.bookmark, color: Colors.amber),
-              onPressed: () {
-                // Handle bookmark button press here
-              },
+              icon: Icon(
+                isBookmarked ? Icons.bookmark : Icons.bookmark_border, color: Colors.yellowAccent[700],
+              ),
+              onPressed: () =>  toggleBookmark(bookId),
             ),
           ],
         ),
