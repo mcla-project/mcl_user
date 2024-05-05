@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:mcl_user/components/book.dart';
 import '../utils/get_doc_id.dart';
 
 class FavoritesPage extends StatefulWidget {
@@ -35,15 +36,14 @@ class _FavoritesPageState extends State<FavoritesPage> {
       return;
     }
 
-    DocumentSnapshot userDoc = await FirebaseFirestore.instance.collection('users').doc(docId).get();
+    DocumentSnapshot userDoc =
+        await FirebaseFirestore.instance.collection('users').doc(docId).get();
     Map<String, dynamic>? userData = userDoc.data() as Map<String, dynamic>?;
     List<dynamic> bookIds = userData?['favorites'] ?? [];
 
     if (userData != null && userData.containsKey('favorites')) {
       bookmarkedIds = Set.from(bookIds);
     }
-    // List<dynamic> bookIds = userData?['favorites'] ?? [];
-    // bookmarkedIds = Set.from(bookIds); // Populate bookmarkedIds
 
     List<Map<String, dynamic>> booksWithAuthors = [];
     for (var bookId in bookIds) {
@@ -97,7 +97,6 @@ class _FavoritesPageState extends State<FavoritesPage> {
               itemCount: favoriteBooks.length + 1,
               itemBuilder: (context, index) {
                 if (index == 0) {
-                  // Header item
                   return const Center(
                     child: SizedBox(
                       width: 265,
@@ -164,64 +163,75 @@ class _FavoritesPageState extends State<FavoritesPage> {
     required String bookId,
   }) {
     bool isBookmarked = bookmarkedIds.contains(bookId);
-    return Column(
-      children: [
-        const SizedBox(height: 20),
-        Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Container(
-              width: 80,
-              height: 100,
-              decoration: BoxDecoration(
-                image: DecorationImage(
-                  image: NetworkImage(imagePath),
-                  fit: BoxFit.fill,
+    return GestureDetector(
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => const BookScreen(),
+          ),
+        );
+      },
+      child: Column(
+        children: [
+          const SizedBox(height: 20),
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Container(
+                width: 80,
+                height: 100,
+                decoration: BoxDecoration(
+                  image: DecorationImage(
+                    image: NetworkImage(imagePath),
+                    fit: BoxFit.fill,
+                  ),
                 ),
               ),
-            ),
-            const SizedBox(width: 20),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    title,
-                    style: const TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w500,
+              const SizedBox(width: 20),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      title,
+                      style: const TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w500,
+                      ),
                     ),
-                  ),
-                  const SizedBox(height: 2),
-                  Text(
-                    authors,
-                    style: const TextStyle(
-                      fontSize: 12,
-                      fontWeight: FontWeight.w400,
+                    const SizedBox(height: 2),
+                    Text(
+                      authors,
+                      style: const TextStyle(
+                        fontSize: 12,
+                        fontWeight: FontWeight.w400,
+                      ),
                     ),
-                  ),
-                  const SizedBox(height: 5),
-                  Text(
-                    summary,
-                    style: const TextStyle(
-                      fontSize: 10,
-                      fontWeight: FontWeight.w500,
+                    const SizedBox(height: 5),
+                    Text(
+                      summary,
+                      style: const TextStyle(
+                        fontSize: 10,
+                        fontWeight: FontWeight.w500,
+                      ),
+                      overflow: TextOverflow.ellipsis,
+                      maxLines: 4,
                     ),
-                    overflow: TextOverflow.ellipsis,
-                    maxLines: 4,
-                  ),
-                ],
+                  ],
+                ),
               ),
-            ),
-            IconButton(
-              icon: Icon(
-                isBookmarked ? Icons.bookmark : Icons.bookmark_border, color: Colors.yellowAccent[700],
+              IconButton(
+                icon: Icon(
+                  isBookmarked ? Icons.bookmark : Icons.bookmark_border,
+                  color: Colors.yellowAccent[700],
+                ),
+                onPressed: () => toggleBookmark(bookId),
               ),
-              onPressed: () =>  toggleBookmark(bookId),
-            ),
-          ],
-        ),
-      ],
+            ],
+          ),
+        ],
+      ),
     );
   }
 }
