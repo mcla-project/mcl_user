@@ -1,6 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import '../../components/base_layout.dart';
 import 'email.dart';
@@ -24,7 +23,8 @@ class SignUpScreenState extends State<SignUpScreen> {
   final TextEditingController _firstnameController = TextEditingController();
   final TextEditingController _lastnameController = TextEditingController();
   final TextEditingController _phoneController = TextEditingController();
-  final TextEditingController _confirmpasswordController = TextEditingController();
+  final TextEditingController _confirmpasswordController =
+      TextEditingController();
   final TextEditingController _addressController = TextEditingController();
   final TextEditingController _occupationController = TextEditingController();
   final TextEditingController _officeController = TextEditingController();
@@ -182,7 +182,7 @@ class SignUpScreenState extends State<SignUpScreen> {
                             onTap: () {
                               setState(() {
                                 _obscureTextConfirmPassword =
-                                !_obscureTextConfirmPassword;
+                                    !_obscureTextConfirmPassword;
                               });
                             },
                             child: Icon(
@@ -254,9 +254,11 @@ class SignUpScreenState extends State<SignUpScreen> {
                         decoration: const InputDecoration(
                           hintText: 'Birthday (YYYY-MM-DD)',
                           border: OutlineInputBorder(),
-                          contentPadding: EdgeInsets.symmetric(vertical: 10.0, horizontal: 15.0),
+                          contentPadding: EdgeInsets.symmetric(
+                              vertical: 10.0, horizontal: 15.0),
                         ),
-                        keyboardType: TextInputType.datetime, // Set keyboard type to handle dates
+                        keyboardType: TextInputType
+                            .datetime, // Set keyboard type to handle dates
                         validator: (value) {
                           if (value == null || value.isEmpty) {
                             return 'Please enter your birthday';
@@ -303,7 +305,8 @@ class SignUpScreenState extends State<SignUpScreen> {
                       onTap: () {
                         Navigator.push(
                           context,
-                          MaterialPageRoute(builder: (context) => const LoginScreen()),
+                          MaterialPageRoute(
+                              builder: (context) => const LoginScreen()),
                         );
                       },
                       child: RichText(
@@ -364,17 +367,21 @@ class SignUpScreenState extends State<SignUpScreen> {
       );
 
       // After successful registration, navigate to the EmailPage
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => const EmailPage()),
-      );
+      if (mounted) {
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => const EmailPage()),
+        );
+      }
     } catch (e) {
       // Handle errors in case of a failure
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        content: Text('Failed to sign up: $e'),
-        backgroundColor: Colors.red,
-      ));
-      print('Failed to sign up: $e'); // For debugging, print the error
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: Text('Failed to sign up: $e'),
+          backgroundColor: Colors.red,
+        ));
+        print('Failed to sign up: $e'); // For debugging, print the error
+      }
     }
   }
 
@@ -389,8 +396,16 @@ class SignUpScreenState extends State<SignUpScreen> {
   }
 
   // Store user details in Firestore
-  Future addUserDetails(String firstName, String lastName, String email,
-      String phoneNumber, String address, String occupation, String sex, String birthdate, String office) async {
+  Future addUserDetails(
+      String firstName,
+      String lastName,
+      String email,
+      String phoneNumber,
+      String address,
+      String occupation,
+      String sex,
+      String birthdate,
+      String office) async {
     await FirebaseFirestore.instance.collection('users').add({
       'first_name': firstName,
       'last_name': lastName,

@@ -29,9 +29,6 @@ class _UpdateProfilePageState extends State<UpdateProfilePage> {
   final TextEditingController _addressController = TextEditingController();
   final TextEditingController _phoneController = TextEditingController();
 
-  CollectionReference _reference =
-      FirebaseFirestore.instance.collection('users');
-
   GlobalKey<FormState> key = GlobalKey();
   String imageUrl = '';
 
@@ -82,10 +79,11 @@ class _UpdateProfilePageState extends State<UpdateProfilePage> {
                               await referenceImageToUpload.getDownloadURL();
 
                           if (imageUrl.isEmpty) {
-                            ScaffoldMessenger.of(context).showSnackBar(
-                                const SnackBar(
-                                    content: Text('Please upload an image')));
-
+                            if (mounted) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(
+                                      content: Text('Please upload an image')));
+                            }
                             return;
                           }
                         } catch (error) {

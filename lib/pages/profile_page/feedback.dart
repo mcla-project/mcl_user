@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import '../../utils/get_user.dart';
+import '../../utils/get_user_information.dart';
 
-class FeedbackPage extends StatelessWidget {
-  // final UserInfo userInfo;
+class FeedbackPage extends StatefulWidget {
   final Function(Widget) navigateToPage;
 
   const FeedbackPage({
@@ -10,7 +12,36 @@ class FeedbackPage extends StatelessWidget {
     required this.navigateToPage,
   });
 
-  //  required this.userInfo,
+  @override
+  State<FeedbackPage> createState() => _FeedbackPageState();
+}
+
+class _FeedbackPageState extends State<FeedbackPage> {
+  double _currentRating = 3.0;
+  final UserDataService userDataService = UserDataService();
+  final TextEditingController feedbackController = TextEditingController();
+
+  // Function to save feedback to Firestore
+  Future<void> saveFeedbackToFirestore(String feedback, double rating) async {
+    FirebaseFirestore firestore = FirebaseFirestore.instance;
+    try {
+      await firestore.collection('feedbacks').add({
+        'feedback': feedback,
+        'rating': rating,
+        'timestamp': FieldValue.serverTimestamp(),
+      });
+      feedbackController.clear();
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Feedback submitted successfully!')));
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Feedback submitted failed!')));
+      }
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -27,29 +58,34 @@ class FeedbackPage extends StatelessWidget {
                 color: const Color(0xFF013822),
                 borderRadius: BorderRadius.circular(10),
               ),
-              child: const Padding(
-                padding: EdgeInsets.all(16.0),
+              child: Padding(
+                padding: const EdgeInsets.all(16.0),
                 child: Row(
                   children: [
-                    CircleAvatar(
-                      radius: 40,
-                      backgroundImage:
-                          NetworkImage('https://via.placeholder.com/150'),
-                    ),
-                    SizedBox(width: 20),
+                    UserInfoWidget(
+                        getDocData: userDataService.getDocData,
+                        fieldName: 'photo_url',
+                        color: Colors.white),
+                    const SizedBox(width: 20),
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(
-                          'userInfo.name',
-                          style: TextStyle(
-                              fontSize: 20,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.white),
+                        Row(
+                          children: [
+                            UserInfoWidget(
+                                getDocData: userDataService.getDocData,
+                                fieldName: 'first_name',
+                                color: Colors.white),
+                            UserInfoWidget(
+                                getDocData: userDataService.getDocData,
+                                fieldName: 'last_name',
+                                color: Colors.white),
+                          ],
                         ),
-                        Text('userInfo.username',
-                            style: TextStyle(
-                                fontSize: 16, color: Colors.white)),
+                        UserInfoWidget(
+                            getDocData: userDataService.getDocData,
+                            fieldName: 'library_card_number',
+                            color: Colors.white),
                       ],
                     ),
                   ],
@@ -70,8 +106,7 @@ class FeedbackPage extends StatelessWidget {
                     child: const Row(
                       children: [
                         Padding(
-                          padding: EdgeInsets.only(
-                              left: 20), // Add space to the left of the icon
+                          padding: EdgeInsets.only(left: 20),
                           child: Icon(
                             IconData(0xf631, fontFamily: 'MaterialIcons'),
                             size: 35,
@@ -137,21 +172,56 @@ class FeedbackPage extends StatelessWidget {
                               color: Colors.amber,
                             ),
                             onRatingUpdate: (rating) {
-                              print(rating);
+                              _currentRating = rating;
                             },
                           ),
                         ),
-                        const Padding(
-                          padding: EdgeInsets.symmetric(
+                        Padding(
+                          padding: const EdgeInsets.symmetric(
                               horizontal: 1.0, vertical: 8.0),
                           child: TextField(
-                            decoration: InputDecoration(
+                            controller: feedbackController,
+                            decoration: const InputDecoration(
                               border: OutlineInputBorder(),
                               hintText: 'Enter your feedback here..',
                             ),
-                            maxLines: 8, // Allows multiple lines of input
+                            maxLines: 8,
                           ),
                         ),
+                        Container(
+                          margin: const EdgeInsets.all(10.0),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            children: [
+                              ElevatedButton(
+                                style: ButtonStyle(
+                                  backgroundColor:
+                                      MaterialStateProperty.all<Color>(
+                                          const Color(0xFF013822)),
+                                ),
+                                onPressed: () {
+                                  if (feedbackController.text.isEmpty) {
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      const SnackBar(
+                                        content:
+                                            Text('Please enter your feedback!'),
+                                      ),
+                                    );
+                                    return;
+                                  } else {
+                                    saveFeedbackToFirestore(
+                                        feedbackController.text,
+                                        _currentRating);
+                                  }
+                                },
+                                child: const Text(
+                                  'Send Feedback',
+                                  style: TextStyle(color: Colors.white),
+                                ),
+                              ),
+                            ],
+                          ),
+                        )
                       ],
                     ),
                   ),

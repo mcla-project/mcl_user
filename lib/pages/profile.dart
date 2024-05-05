@@ -1,7 +1,6 @@
 // import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:mcl_user/pages/profile_page/about_us.dart';
 import 'package:mcl_user/pages/profile_page/feedback.dart';
@@ -9,7 +8,6 @@ import 'package:mcl_user/pages/profile_page/visits.dart';
 import 'package:mcl_user/pages/splash_screen/login.dart';
 import 'profile_page/personal_info.dart';
 import 'profile_page/view_card.dart';
-import '../utils/get_profile_photo.dart';
 import '../utils/get_user_information.dart';
 import '../utils/get_user.dart';
 

@@ -11,7 +11,6 @@ class RecentsPage extends StatefulWidget {
 }
 
 class _RecentsPageState extends State<RecentsPage> {
-
   final DocIDService docIDService = DocIDService();
   List<Map<String, dynamic>> recentBooks = [];
   Set<String> bookmarkedIds = {};
@@ -25,6 +24,7 @@ class _RecentsPageState extends State<RecentsPage> {
   }
 
   Future<void> fetchRecentBooks() async {
+    if (!mounted) return;
     setState(() {
       isLoading = true;
     });
@@ -78,14 +78,13 @@ class _RecentsPageState extends State<RecentsPage> {
         });
       }
     }
-
-    setState(() {
-      recentBooks = booksWithAuthors;
-      isLoading = false;
-    });
+    if (mounted) {
+      setState(() {
+        recentBooks = booksWithAuthors;
+        isLoading = false;
+      });
+    }
   }
-
-
 
   @override
   Widget build(BuildContext context) {
@@ -93,7 +92,7 @@ class _RecentsPageState extends State<RecentsPage> {
       appBar: AppBar(
         title: const Text('Recents'),
       ),
-         body: isLoading
+      body: isLoading
           ? const Center(child: CircularProgressIndicator())
           : ListView.builder(
               padding: const EdgeInsets.all(20),
