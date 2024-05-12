@@ -1,5 +1,9 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_storage/firebase_storage.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:mcl_user/components/base_layout.dart';
 import '../../utils/get_doc_id.dart';
 import '../../utils/get_user.dart';
@@ -25,6 +29,12 @@ class _UpdateProfilePageState extends State<UpdateProfilePage> {
   final TextEditingController _addressController = TextEditingController();
   final TextEditingController _phoneController = TextEditingController();
 
+  CollectionReference _reference =
+      FirebaseFirestore.instance.collection('users');
+
+  GlobalKey<FormState> key = GlobalKey();
+  String imageUrl = '';
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -44,10 +54,50 @@ class _UpdateProfilePageState extends State<UpdateProfilePage> {
                 padding: const EdgeInsets.all(16.0),
                 child: Row(
                   children: [
-                    const CircleAvatar(
-                      radius: 40,
-                      backgroundImage:
-                          NetworkImage('https://via.placeholder.com/150'),
+                    GestureDetector(
+                      onTap: () async {
+                        ImagePicker imagePicker = ImagePicker();
+                        XFile? file = await imagePicker.pickImage(
+                            source: ImageSource
+                                .gallery); // Select image from gallery
+
+                        if (file == null) return;
+
+                        String uniqueFileName =
+                            DateTime.now().millisecondsSinceEpoch.toString();
+
+                        Reference referenceRoot =
+                            FirebaseStorage.instance.ref();
+                        Reference referenceDirImages =
+                            referenceRoot.child('images');
+
+                        Reference referenceImageToUpload =
+                            referenceDirImages.child(uniqueFileName);
+
+                        try {
+                          //Store the file
+                          await referenceImageToUpload.putFile(File(file.path));
+                          //Success: get the download URL
+                          imageUrl =
+                              await referenceImageToUpload.getDownloadURL();
+
+                          if (imageUrl.isEmpty) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(
+                                    content: Text('Please upload an image')));
+
+                            return;
+                          }
+                        } catch (error) {
+                          print(error);
+                        }
+                      },
+                      child: const CircleAvatar(
+                        radius: 40,
+                        backgroundColor: Colors.white70,
+                        child:
+                            Icon(Icons.upload_file, color: Color(0xFF013822)),
+                      ),
                     ),
                     const SizedBox(width: 20),
                     Column(
@@ -65,9 +115,10 @@ class _UpdateProfilePageState extends State<UpdateProfilePage> {
                                 color: Colors.white),
                           ],
                         ),
-                        const Text('Username',
-                            style:
-                                TextStyle(fontSize: 16, color: Colors.white)),
+                        UserInfoWidget(
+                            getDocData: userDataService.getDocData,
+                            fieldName: 'library_card_number',
+                            color: Colors.white),
                       ],
                     ),
                   ],
@@ -128,6 +179,20 @@ class _UpdateProfilePageState extends State<UpdateProfilePage> {
                   Container(
                     margin: const EdgeInsets.only(bottom: 10.0),
                     child: TextFormField(
+                      controller: _occupationController,
+                      decoration: InputDecoration(
+                        labelText: 'Occupation',
+                        fillColor: Colors.grey[200],
+                        filled: true,
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10.0),
+                        ),
+                      ),
+                    ),
+                  ),
+                  Container(
+                    margin: const EdgeInsets.only(bottom: 10.0),
+                    child: TextFormField(
                       controller: _addressController,
                       decoration: InputDecoration(
                         labelText: 'Address',
@@ -145,6 +210,36 @@ class _UpdateProfilePageState extends State<UpdateProfilePage> {
                       controller: _phoneController,
                       decoration: InputDecoration(
                         labelText: 'Contact Number',
+                        fillColor: Colors.grey[200],
+                        filled: true,
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10.0),
+                        ),
+                      ),
+                      keyboardType: TextInputType.phone,
+                    ),
+                  ),
+                  Container(
+                    margin: const EdgeInsets.only(bottom: 10.0),
+                    child: TextFormField(
+                      controller: _phoneController,
+                      decoration: InputDecoration(
+                        labelText: 'Birthdate',
+                        fillColor: Colors.grey[200],
+                        filled: true,
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10.0),
+                        ),
+                      ),
+                      keyboardType: TextInputType.phone,
+                    ),
+                  ),
+                  Container(
+                    margin: const EdgeInsets.only(bottom: 10.0),
+                    child: TextFormField(
+                      controller: _phoneController,
+                      decoration: InputDecoration(
+                        labelText: 'Sex',
                         fillColor: Colors.grey[200],
                         filled: true,
                         border: OutlineInputBorder(
@@ -186,16 +281,27 @@ class _UpdateProfilePageState extends State<UpdateProfilePage> {
     final DocIDService docIDService = DocIDService();
     try {
       String? userID = await docIDService.getDocId();
+
+      if (imageUrl.isNotEmpty) {
+        await FirebaseFirestore.instance
+            .collection('users')
+            .doc(userID)
+            .update({
+          'photo_url': imageUrl,
+        });
+      }
+
       await FirebaseFirestore.instance.collection('users').doc(userID).update({
         'first_name': _firstnameController.text.trim(),
         'last_name': _lastnameController.text.trim(),
         'occupation': _occupationController.text.trim(),
         'address': _addressController.text.trim(),
         'phone_number': _phoneController.text.trim(),
+        'photo_url': imageUrl,
       }).then((_) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
-            content: Text("User is successfully signed in"),
+            content: Text("Profile Information Successfully Updated"),
           ),
         );
         Navigator.pushReplacement(
