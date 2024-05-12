@@ -16,6 +16,7 @@ class SignUpScreen extends StatefulWidget {
 class SignUpScreenState extends State<SignUpScreen> {
   bool _obscureTextPassword = true;
   bool _obscureTextConfirmPassword = true;
+  bool _acceptedTerms = false;
 
   // final FirebaseAuthService _auth = FirebaseAuthService();
 
@@ -46,6 +47,19 @@ class SignUpScreenState extends State<SignUpScreen> {
     _birthdateController.dispose();
     super.dispose();
   }
+
+  String? _validatePhoneNumber(String? value) {
+    final phoneRegExp = RegExp(r'^(\+?63|0)9\d{9}$');
+    if (value == null || value.isEmpty) {
+      return 'Phone number is required';
+    }
+    if (!phoneRegExp.hasMatch(value)) {
+      return 'Enter a valid PH phone number';
+    }
+    return null;
+  }
+
+  String? _selectedSex;
 
   @override
   Widget build(BuildContext context) {
@@ -85,17 +99,28 @@ class SignUpScreenState extends State<SignUpScreen> {
                         fontWeight: FontWeight.bold,
                       ),
                     ),
-                    const SizedBox(height: 10),
-                    SizedBox(
-                      width: 350, // Adjust the width as needed
-                      child: TextFormField(
+                Form(
+                  autovalidateMode: AutovalidateMode.onUserInteraction,
+                  child: Column(
+                  children: [
+                  SizedBox(
+                    width: 350, // Adjust the width as needed
+                    child: TextFormField(
                         controller: _firstnameController,
                         decoration: const InputDecoration(
                           hintText: 'First Name',
                           border: OutlineInputBorder(),
-                          contentPadding: EdgeInsets.symmetric(
-                              vertical: 10.0, horizontal: 15.0),
+                          contentPadding: EdgeInsets.symmetric(vertical: 10.0, horizontal: 15.0),
                         ),
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'First name is required';
+                          }
+                          if (value.contains(RegExp(r'[0-9]'))) {
+                            return 'First name cannot contain numbers';
+                          }
+                          return null;
+                        },
                       ),
                     ),
                     const SizedBox(height: 10),
@@ -106,9 +131,17 @@ class SignUpScreenState extends State<SignUpScreen> {
                         decoration: const InputDecoration(
                           hintText: 'Last Name',
                           border: OutlineInputBorder(),
-                          contentPadding: EdgeInsets.symmetric(
-                              vertical: 10.0, horizontal: 15.0),
+                          contentPadding: EdgeInsets.symmetric(vertical: 10.0, horizontal: 15.0),
                         ),
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Last name is required';
+                          }
+                          if (value.contains(RegExp(r'[0-9]'))) {
+                            return 'Last name cannot contain numbers';
+                          }
+                          return null;
+                        },
                       ),
                     ),
                     const SizedBox(height: 10),
@@ -119,12 +152,20 @@ class SignUpScreenState extends State<SignUpScreen> {
                         decoration: const InputDecoration(
                           hintText: 'Phone Number',
                           border: OutlineInputBorder(),
-                          contentPadding: EdgeInsets.symmetric(
-                              vertical: 10.0, horizontal: 15.0),
+                          contentPadding: EdgeInsets.symmetric(vertical: 10.0, horizontal: 15.0),
                         ),
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Phone number is required';
+                          }
+                          final phoneRegExp = RegExp(r'^(\+?63|0)9\d{9}$');
+                          if (!phoneRegExp.hasMatch(value)) {
+                            return 'Enter a valid PH phone number';
+                          }
+                          return null;
+                        },
                       ),
                     ),
-                    const SizedBox(height: 10),
                     SizedBox(
                       width: 350, // Adjust the width as needed
                       child: TextFormField(
@@ -132,9 +173,18 @@ class SignUpScreenState extends State<SignUpScreen> {
                         decoration: const InputDecoration(
                           hintText: 'Email',
                           border: OutlineInputBorder(),
-                          contentPadding: EdgeInsets.symmetric(
-                              vertical: 10.0, horizontal: 15.0),
+                          contentPadding: EdgeInsets.symmetric(vertical: 10.0, horizontal: 15.0),
                         ),
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Email is required';
+                          }
+                          // Use the built-in email validation provided by TextFormField
+                          if (!RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$').hasMatch(value)) {
+                            return 'Enter a valid email address';
+                          }
+                          return null;
+                        },
                       ),
                     ),
                     const SizedBox(height: 10),
@@ -163,6 +213,29 @@ class SignUpScreenState extends State<SignUpScreen> {
                             ),
                           ),
                         ),
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Password is required';
+                          }
+                          // Minimum length validation
+                          if (value.length < 8) {
+                            return 'Password must be at least 8 characters long';
+                          }
+                          // Uppercase letter validation
+                          if (!value.contains(RegExp(r'[A-Z]'))) {
+                            return 'Password must contain at least one uppercase letter';
+                          }
+                          // Lowercase letter validation
+                          if (!value.contains(RegExp(r'[a-z]'))) {
+                            return 'Password must contain at least one lowercase letter';
+                          }
+                          // Number validation
+                          if (!value.contains(RegExp(r'[0-9]'))) {
+                            return 'Password must contain at least one number';
+                          }
+                          // Return null if the password meets all criteria
+                          return null;
+                        },
                       ),
                     ),
                     const SizedBox(height: 10),
@@ -192,6 +265,15 @@ class SignUpScreenState extends State<SignUpScreen> {
                             ),
                           ),
                         ),
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Please confirm your password';
+                          }
+                          if (value != _passwordController.text) {
+                            return 'Passwords do not match';
+                          }
+                          return null;
+                        },
                       ),
                     ),
                     const SizedBox(height: 10),
@@ -202,9 +284,15 @@ class SignUpScreenState extends State<SignUpScreen> {
                         decoration: const InputDecoration(
                           hintText: 'Address',
                           border: OutlineInputBorder(),
-                          contentPadding: EdgeInsets.symmetric(
-                              vertical: 10.0, horizontal: 15.0),
+                          contentPadding: EdgeInsets.symmetric(vertical: 10.0, horizontal: 15.0),
                         ),
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Address is required';
+                          }
+                          // You can add additional validation logic here if needed
+                          return null;
+                        },
                       ),
                     ),
                     const SizedBox(height: 10),
@@ -218,6 +306,12 @@ class SignUpScreenState extends State<SignUpScreen> {
                           contentPadding: EdgeInsets.symmetric(
                               vertical: 10.0, horizontal: 15.0),
                         ),
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Occupation is required';
+                          }
+                          return null;
+                        },
                       ),
                     ),
                     const SizedBox(height: 10),
@@ -228,31 +322,52 @@ class SignUpScreenState extends State<SignUpScreen> {
                         decoration: const InputDecoration(
                           hintText: 'Office/School',
                           border: OutlineInputBorder(),
-                          contentPadding: EdgeInsets.symmetric(
-                              vertical: 10.0, horizontal: 15.0),
+                          contentPadding: EdgeInsets.symmetric(vertical: 10.0, horizontal: 15.0),
                         ),
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Office/School is required';
+                          }
+                          // You can add additional validation logic here if needed
+                          return null;
+                        },
                       ),
                     ),
                     const SizedBox(height: 10),
                     SizedBox(
                       width: 350, // Adjust the width as needed
-                      child: TextFormField(
-                        controller: _sexController,
+                      child: DropdownButtonFormField<String>(
+                        value: _selectedSex,
                         decoration: const InputDecoration(
                           hintText: 'Sex',
                           border: OutlineInputBorder(),
-                          contentPadding: EdgeInsets.symmetric(
-                              vertical: 10.0, horizontal: 15.0),
+                          contentPadding: EdgeInsets.symmetric(vertical: 10.0, horizontal: 10.0),
                         ),
+                        onChanged: (newValue) {
+                          setState(() {
+                            _selectedSex = newValue;
+                          });
+                        },
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Sex field is required';
+                          }
+                          return null;
+                        },
+                        items: <String>['Male', 'Female'].map((String value) {
+                          return DropdownMenuItem<String>(
+                            value: value,
+                            child: Text(value),
+                          );
+                        }).toList(),
                       ),
                     ),
-                    const SizedBox(height: 10),
                     SizedBox(
                       width: 350, // Adjust the width as needed
                       child: TextFormField(
                         controller: _birthdateController,
                         decoration: const InputDecoration(
-                          hintText: 'Birthday (YYYY-MM-DD)',
+                          hintText: 'Birthday (MM-DD-YYYY)',
                           border: OutlineInputBorder(),
                           contentPadding: EdgeInsets.symmetric(vertical: 10.0, horizontal: 15.0),
                         ),
@@ -260,6 +375,10 @@ class SignUpScreenState extends State<SignUpScreen> {
                         validator: (value) {
                           if (value == null || value.isEmpty) {
                             return 'Please enter your birthday';
+                          }
+                          // Check if the entered value matches the desired format "MM-DD-YYYY"
+                          if (!RegExp(r'^\d{2}/\d{2}/\d{4}$').hasMatch(value)) {
+                            return 'Please enter a valid birthday format (MM/DD/YYYY)';
                           }
                           return null;
                         },
@@ -269,14 +388,21 @@ class SignUpScreenState extends State<SignUpScreen> {
                     Row(
                       children: [
                         Checkbox(
-                          value: false,
+                          value: _acceptedTerms,
                           onChanged: (bool? value) {
-                            // Implement checkbox state change
+                            setState(() {
+                              _acceptedTerms = value ?? false;
+                            });
                           },
                         ),
-                        const Flexible(
-                          child: Text(
-                            'By clicking “Sign Up” I agree that I have read and accepted the Terms and Conditions.',
+                        Expanded(
+                          child: GestureDetector(
+                            onTap: () {
+                              // Add navigation to terms and conditions page or display terms and conditions dialog
+                            },
+                            child: Text(
+                              'By clicking “Sign Up” I agree that I have read and accepted the Terms and Conditions.',
+                            ),
                           ),
                         ),
                       ],
@@ -327,20 +453,26 @@ class SignUpScreenState extends State<SignUpScreen> {
                   ],
                 ),
               ),
+              ],
             ),
           ),
-        ));
+        ),
+      )
+    ));
   }
 
   // Sign up user and store data in Firebase
   void _signUp() async {
     if (!passwordConfirmed()) {
-      // You could use a dialog or a snackbar to alert the user here
-      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-        content: Text('Passwords do not match!'),
-        backgroundColor: Colors.red,
-      ));
-      return; // Exit the function if the passwords do not match
+      // Show error under the password confirmation field
+      // Handle this based on your UI framework
+      return;
+    }
+
+    if (_validatePhoneNumber(_phoneController.text.trim()) != null) {
+      // Show error under the phone number field
+      // Handle this based on your UI framework
+      return;
     }
 
     try {
@@ -370,10 +502,6 @@ class SignUpScreenState extends State<SignUpScreen> {
       );
     } catch (e) {
       // Handle errors in case of a failure
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        content: Text('Failed to sign up: $e'),
-        backgroundColor: Colors.red,
-      ));
       print('Failed to sign up: $e'); // For debugging, print the error
     }
   }
