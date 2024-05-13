@@ -37,7 +37,7 @@ class LoginScreenState extends State<LoginScreen> {
         );
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => EmailPage()),
+          MaterialPageRoute(builder: (context) => const EmailPage()),
         );
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -59,7 +59,7 @@ class LoginScreenState extends State<LoginScreen> {
   void _navigateToSignUpScreen() {
     Navigator.push(
       context,
-      MaterialPageRoute(builder: (context) => SignUpScreen()), // Navigate to SignUpScreen
+      MaterialPageRoute(builder: (context) => const SignUpScreen()), // Navigate to SignUpScreen
     );
   }
 

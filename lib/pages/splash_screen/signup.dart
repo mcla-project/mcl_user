@@ -31,6 +31,16 @@ class SignUpScreenState extends State<SignUpScreen> {
   final TextEditingController _officeController = TextEditingController();
   final TextEditingController _sexController = TextEditingController();
   final TextEditingController _birthdateController = TextEditingController();
+  final _formKey1 = GlobalKey<FormState>();
+  final _formKey2 = GlobalKey<FormState>();
+  final _formKey3 = GlobalKey<FormState>();
+  final _formKey4 = GlobalKey<FormState>();
+  final _formKey5 = GlobalKey<FormState>();
+  final _formKey6 = GlobalKey<FormState>();
+  final _formKey7 = GlobalKey<FormState>();
+  final _formKey8 = GlobalKey<FormState>();
+  final _formKey9 = GlobalKey<FormState>();
+  final _formKey10 = GlobalKey<FormState>();
 
   @override
   void dispose() {
@@ -99,13 +109,13 @@ class SignUpScreenState extends State<SignUpScreen> {
                         fontWeight: FontWeight.bold,
                       ),
                     ),
-                Form(
-                  autovalidateMode: AutovalidateMode.onUserInteraction,
-                  child: Column(
-                  children: [
-                  SizedBox(
-                    width: 350, // Adjust the width as needed
-                    child: TextFormField(
+              Column(
+                children: [
+                  Form(
+                    key: _formKey1,
+                    child: SizedBox(
+                      width: 350,
+                      child: TextFormField(
                         controller: _firstnameController,
                         decoration: const InputDecoration(
                           hintText: 'First Name',
@@ -121,10 +131,18 @@ class SignUpScreenState extends State<SignUpScreen> {
                           }
                           return null;
                         },
+                        onChanged: (value) {
+                          _formKey1.currentState!.validate();
+                        },
                       ),
                     ),
+                  ),
+
                     const SizedBox(height: 10),
-                    SizedBox(
+
+                    Form(
+                      key: _formKey2,
+                    child: SizedBox(
                       width: 350, // Adjust the width as needed
                       child: TextFormField(
                         controller: _lastnameController,
@@ -142,10 +160,18 @@ class SignUpScreenState extends State<SignUpScreen> {
                           }
                           return null;
                         },
+                         onChanged: (value) {
+                          _formKey2.currentState!.validate();
+                         }
                       ),
                     ),
+                  ),
+
                     const SizedBox(height: 10),
-                    SizedBox(
+                    
+                    Form(
+                      key: _formKey3,
+                      child: SizedBox(
                       width: 350, // Adjust the width as needed
                       child: TextFormField(
                         controller: _phoneController,
@@ -164,9 +190,18 @@ class SignUpScreenState extends State<SignUpScreen> {
                           }
                           return null;
                         },
+                         onChanged: (value) {
+                          _formKey3.currentState!.validate();
+                         }
                       ),
                     ),
-                    SizedBox(
+                  ),
+
+                    const SizedBox(height: 10),
+
+                    Form(
+                      key: _formKey4,
+                      child: SizedBox(
                       width: 350, // Adjust the width as needed
                       child: TextFormField(
                         controller: _emailController,
@@ -185,10 +220,18 @@ class SignUpScreenState extends State<SignUpScreen> {
                           }
                           return null;
                         },
+                         onChanged: (value) {
+                          _formKey4.currentState!.validate();
+                         }
                       ),
                     ),
+                  ),
+
                     const SizedBox(height: 10),
-                    SizedBox(
+
+                  Form(
+                    key: _formKey5,
+                    child: SizedBox(
                       width: 350,
                       child: TextFormField(
                         controller: _passwordController,
@@ -236,10 +279,18 @@ class SignUpScreenState extends State<SignUpScreen> {
                           // Return null if the password meets all criteria
                           return null;
                         },
+                         onChanged: (value) {
+                          _formKey5.currentState!.validate();
+                         }
                       ),
                     ),
+                  ),
+
                     const SizedBox(height: 10),
-                    SizedBox(
+
+                    Form(
+                    key: _formKey6,
+                    child: SizedBox(
                       width: 350,
                       child: TextFormField(
                         controller: _confirmpasswordController,
@@ -274,10 +325,18 @@ class SignUpScreenState extends State<SignUpScreen> {
                           }
                           return null;
                         },
+                         onChanged: (value) {
+                          _formKey6.currentState!.validate();
+                         }
                       ),
                     ),
+                  ),
+
                     const SizedBox(height: 10),
-                    SizedBox(
+
+                    Form(
+                    key: _formKey7,
+                    child:SizedBox(
                       width: 350, // Adjust the width as needed
                       child: TextFormField(
                         controller: _addressController,
@@ -293,10 +352,18 @@ class SignUpScreenState extends State<SignUpScreen> {
                           // You can add additional validation logic here if needed
                           return null;
                         },
+                         onChanged: (value) {
+                          _formKey7.currentState!.validate();
+                         }
                       ),
                     ),
+                  ),
+
                     const SizedBox(height: 10),
-                    SizedBox(
+
+                    Form(
+                    key: _formKey8,
+                    child: SizedBox(
                       width: 350, // Adjust the width as needed
                       child: TextFormField(
                         controller: _occupationController,
@@ -312,10 +379,18 @@ class SignUpScreenState extends State<SignUpScreen> {
                           }
                           return null;
                         },
+                         onChanged: (value) {
+                          _formKey8.currentState!.validate();
+                         }
                       ),
                     ),
+                  ),
+
                     const SizedBox(height: 10),
-                    SizedBox(
+
+                    Form(
+                    key: _formKey9,
+                    child: SizedBox(
                       width: 350, // Adjust the width as needed
                       child: TextFormField(
                         controller: _officeController,
@@ -331,10 +406,17 @@ class SignUpScreenState extends State<SignUpScreen> {
                           // You can add additional validation logic here if needed
                           return null;
                         },
+                         onChanged: (value) {
+                          _formKey9.currentState!.validate();
+                         }
                       ),
                     ),
+                  ),
+
                     const SizedBox(height: 10),
-                    SizedBox(
+
+                    Form(
+                    child: SizedBox(
                       width: 350, // Adjust the width as needed
                       child: DropdownButtonFormField<String>(
                         value: _selectedSex,
@@ -362,7 +444,13 @@ class SignUpScreenState extends State<SignUpScreen> {
                         }).toList(),
                       ),
                     ),
-                    SizedBox(
+                  ),
+
+                    const SizedBox(height: 10),
+
+                    Form(
+                    key: _formKey10,
+                    child: SizedBox(
                       width: 350, // Adjust the width as needed
                       child: TextFormField(
                         controller: _birthdateController,
@@ -382,9 +470,15 @@ class SignUpScreenState extends State<SignUpScreen> {
                           }
                           return null;
                         },
+                         onChanged: (value) {
+                          _formKey10.currentState!.validate();
+                         }
                       ),
                     ),
+                  ),
+
                     const SizedBox(height: 10),
+
                     Row(
                       children: [
                         Checkbox(
@@ -400,7 +494,7 @@ class SignUpScreenState extends State<SignUpScreen> {
                             onTap: () {
                               // Add navigation to terms and conditions page or display terms and conditions dialog
                             },
-                            child: Text(
+                            child: const Text(
                               'By clicking “Sign Up” I agree that I have read and accepted the Terms and Conditions.',
                             ),
                           ),
@@ -452,7 +546,6 @@ class SignUpScreenState extends State<SignUpScreen> {
                     ),
                   ],
                 ),
-              ),
               ],
             ),
           ),
@@ -463,11 +556,20 @@ class SignUpScreenState extends State<SignUpScreen> {
 
   // Sign up user and store data in Firebase
   void _signUp() async {
-    if (!passwordConfirmed()) {
-      // Show error under the password confirmation field
-      // Handle this based on your UI framework
-      return;
-    }
+  if (!_acceptedTerms) {
+    // Show a dialog or a snackbar
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text('You must accept the terms and conditions to sign up.')),
+    );
+    return;
+  }
+
+  if (!passwordConfirmed()) {
+    // Show error under the password confirmation field
+    // Handle this based on your UI framework
+    return;
+  }
+  // Proceed with the sign up
 
     if (_validatePhoneNumber(_phoneController.text.trim()) != null) {
       // Show error under the phone number field
