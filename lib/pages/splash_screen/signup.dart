@@ -30,6 +30,16 @@ class SignUpScreenState extends State<SignUpScreen> {
   final TextEditingController _officeController = TextEditingController();
   final TextEditingController _sexController = TextEditingController();
   final TextEditingController _birthdateController = TextEditingController();
+  final _formKey1 = GlobalKey<FormState>();
+  final _formKey2 = GlobalKey<FormState>();
+  final _formKey3 = GlobalKey<FormState>();
+  final _formKey4 = GlobalKey<FormState>();
+  final _formKey5 = GlobalKey<FormState>();
+  final _formKey6 = GlobalKey<FormState>();
+  final _formKey7 = GlobalKey<FormState>();
+  final _formKey8 = GlobalKey<FormState>();
+  final _formKey9 = GlobalKey<FormState>();
+  final _formKey10 = GlobalKey<FormState>();
 
   @override
   void dispose() {
@@ -75,99 +85,419 @@ class SignUpScreenState extends State<SignUpScreen> {
               ),
               title: const Text('Sign Up'),
             ),
-            body: Padding(
-              padding: const EdgeInsets.all(20.0),
-              child: Center(
-                child: SingleChildScrollView(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      SizedBox(
-                        width: 200,
-                        height: 200,
-                        child: Image.asset(
-                          'images/mnlcitylib_logo.png',
-                        ),
+            title: const Text('Sign Up'),
+          ),
+          body: Padding(
+            padding: const EdgeInsets.all(20.0),
+            child: Center(
+              child: SingleChildScrollView(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    SizedBox(
+                      width: 200,
+                      height: 200,
+                      child: Image.asset(
+                        'images/mnlcitylib_logo.png',
                       ),
-                      const SizedBox(height: 10),
-                      const Text(
-                        'CREATE YOUR ACCOUNT',
-                        style: TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                        ),
+                    ),
+                    const SizedBox(height: 10),
+                    const Text(
+                      'CREATE YOUR ACCOUNT',
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
                       ),
-                      Form(
-                        autovalidateMode: AutovalidateMode.onUserInteraction,
-                        child: Column(
-                          children: [
-                            SizedBox(
-                              width: 350, // Adjust the width as needed
-                              child: TextFormField(
-                                controller: _firstnameController,
-                                decoration: const InputDecoration(
-                                  hintText: 'First Name',
-                                  border: OutlineInputBorder(),
-                                  contentPadding: EdgeInsets.symmetric(
-                                      vertical: 10.0, horizontal: 15.0),
-                                ),
-                                validator: (value) {
-                                  if (value == null || value.isEmpty) {
-                                    return 'First name is required';
-                                  }
-                                  if (value.contains(RegExp(r'[0-9]'))) {
-                                    return 'First name cannot contain numbers';
-                                  }
-                                  return null;
-                                },
-                              ),
+                    ),
+                    const SizedBox(height: 10),
+              Column(
+                children: [
+                  Form(
+                    key: _formKey1,
+                    child: SizedBox(
+                      width: 350,
+                      child: TextFormField(
+                        controller: _firstnameController,
+                        decoration: const InputDecoration(
+                          hintText: 'First Name',
+                          border: OutlineInputBorder(),
+                          contentPadding: EdgeInsets.symmetric(vertical: 10.0, horizontal: 15.0),
+                        ),
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'First name is required';
+                          }
+                          if (value.contains(RegExp(r'[0-9]'))) {
+                            return 'First name cannot contain numbers';
+                          }
+                          return null;
+                        },
+                        onChanged: (value) {
+                          _formKey1.currentState!.validate();
+                        },
+                      ),
+                    ),
+                  ),
+
+                    const SizedBox(height: 10),
+
+                    Form(
+                      key: _formKey2,
+                    child: SizedBox(
+                      width: 350, // Adjust the width as needed
+                      child: TextFormField(
+                        controller: _lastnameController,
+                        decoration: const InputDecoration(
+                          hintText: 'Last Name',
+                          border: OutlineInputBorder(),
+                          contentPadding: EdgeInsets.symmetric(vertical: 10.0, horizontal: 15.0),
+                        ),
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Last name is required';
+                          }
+                          if (value.contains(RegExp(r'[0-9]'))) {
+                            return 'Last name cannot contain numbers';
+                          }
+                          return null;
+                        },
+                         onChanged: (value) {
+                          _formKey2.currentState!.validate();
+                         }
+                      ),
+                    ),
+                  ),
+
+                    const SizedBox(height: 10),
+                    
+                    Form(
+                      key: _formKey3,
+                      child: SizedBox(
+                      width: 350, // Adjust the width as needed
+                      child: TextFormField(
+                        controller: _phoneController,
+                        decoration: const InputDecoration(
+                          hintText: 'Phone Number',
+                          border: OutlineInputBorder(),
+                          contentPadding: EdgeInsets.symmetric(vertical: 10.0, horizontal: 15.0),
+                        ),
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Phone number is required';
+                          }
+                          final phoneRegExp = RegExp(r'^(\+?63|0)9\d{9}$');
+                          if (!phoneRegExp.hasMatch(value)) {
+                            return 'Enter a valid PH phone number';
+                          }
+                          return null;
+                        },
+                         onChanged: (value) {
+                          _formKey3.currentState!.validate();
+                         }
+                      ),
+                    ),
+                  ),
+
+                    const SizedBox(height: 10),
+
+                    Form(
+                      key: _formKey4,
+                      child: SizedBox(
+                      width: 350, // Adjust the width as needed
+                      child: TextFormField(
+                        controller: _emailController,
+                        decoration: const InputDecoration(
+                          hintText: 'Email',
+                          border: OutlineInputBorder(),
+                          contentPadding: EdgeInsets.symmetric(vertical: 10.0, horizontal: 15.0),
+                        ),
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Email is required';
+                          }
+                          // Use the built-in email validation provided by TextFormField
+                          if (!RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$').hasMatch(value)) {
+                            return 'Enter a valid email address';
+                          }
+                          return null;
+                        },
+                         onChanged: (value) {
+                          _formKey4.currentState!.validate();
+                         }
+                      ),
+                    ),
+                  ),
+
+                    const SizedBox(height: 10),
+
+                  Form(
+                    key: _formKey5,
+                    child: SizedBox(
+                      width: 350,
+                      child: TextFormField(
+                        controller: _passwordController,
+                        obscureText: _obscureTextPassword,
+                        decoration: InputDecoration(
+                          hintText: 'Password',
+                          border: const OutlineInputBorder(),
+                          contentPadding: const EdgeInsets.symmetric(
+                            vertical: 10.0,
+                            horizontal: 15.0,
+                          ),
+                          suffixIcon: GestureDetector(
+                            onTap: () {
+                              setState(() {
+                                _obscureTextPassword = !_obscureTextPassword;
+                              });
+                            },
+                            child: Icon(
+                              _obscureTextPassword
+                                  ? Icons.visibility
+                                  : Icons.visibility_off,
                             ),
-                            const SizedBox(height: 10),
-                            SizedBox(
-                              width: 350, // Adjust the width as needed
-                              child: TextFormField(
-                                controller: _lastnameController,
-                                decoration: const InputDecoration(
-                                  hintText: 'Last Name',
-                                  border: OutlineInputBorder(),
-                                  contentPadding: EdgeInsets.symmetric(
-                                      vertical: 10.0, horizontal: 15.0),
-                                ),
-                                validator: (value) {
-                                  if (value == null || value.isEmpty) {
-                                    return 'Last name is required';
-                                  }
-                                  if (value.contains(RegExp(r'[0-9]'))) {
-                                    return 'Last name cannot contain numbers';
-                                  }
-                                  return null;
-                                },
-                              ),
+                          ),
+                        ),
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Password is required';
+                          }
+                          // Minimum length validation
+                          if (value.length < 8) {
+                            return 'Password must be at least 8 characters long';
+                          }
+                          // Uppercase letter validation
+                          if (!value.contains(RegExp(r'[A-Z]'))) {
+                            return 'Password must contain at least one uppercase letter';
+                          }
+                          // Lowercase letter validation
+                          if (!value.contains(RegExp(r'[a-z]'))) {
+                            return 'Password must contain at least one lowercase letter';
+                          }
+                          // Number validation
+                          if (!value.contains(RegExp(r'[0-9]'))) {
+                            return 'Password must contain at least one number';
+                          }
+                          // Return null if the password meets all criteria
+                          return null;
+                        },
+                         onChanged: (value) {
+                          _formKey5.currentState!.validate();
+                         }
+                      ),
+                    ),
+                  ),
+
+                    const SizedBox(height: 10),
+
+                    Form(
+                    key: _formKey6,
+                    child: SizedBox(
+                      width: 350,
+                      child: TextFormField(
+                        controller: _confirmpasswordController,
+                        obscureText: _obscureTextConfirmPassword,
+                        decoration: InputDecoration(
+                          hintText: 'Confirm Password',
+                          border: const OutlineInputBorder(),
+                          contentPadding: const EdgeInsets.symmetric(
+                            vertical: 10.0,
+                            horizontal: 15.0,
+                          ),
+                          suffixIcon: GestureDetector(
+                            onTap: () {
+                              setState(() {
+                                _obscureTextConfirmPassword =
+                                !_obscureTextConfirmPassword;
+                              });
+                            },
+                            child: Icon(
+                              _obscureTextConfirmPassword
+                                  ? Icons.visibility
+                                  : Icons.visibility_off,
                             ),
-                            const SizedBox(height: 10),
-                            SizedBox(
-                              width: 350, // Adjust the width as needed
-                              child: TextFormField(
-                                controller: _phoneController,
-                                decoration: const InputDecoration(
-                                  hintText: 'Phone Number',
-                                  border: OutlineInputBorder(),
-                                  contentPadding: EdgeInsets.symmetric(
-                                      vertical: 10.0, horizontal: 15.0),
-                                ),
-                                validator: (value) {
-                                  if (value == null || value.isEmpty) {
-                                    return 'Phone number is required';
-                                  }
-                                  final phoneRegExp = RegExp(
-                                      r'^(\+?63|0)9\d{9}$');
-                                  if (!phoneRegExp.hasMatch(value)) {
-                                    return 'Enter a valid PH phone number';
-                                  }
-                                  return null;
-                                },
-                              ),
+                          ),
+                        ),
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Please confirm your password';
+                          }
+                          if (value != _passwordController.text) {
+                            return 'Passwords do not match';
+                          }
+                          return null;
+                        },
+                         onChanged: (value) {
+                          _formKey6.currentState!.validate();
+                         }
+                      ),
+                    ),
+                  ),
+
+                    const SizedBox(height: 10),
+
+                    Form(
+                    key: _formKey7,
+                    child:SizedBox(
+                      width: 350, // Adjust the width as needed
+                      child: TextFormField(
+                        controller: _addressController,
+                        decoration: const InputDecoration(
+                          hintText: 'Address',
+                          border: OutlineInputBorder(),
+                          contentPadding: EdgeInsets.symmetric(vertical: 10.0, horizontal: 15.0),
+                        ),
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Address is required';
+                          }
+                          // You can add additional validation logic here if needed
+                          return null;
+                        },
+                         onChanged: (value) {
+                          _formKey7.currentState!.validate();
+                         }
+                      ),
+                    ),
+                  ),
+
+                    const SizedBox(height: 10),
+
+                    Form(
+                    key: _formKey8,
+                    child: SizedBox(
+                      width: 350, // Adjust the width as needed
+                      child: TextFormField(
+                        controller: _occupationController,
+                        decoration: const InputDecoration(
+                          hintText: 'Occupation',
+                          border: OutlineInputBorder(),
+                          contentPadding: EdgeInsets.symmetric(
+                              vertical: 10.0, horizontal: 15.0),
+                        ),
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Occupation is required';
+                          }
+                          return null;
+                        },
+                         onChanged: (value) {
+                          _formKey8.currentState!.validate();
+                         }
+                      ),
+                    ),
+                  ),
+
+                    const SizedBox(height: 10),
+
+                    Form(
+                    key: _formKey9,
+                    child: SizedBox(
+                      width: 350, // Adjust the width as needed
+                      child: TextFormField(
+                        controller: _officeController,
+                        decoration: const InputDecoration(
+                          hintText: 'Office/School',
+                          border: OutlineInputBorder(),
+                          contentPadding: EdgeInsets.symmetric(vertical: 10.0, horizontal: 15.0),
+                        ),
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Office/School is required';
+                          }
+                          // You can add additional validation logic here if needed
+                          return null;
+                        },
+                         onChanged: (value) {
+                          _formKey9.currentState!.validate();
+                         }
+                      ),
+                    ),
+                  ),
+
+                    const SizedBox(height: 10),
+
+                    Form(
+                    child: SizedBox(
+                      width: 350, // Adjust the width as needed
+                      child: DropdownButtonFormField<String>(
+                        value: _selectedSex,
+                        decoration: const InputDecoration(
+                          hintText: 'Sex',
+                          border: OutlineInputBorder(),
+                          contentPadding: EdgeInsets.symmetric(vertical: 10.0, horizontal: 10.0),
+                        ),
+                        onChanged: (newValue) {
+                          setState(() {
+                            _selectedSex = newValue;
+                          });
+                        },
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Sex field is required';
+                          }
+                          return null;
+                        },
+                        items: <String>['Male', 'Female'].map((String value) {
+                          return DropdownMenuItem<String>(
+                            value: value,
+                            child: Text(value),
+                          );
+                        }).toList(),
+                      ),
+                    ),
+                  ),
+
+                    const SizedBox(height: 10),
+
+                    Form(
+                    key: _formKey10,
+                    child: SizedBox(
+                      width: 350, // Adjust the width as needed
+                      child: TextFormField(
+                        controller: _birthdateController,
+                        decoration: const InputDecoration(
+                          hintText: 'Birthday (MM-DD-YYYY)',
+                          border: OutlineInputBorder(),
+                          contentPadding: EdgeInsets.symmetric(vertical: 10.0, horizontal: 15.0),
+                        ),
+                        keyboardType: TextInputType.datetime, // Set keyboard type to handle dates
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Please enter your birthday';
+                          }
+                          // Check if the entered value matches the desired format "MM-DD-YYYY"
+                          if (!RegExp(r'^\d{2}/\d{2}/\d{4}$').hasMatch(value)) {
+                            return 'Please enter a valid birthday format (MM/DD/YYYY)';
+                          }
+                          return null;
+                        },
+                         onChanged: (value) {
+                          _formKey10.currentState!.validate();
+                         }
+                      ),
+                    ),
+                  ),
+
+                    const SizedBox(height: 10),
+
+                    Row(
+                      children: [
+                        Checkbox(
+                          value: _acceptedTerms,
+                          onChanged: (bool? value) {
+                            setState(() {
+                              _acceptedTerms = value ?? false;
+                            });
+                          },
+                        ),
+                        Expanded(
+                          child: GestureDetector(
+                            onTap: () {
+                              // Add navigation to terms and conditions page or display terms and conditions dialog
+                            },
+                            child: const Text(
+                              'By clicking “Sign Up” I agree that I have read and accepted the Terms and Conditions.',
                             ),
                             SizedBox(
                               width: 350, // Adjust the width as needed
@@ -480,18 +810,30 @@ class SignUpScreenState extends State<SignUpScreen> {
                     ],
                   ),
                 ),
-              ),
-            )
-        ));
+              ],
+            ),
+          ),
+        ),
+      )
+    ));
   }
 
   // Sign up user and store data in Firebase
   void _signUp() async {
-    if (!passwordConfirmed()) {
-      // Show error under the password confirmation field
-      // Handle this based on your UI framework
-      return;
-    }
+  if (!_acceptedTerms) {
+    // Show a dialog or a snackbar
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text('You must accept the terms and conditions to sign up.')),
+    );
+    return;
+  }
+
+  if (!passwordConfirmed()) {
+    // Show error under the password confirmation field
+    // Handle this based on your UI framework
+    return;
+  }
+  // Proceed with the sign up
 
     if (_validatePhoneNumber(_phoneController.text.trim()) != null) {
       // Show error under the phone number field

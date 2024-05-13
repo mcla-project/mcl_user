@@ -43,7 +43,7 @@ class AnimatedSplashScreenState extends State<AnimatedSplashScreen>
           children: [
             Positioned.fill(
               child: CustomPaint(
-                painter: BorderPainter(),
+                painter: SplashBorderPainter(),
               ),
             ),
             FadeTransition(
@@ -72,7 +72,7 @@ class AnimatedSplashScreenState extends State<AnimatedSplashScreen>
   }
 }
 
-class BorderPainter extends CustomPainter {
+class SplashBorderPainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     final paint = Paint()
@@ -139,7 +139,7 @@ class OnboardingScreen extends StatelessWidget {
         children: [
           Positioned.fill(
             child: CustomPaint(
-              painter: BorderPainter(),
+              painter: SplashBorderPainter(),
             ),
           ),
           Column(
@@ -208,7 +208,7 @@ class NextOnboardingScreen extends StatelessWidget {
         children: [
           Positioned.fill(
             child: CustomPaint(
-              painter: BorderPainter(),
+              painter: SplashBorderPainter(),
             ),
           ),
           Column(
