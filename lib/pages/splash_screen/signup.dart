@@ -480,46 +480,57 @@ class SignUpScreenState extends State<SignUpScreen> {
 
                     const SizedBox(height: 10),
 
-                    Row(
-                      children: [
-                        Checkbox(
-                          value: _acceptedTerms,
-                          onChanged: (bool? value) {
-                            setState(() {
-                              _acceptedTerms = value ?? false;
-                            });
-                          },
-                        ),
-                        Expanded(
-                          child: GestureDetector(
-                            onTap: () {
-                              // Add navigation to terms and conditions page or display terms and conditions dialog
-                            },
-                            child: const Text(
-                              'By clicking “Sign Up” I agree that I have read and accepted the Terms and Conditions.',
+                            Row(
+                              children: [
+                                Checkbox(
+                                  value: _acceptedTerms,
+                                  onChanged: (bool? value) {
+                                    setState(() {
+                                      _acceptedTerms = value ?? false;
+                                      if (_acceptedTerms) {
+                                        _showTermsAndConditionsDialog(context);
+                                      }
+                                    });
+                                  },
+                                ),
+                                Expanded(
+                                  child: GestureDetector(
+                                    onTap: () {
+                                      setState(() {
+                                        _acceptedTerms = !_acceptedTerms;
+                                      });
+                                      if (_acceptedTerms) {
+                                        _showTermsAndConditionsDialog(context);
+                                      }
+                                    },
+                                    child: const Text(
+                                      'By clicking “Sign Up” I agree that I have read and accepted the Terms and Conditions.',
+                                    ),
+                                  ),
+                                ),
+                              ],
                             ),
-                          ),
-                        ),
-                      ],
-                    ),
+
+                            const SizedBox(height: 10),
+                            SizedBox(
+                              width: 350,
+                              child: ElevatedButton(
+                                onPressed: _acceptedTerms ? _signUp : null,
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: Colors.green.shade900,
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(10),
+                                  ),
+                                ),
+                                child: const Text(
+                                  'Sign Up',
+                                  style: TextStyle(fontSize: 20, color: Colors.white),
+                                ),
+                              ),
+                            ),
+
                     const SizedBox(height: 10),
-                    SizedBox(
-                      width: 350,
-                      child: ElevatedButton(
-                        onPressed: () => _signUp(),
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.green.shade900,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                        ),
-                        child: const Text(
-                          'Sign Up',
-                          style: TextStyle(fontSize: 20, color: Colors.white),
-                        ),
-                      ),
-                    ),
-                    const SizedBox(height: 10),
+
                     GestureDetector(
                       onTap: () {
                         Navigator.push(
@@ -641,6 +652,39 @@ class SignUpScreenState extends State<SignUpScreen> {
   void navigateToBaseLayout(BuildContext context) {
     Navigator.of(context).pushReplacement(
       MaterialPageRoute(builder: (_) => const BaseLayout()),
+    );
+  }
+
+  void _showTermsAndConditionsDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text(
+            "Terms and Conditions",
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          content: const Text(
+            "Welcome to MCLA!  "
+                "\n\nThese terms and conditions outline the rules and regulations for the use of Manila City Library App's Website, located at mclapp.com.  "
+                "\n\nBy accessing this website we assume you accept these terms and conditions. Do not continue to use MCLA if you do not agree to take all of the terms and conditions stated on this page.  "
+                "\n\nThe following terminology applies to these Terms and Conditions, Privacy Statement and Disclaimer Notice and all Agreements: 'Client', 'You' and 'Your' refers to you, the person log on this website and compliant to the Company's terms and conditions. 'The Company', 'Ourselves', 'We', 'Our' and 'Us', refers to our Company. 'Party', 'Parties', or 'Us', refers to both the Client and ourselves. All terms refer to the offer, acceptance and consideration of payment necessary to undertake the process of our assistance to the Client in the most appropriate manner for the express purpose of meeting the Client's needs in respect of provision of the Company's stated services, in accordance with and subject to, prevailing law of ph.  "
+                "\n\nAny use of the above terminology or other words in the singular, plural, capitalization and/or he/she or they, are taken as interchangeable and therefore as referring to same.",
+            textAlign: TextAlign.center,
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: const Text("Close"),
+            ),
+          ],
+        );
+      },
     );
   }
 }
