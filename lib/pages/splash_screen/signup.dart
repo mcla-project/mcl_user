@@ -109,6 +109,7 @@ class SignUpScreenState extends State<SignUpScreen> {
                         fontWeight: FontWeight.bold,
                       ),
                     ),
+                    const SizedBox(height: 10),
               Column(
                 children: [
                   Form(
