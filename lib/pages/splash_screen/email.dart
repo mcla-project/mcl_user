@@ -1,17 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:email_otp/email_otp.dart';
 import '../../components/base_layout.dart';
-import 'otp.dart';
+import 'otp.dart'; // Importing the OTP page
 
 class EmailPage extends StatefulWidget {
-  const EmailPage({super.key});
+  const EmailPage({Key? key}) : super(key: key);
 
   @override
-  EmailPageState createState() => EmailPageState();
+  State<EmailPage> createState() => _EmailPageState();
 }
 
-class EmailPageState extends State<EmailPage> {
-  final _formKey = GlobalKey<FormState>();
-  late String _email;
+class _EmailPageState extends State<EmailPage> {
+  TextEditingController emailController = TextEditingController();
+  EmailOTP myauth = EmailOTP();
 
   @override
   Widget build(BuildContext context) {
@@ -36,7 +37,7 @@ class EmailPageState extends State<EmailPage> {
                 ),
                 const SizedBox(height: 50),
                 const Text(
-                  'Enter you email address to receive a \nverification code',
+                  'Enter your email address to receive a \nverification code',
                   style: TextStyle(
                     fontSize: 14,
                   ),
@@ -46,7 +47,7 @@ class EmailPageState extends State<EmailPage> {
                 SizedBox(
                   width: 350,
                   child: TextFormField(
-                    obscureText: true,
+                    controller: emailController,
                     decoration: const InputDecoration(
                       hintText: 'Email Address',
                       border: OutlineInputBorder(),
@@ -61,19 +62,38 @@ class EmailPageState extends State<EmailPage> {
                 SizedBox(
                   width: 350,
                   child: ElevatedButton(
-                    onPressed: () => Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => const OtpPage()),
-                    ),
+                    onPressed: () async {
+                      myauth.setConfig(
+                        appEmail: "contact@hdevcoder.com",
+                        appName: "Email OTP",
+                        userEmail: emailController.text,
+                        otpLength: 6,
+                        otpType: OTPType.digitsOnly,
+                      );
+                      if (await myauth.sendOTP()) {
+                        ScaffoldMessenger.of(context)
+                            .showSnackBar(const SnackBar(
+                          content: Text("OTP has been sent"),
+                        ));
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => OtpPage(myauth: EmailOTP()),
+                          ),
+                        );
+                      } else {
+                        ScaffoldMessenger.of(context)
+                            .showSnackBar(const SnackBar(
+                          content: Text("Oops, OTP send failed"),
+                        ));
+                      }
+                    },
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors
-                          .green.shade900, // Set the button color to green
+                      backgroundColor: Colors.green.shade900,
                       shape: RoundedRectangleBorder(
-                        borderRadius:
-                            BorderRadius.circular(10), // Set the corner radius
+                        borderRadius: BorderRadius.circular(10),
                       ),
                     ),
-
                     child: const Text(
                       'Send Code',
                       style: TextStyle(fontSize: 20, color: Colors.white),
@@ -86,17 +106,15 @@ class EmailPageState extends State<EmailPage> {
                   child: ElevatedButton(
                     onPressed: () => Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => const BaseLayout()),
+                      MaterialPageRoute(
+                          builder: (context) => const BaseLayout()),
                     ),
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors
-                          .green.shade900, // Set the button color to green
+                      backgroundColor: Colors.green.shade900,
                       shape: RoundedRectangleBorder(
-                        borderRadius:
-                            BorderRadius.circular(10), // Set the corner radius
+                        borderRadius: BorderRadius.circular(10),
                       ),
                     ),
-
                     child: const Text(
                       'Home',
                       style: TextStyle(fontSize: 20, color: Colors.white),

@@ -348,12 +348,16 @@ class SignUpScreenState extends State<SignUpScreen> {
 
     try {
       // Attempt to create the user with email and password
-      await FirebaseAuth.instance.createUserWithEmailAndPassword(
+      UserCredential userCredential =
+          await FirebaseAuth.instance.createUserWithEmailAndPassword(
         email: _emailController.text.trim(),
         password: _passwordController.text.trim(),
       );
 
-      // On successful creation, add user details to Firestore
+      // On successful creation, send email verification
+      await userCredential.user!.sendEmailVerification();
+
+      // Add user details to Firestore
       await addUserDetails(
         _firstnameController.text.trim(),
         _lastnameController.text.trim(),
@@ -366,7 +370,7 @@ class SignUpScreenState extends State<SignUpScreen> {
         _birthdateController.text.trim(),
       );
 
-      // After successful registration, navigate to the EmailPage
+      // Navigate to the EmailPage after successful registration
       if (mounted) {
         Navigator.push(
           context,
