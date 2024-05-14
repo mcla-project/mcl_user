@@ -139,7 +139,6 @@ class _RecentsPageState extends State<RecentsPage> {
       } else {
         bookmarkedIds.add(bookId);
       }
-      // Update the Firestore document asynchronously
       updateFavoritesInFirestore(bookId);
     });
   }
@@ -169,7 +168,14 @@ class _RecentsPageState extends State<RecentsPage> {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => const BookScreen(),
+            builder: (context) => BookScreen(
+              title: title,
+              authors: authors,
+              summary: summary,
+              imagePath: imagePath,
+              isBookmarked: isBookmarked,
+              bookId: bookId,
+            ),
           ),
         );
       },

@@ -172,7 +172,14 @@ class _FavoritesPageState extends State<FavoritesPage> {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => const BookScreen(),
+            builder: (context) => BookScreen(
+              title: title,
+              authors: authors,
+              summary: summary,
+              imagePath: imagePath,
+              isBookmarked: isBookmarked,
+              bookId: bookId,
+            ),
           ),
         );
       },
