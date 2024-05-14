@@ -1,7 +1,90 @@
 import 'package:flutter/material.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:mcl_user/components/book.dart';
+import '../utils/get_doc_id.dart';
 
-class RecentsPage extends StatelessWidget {
+class RecentsPage extends StatefulWidget {
   const RecentsPage({super.key});
+
+  @override
+  State<RecentsPage> createState() => _RecentsPageState();
+}
+
+class _RecentsPageState extends State<RecentsPage> {
+  final DocIDService docIDService = DocIDService();
+  List<Map<String, dynamic>> recentBooks = [];
+  Set<String> bookmarkedIds = {};
+  bool isLoading = true;
+  Map<String, dynamic>? userData;
+
+  @override
+  void initState() {
+    super.initState();
+    fetchRecentBooks();
+  }
+
+  Future<void> fetchRecentBooks() async {
+    if (!mounted) return;
+    setState(() {
+      isLoading = true;
+    });
+
+    String? docId = await docIDService.getDocId();
+    if (docId == null) {
+      setState(() {
+        isLoading = false;
+      });
+      return;
+    }
+
+    DocumentSnapshot userDoc =
+        await FirebaseFirestore.instance.collection('users').doc(docId).get();
+    Map<String, dynamic>? userData = userDoc.data() as Map<String, dynamic>?;
+    List<dynamic> bookIds = userData?['recents'] ?? [];
+
+    if (userData != null && userData.containsKey('recents')) {
+      bookmarkedIds = Set.from(bookIds);
+    }
+
+    List<Map<String, dynamic>> booksWithAuthors = [];
+    for (var bookId in bookIds) {
+      DocumentSnapshot bookDoc = await FirebaseFirestore.instance
+          .collection('books')
+          .doc(bookId)
+          .get();
+      if (bookDoc.data() != null) {
+        Map<String, dynamic> bookData = bookDoc.data() as Map<String, dynamic>;
+        List<dynamic> authorsIds = List.from(bookData['authors_id'] ?? []);
+
+        List<String> authorNames = [];
+        for (var authorId in authorsIds) {
+          DocumentSnapshot authorDoc = await FirebaseFirestore.instance
+              .collection('authors')
+              .doc(authorId)
+              .get();
+          if (authorDoc.data() != null) {
+            Map<String, dynamic> authorData =
+                authorDoc.data() as Map<String, dynamic>;
+            authorNames.add(authorData['name']);
+          }
+        }
+
+        booksWithAuthors.add({
+          'id': bookDoc.id,
+          'title': bookData['title'],
+          'authors': authorNames,
+          'synopsis': bookData['synopsis'],
+          'book_cover': bookData['book_cover'],
+        });
+      }
+    }
+    if (mounted) {
+      setState(() {
+        recentBooks = booksWithAuthors;
+        isLoading = false;
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -9,129 +92,144 @@ class RecentsPage extends StatelessWidget {
       appBar: AppBar(
         title: const Text('Recents'),
       ),
-      body: ListView(
-        padding: const EdgeInsets.all(20),
-        children: <Widget>[
-          const Center(
-            child: Text(
-              'RECENTLY VIEWED',
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                color: Colors.black,
-                fontSize: 20,
-                fontFamily: 'Nunito',
-                fontWeight: FontWeight.w500,
-              ),
+      body: isLoading
+          ? const Center(child: CircularProgressIndicator())
+          : ListView.builder(
+              padding: const EdgeInsets.all(20),
+              itemCount: recentBooks.length + 1,
+              itemBuilder: (context, index) {
+                if (index == 0) {
+                  return const Center(
+                    child: SizedBox(
+                      width: 265,
+                      child: Text(
+                        'RECENT READS',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          color: Colors.black,
+                          fontSize: 20,
+                          fontFamily: 'Nunito',
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                    ),
+                  );
+                }
+                Map<String, dynamic> bookData = recentBooks[index - 1];
+                bool isBookmarked =
+                    userData?['favorites'].contains(bookData['id']) ?? false;
+                return bookItem(
+                  title: bookData['title'] ?? 'No title',
+                  authors: bookData['authors'].join(", ") ?? 'No authors',
+                  summary: bookData['synopsis'] ?? 'No summary available',
+                  imagePath: bookData['book_cover'] ??
+                      'https://via.placeholder.com/150',
+                  isBookmarked: isBookmarked,
+                  bookId: bookData['id'],
+                );
+              },
             ),
-          ),
-          const SizedBox(height: 20),
-          const SearchBar(),
-          bookItem(
-            title: "El Filibusterismo",
-            author: "by Dr. Jose Rizal",
-            summary:
-                "El filibusterismo is the second novel written by Philippine national hero José Rizal. It is the sequel to Noli Me Tángere and, …",
-            imagePath: 'assets/Elfili.png',
-          ),
-          bookItem(
-            title: "Alamat ng Pagong",
-            author: "by Segundo B. Matias",
-            summary:
-                "Ang alamat ng pagong ay tungkol sa isang binatang matulungin sa kapwa. Subalit, dahil sa isang masamang hangarin...",
-            imagePath: 'assets/pagong.png',
-          ),
-          bookItem(
-            title: "Florante at Laura",
-            author: "by Francisco Balagtas",
-            summary:
-                "Florante at Laura is an 1838 awit written by Tagalog poet Francisco Balagtas. The story was dedicated his former sweetheart María Asuncion Rivera.",
-            imagePath: 'assets/florante&laura.png',
-          ),
-          bookItem(
-            title: "I Love You Since 1892",
-            author: "by Binibinig Mia",
-            summary:
-                "Carmelita Montecarlos was the youngest daughter of San Alfonso’s wealthiest family, while Juanito Alfonso was the son of the most powerful and...",
-            imagePath: 'assets/ily1892.png',
-          ),
-          bookItem(
-            title: "Pride and Prejudice",
-            author: "by Jane Austen",
-            summary:
-                "A classic of English literature, written with incisive wit and superb character delineation, it centers on the burgeoning ...",
-            imagePath: 'assets/pride&prejudice.png',
-          ),
-        ],
-      ),
     );
   }
 
-  Widget bookItem({required String title, required String author, required String summary, required String imagePath}) {
-    return Container(
-      margin: const EdgeInsets.only(top: 20),
-      height: 150,
-      decoration: BoxDecoration(
-        color: const Color(0xFFD9D9D9),
-        borderRadius: BorderRadius.circular(20),
-        boxShadow: const [
-          BoxShadow(
-            color: Color(0x3F000000),
-            blurRadius: 1,
-            offset: Offset(0, 4),
-            spreadRadius: 0,
+  void toggleBookmark(String bookId) {
+    setState(() {
+      if (bookmarkedIds.contains(bookId)) {
+        bookmarkedIds.remove(bookId);
+      } else {
+        bookmarkedIds.add(bookId);
+      }
+      // Update the Firestore document asynchronously
+      updateFavoritesInFirestore(bookId);
+    });
+  }
+
+  Future<void> updateFavoritesInFirestore(String bookId) async {
+    String? docId = await docIDService.getDocId();
+    if (docId != null) {
+      List<String> updatedFavorites = bookmarkedIds.toList();
+      await FirebaseFirestore.instance
+          .collection('users')
+          .doc(docId)
+          .update({'favorites': updatedFavorites});
+    }
+  }
+
+  Widget bookItem({
+    required String title,
+    required String authors,
+    required String summary,
+    required String imagePath,
+    required bool isBookmarked,
+    required String bookId,
+  }) {
+    bool isBookmarked = bookmarkedIds.contains(bookId);
+    return GestureDetector(
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => const BookScreen(),
           ),
-        ],
-      ),
-      child: Row(
+        );
+      },
+      child: Column(
         children: [
-          Container(
-            width: 90,
-            height: 100,
-            decoration: BoxDecoration(
-              image: DecorationImage(
-                image: AssetImage(imagePath),
-                fit: BoxFit.fill,
+          const SizedBox(height: 20),
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Container(
+                width: 80,
+                height: 100,
+                decoration: BoxDecoration(
+                  image: DecorationImage(
+                    image: NetworkImage(imagePath),
+                    fit: BoxFit.fill,
+                  ),
+                ),
               ),
-            ),
-          ),
-          Expanded(
-            child: Padding(
-              padding: const EdgeInsets.only(left: 35.0, top: 20.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    title,
-                    style: const TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w500,
+              const SizedBox(width: 20),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      title,
+                      style: const TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w500,
+                      ),
                     ),
-                  ),
-                  const SizedBox(height: 2),
-                  Text(
-                    author,
-                    style: const TextStyle(
-                      fontSize: 12,
-                      fontWeight: FontWeight.w400,
+                    const SizedBox(height: 2),
+                    Text(
+                      authors,
+                      style: const TextStyle(
+                        fontSize: 12,
+                        fontWeight: FontWeight.w400,
+                      ),
                     ),
-                  ),
-                  const SizedBox(height: 5),
-                  Text(
-                    summary,
-                    style: const TextStyle(
-                      fontSize: 10,
-                      fontWeight: FontWeight.w500,
+                    const SizedBox(height: 5),
+                    Text(
+                      summary,
+                      style: const TextStyle(
+                        fontSize: 10,
+                        fontWeight: FontWeight.w500,
+                      ),
+                      overflow: TextOverflow.ellipsis,
+                      maxLines: 4,
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
-            ),
-          ),
-          IconButton(
-            icon: const Icon(Icons.bookmark, color: Colors.amber),
-            onPressed: () {
-              // Handle bookmark button press here
-            },
+              IconButton(
+                icon: Icon(
+                  isBookmarked ? Icons.bookmark : Icons.bookmark_border,
+                  color: Colors.yellowAccent[700],
+                ),
+                onPressed: () => toggleBookmark(bookId),
+              ),
+            ],
           ),
         ],
       ),
@@ -173,11 +271,11 @@ class SearchBarState extends State<SearchBar> {
         prefixIcon: IconButton(
           icon: const Icon(Icons.arrow_back),
           onPressed: () {
-            // Handle arrow button press here
             Navigator.of(context).pop();
           },
         ),
-        contentPadding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 15.0),
+        contentPadding:
+            const EdgeInsets.symmetric(vertical: 10.0, horizontal: 15.0),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(20.0),
         ),

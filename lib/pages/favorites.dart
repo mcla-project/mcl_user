@@ -1,7 +1,92 @@
 import 'package:flutter/material.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:mcl_user/components/book.dart';
+import '../utils/get_doc_id.dart';
 
-class FavoritesPage extends StatelessWidget {
+class FavoritesPage extends StatefulWidget {
   const FavoritesPage({super.key});
+
+  @override
+  State<FavoritesPage> createState() => _FavoritesPageState();
+}
+
+class _FavoritesPageState extends State<FavoritesPage> {
+  final DocIDService docIDService = DocIDService();
+  List<Map<String, dynamic>> favoriteBooks = [];
+  Set<String> bookmarkedIds = {};
+  bool isLoading = true;
+  Map<String, dynamic>? userData;
+
+  @override
+  void initState() {
+    super.initState();
+    fetchFavoriteBooks();
+  }
+
+  Future<void> fetchFavoriteBooks() async {
+    if (!mounted) return;
+
+    setState(() {
+      isLoading = true;
+    });
+
+    String? docId = await docIDService.getDocId();
+    if (docId == null) {
+      setState(() {
+        isLoading = false;
+      });
+      return;
+    }
+
+    DocumentSnapshot userDoc =
+        await FirebaseFirestore.instance.collection('users').doc(docId).get();
+    Map<String, dynamic>? userData = userDoc.data() as Map<String, dynamic>?;
+    List<dynamic> bookIds = userData?['favorites'] ?? [];
+
+    if (userData != null && userData.containsKey('favorites')) {
+      bookmarkedIds = Set.from(bookIds);
+    }
+
+    List<Map<String, dynamic>> booksWithAuthors = [];
+    for (var bookId in bookIds) {
+      DocumentSnapshot bookDoc = await FirebaseFirestore.instance
+          .collection('books')
+          .doc(bookId)
+          .get();
+      if (bookDoc.data() != null) {
+        Map<String, dynamic> bookData = bookDoc.data() as Map<String, dynamic>;
+        List<dynamic> authorsIds = List.from(bookData['authors_id'] ?? []);
+
+        List<String> authorNames = [];
+        for (var authorId in authorsIds) {
+          DocumentSnapshot authorDoc = await FirebaseFirestore.instance
+              .collection('authors')
+              .doc(authorId)
+              .get();
+          if (authorDoc.data() != null) {
+            Map<String, dynamic> authorData =
+                authorDoc.data() as Map<String, dynamic>;
+            authorNames.add(authorData['name']);
+          }
+        }
+
+        booksWithAuthors.add({
+          'id': bookDoc.id,
+          'title': bookData['title'],
+          'authors': authorNames,
+          'synopsis': bookData['synopsis'],
+          'book_cover': bookData['book_cover'],
+        });
+      }
+    }
+
+    if (mounted) {
+      setState(() {
+        favoriteBooks = booksWithAuthors;
+        isLoading = false;
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -9,100 +94,148 @@ class FavoritesPage extends StatelessWidget {
       appBar: AppBar(
         title: const Text('Favorites'),
       ),
-      body: ListView(
-        padding: const EdgeInsets.all(20),
-        children: <Widget>[
-          const Center(
-            child: SizedBox(
-              width: 265,
-              child: Text(
-                'RECENTLY VIEWED',
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  color: Colors.black,
-                  fontSize: 20,
-                  fontFamily: 'Nunito',
-                  fontWeight: FontWeight.w500,
-                ),
-              ),
+      body: isLoading
+          ? const Center(child: CircularProgressIndicator())
+          : ListView.builder(
+              padding: const EdgeInsets.all(20),
+              itemCount: favoriteBooks.length + 1,
+              itemBuilder: (context, index) {
+                if (index == 0) {
+                  return const Center(
+                    child: SizedBox(
+                      width: 265,
+                      child: Text(
+                        'FAVORITE READS',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          color: Colors.black,
+                          fontSize: 20,
+                          fontFamily: 'Nunito',
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                    ),
+                  );
+                }
+                // Use the fetched book data directly
+                Map<String, dynamic> bookData = favoriteBooks[index - 1];
+                bool isBookmarked =
+                    userData?['favorites'].contains(bookData['id']) ?? false;
+                return bookItem(
+                  title: bookData['title'] ?? 'No title',
+                  authors: bookData['authors'].join(", ") ?? 'No authors',
+                  summary: bookData['synopsis'] ?? 'No summary available',
+                  imagePath: bookData['book_cover'] ??
+                      'https://via.placeholder.com/150',
+                  isBookmarked: isBookmarked,
+                  bookId: bookData['id'],
+                );
+              },
             ),
-          ),
-          const SizedBox(height: 30),
-          const SearchBar(),
-          bookItem(
-              title: "El Filibusterismo",
-              author: "by Dr. Jose Rizal",
-              summary:
-                  "El filibusterismo is the second novel written by Philippine national hero José Rizal. It is the sequel to Noli Me Tángere and, …",
-              imagePath: 'assets/Elfili.png'),
-          bookItem(
-              title: "Alamat ng Pinya",
-              author: "by Boots S. Agbayani",
-              summary:
-                  "Ang Alamat ng Pinya ay isa sa mga kilalang kwentong-bayan sa Pilipinas. Ito ay isang kuwento tungkol sa isang ina na nagngangalang...",
-              imagePath: 'assets/pinya.png'),
-          bookItem(
-              title: "Florante at Laura",
-              author: "by Francisco Balagtas",
-              summary:
-                  "Florante at Laura is an 1838 awit written by Tagalog poet Francisco Balagtas. The story was dedicated his former sweetheart María Asuncion Rivera.",
-              imagePath: 'assets/florante&laura.png'),
-          bookItem(
-              title: "A Thousand Brains",
-              author: "by Jeff Hawkins",
-              summary:
-                  "An author, neuroscientist, and computer engineer unveils a theory of intelligence, of understanding the brain and the future of AI. For all...",
-              imagePath: 'assets/thousand_brains.png'),
-          bookItem(
-              title: "World War Z",
-              author: "by Max Brooks",
-              summary:
-                  "The Zombie War came unthinkably close to eradicating humanity. Max Brooks, driven by the urgency of preserving the acid-etched first-hand...",
-              imagePath: 'assets/WWZ.png'),
-        ],
-      ),
     );
   }
 
-  Widget bookItem({required String title, required String author, required String summary, required String imagePath}) {
-    return Column(
-      children: [
-        const SizedBox(height: 20),
-        Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Container(
-              width: 80,
-              height: 100,
-              decoration: BoxDecoration(
-                image: DecorationImage(
-                  image: AssetImage(imagePath),
-                  fit: BoxFit.fill,
+  void toggleBookmark(String bookId) {
+    setState(() {
+      if (bookmarkedIds.contains(bookId)) {
+        bookmarkedIds.remove(bookId);
+      } else {
+        bookmarkedIds.add(bookId);
+      }
+      // Update the Firestore document asynchronously
+      updateFavoritesInFirestore(bookId);
+    });
+  }
+
+  Future<void> updateFavoritesInFirestore(String bookId) async {
+    String? docId = await docIDService.getDocId();
+    if (docId != null) {
+      List<String> updatedFavorites = bookmarkedIds.toList();
+      await FirebaseFirestore.instance
+          .collection('users')
+          .doc(docId)
+          .update({'favorites': updatedFavorites});
+    }
+  }
+
+  Widget bookItem({
+    required String title,
+    required String authors,
+    required String summary,
+    required String imagePath,
+    required bool isBookmarked,
+    required String bookId,
+  }) {
+    bool isBookmarked = bookmarkedIds.contains(bookId);
+    return GestureDetector(
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => const BookScreen(),
+          ),
+        );
+      },
+      child: Column(
+        children: [
+          const SizedBox(height: 20),
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Container(
+                width: 80,
+                height: 100,
+                decoration: BoxDecoration(
+                  image: DecorationImage(
+                    image: NetworkImage(imagePath),
+                    fit: BoxFit.fill,
+                  ),
                 ),
               ),
-            ),
-            const SizedBox(width: 20),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(title, style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w500)),
-                  const SizedBox(height: 2),
-                  Text(author, style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w400)),
-                  const SizedBox(height: 5),
-                  Text(summary, style: const TextStyle(fontSize: 10, fontWeight: FontWeight.w500)),
-                ],
+              const SizedBox(width: 20),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      title,
+                      style: const TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                    const SizedBox(height: 2),
+                    Text(
+                      authors,
+                      style: const TextStyle(
+                        fontSize: 12,
+                        fontWeight: FontWeight.w400,
+                      ),
+                    ),
+                    const SizedBox(height: 5),
+                    Text(
+                      summary,
+                      style: const TextStyle(
+                        fontSize: 10,
+                        fontWeight: FontWeight.w500,
+                      ),
+                      overflow: TextOverflow.ellipsis,
+                      maxLines: 4,
+                    ),
+                  ],
+                ),
               ),
-            ),
-            IconButton(
-              icon: const Icon(Icons.bookmark, color: Colors.amber),
-              onPressed: () {
-                // Handle bookmark button press here
-              },
-            ),
-          ],
-        ),
-      ],
+              IconButton(
+                icon: Icon(
+                  isBookmarked ? Icons.bookmark : Icons.bookmark_border,
+                  color: Colors.yellowAccent[700],
+                ),
+                onPressed: () => toggleBookmark(bookId),
+              ),
+            ],
+          ),
+        ],
+      ),
     );
   }
 }
@@ -145,7 +278,8 @@ class SearchBarState extends State<SearchBar> {
             Navigator.of(context).pop();
           },
         ),
-        contentPadding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 15.0),
+        contentPadding:
+            const EdgeInsets.symmetric(vertical: 10.0, horizontal: 15.0),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(20.0),
         ),

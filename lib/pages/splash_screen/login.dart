@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import '../../components/base_layout.dart';
@@ -29,7 +28,7 @@ class LoginScreenState extends State<LoginScreen> {
         password: password,
       );
 
-      if (userCredential.user != null) {
+      if (userCredential.user != null && mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
             content: Text("User is successfully signed in"),
@@ -40,19 +39,22 @@ class LoginScreenState extends State<LoginScreen> {
           MaterialPageRoute(builder: (context) => const EmailPage()),
         );
       } else {
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text("Some error occurred"),
+            ),
+          );
+        }
+      }
+    } catch (e) {
+      if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text("Some error occurred"),
+          SnackBar(
+            content: Text("Error signing in: $e"),
           ),
         );
       }
-    } catch (e) {
-      print("Error signing in: $e");
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text("Error signing in: $e"),
-        ),
-      );
     }
   }
 
@@ -181,10 +183,8 @@ class LoginScreenState extends State<LoginScreen> {
                               style: TextStyle(
                                 color: Colors.blue,
                                 fontWeight: FontWeight.bold,
-                              )
-                          )
-                        ]
-                    ),
+                              ))
+                        ]),
                   ),
                 ),
               ),
