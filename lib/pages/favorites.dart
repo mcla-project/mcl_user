@@ -76,6 +76,7 @@ class _FavoritesPageState extends State<FavoritesPage> {
           'authors': authorNames,
           'synopsis': bookData['synopsis'],
           'book_cover': bookData['book_cover'],
+          'genre': bookData['genre'],
         });
       }
     }
@@ -129,6 +130,7 @@ class _FavoritesPageState extends State<FavoritesPage> {
                       'https://via.placeholder.com/150',
                   isBookmarked: isBookmarked,
                   bookId: bookData['id'],
+                  genre: bookData['genre'].join(", ") ?? 'No genre',
                 );
               },
             ),
@@ -165,6 +167,7 @@ class _FavoritesPageState extends State<FavoritesPage> {
     required String imagePath,
     required bool isBookmarked,
     required String bookId,
+    required String genre,
   }) {
     bool isBookmarked = bookmarkedIds.contains(bookId);
     return GestureDetector(
@@ -179,6 +182,7 @@ class _FavoritesPageState extends State<FavoritesPage> {
               imagePath: imagePath,
               isBookmarked: isBookmarked,
               bookId: bookId,
+              genre: genre,
             ),
           ),
         );

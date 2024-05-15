@@ -38,15 +38,24 @@ class Book {
   }
 }
 
-class ViewCardPage extends StatefulWidget {
-  const ViewCardPage({super.key});
+class AllBooksPage extends StatefulWidget {
+  const AllBooksPage({super.key});
 
   @override
-  State<ViewCardPage> createState() => _ViewCardPageState();
+  State<AllBooksPage> createState() => _AllBooksPageState();
 }
 
 // Fetch author names from firebase
-class _ViewCardPageState extends State<ViewCardPage> {
+class _AllBooksPageState extends State<AllBooksPage> {
+  late Future<List<Book>> booksFuture;
+  TextEditingController searchController = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+    booksFuture = fetchBooksFromFirebase();
+  }
+
   Future<String> fetchAuthorNameById(String authorId) async {
     try {
       DocumentSnapshot authorDoc = await FirebaseFirestore.instance
@@ -70,38 +79,80 @@ class _ViewCardPageState extends State<ViewCardPage> {
   }
 
   // Fetch all books from firebase
-  Future<List<Book>> fetchBooksFromFirebase() async {
+  Future<List<Book>> fetchBooksFromFirebase({String query = ''}) async {
     FirebaseFirestore firestore = FirebaseFirestore.instance;
-    QuerySnapshot snapshot = await firestore.collection('books').get();
+    Query collectionQuery = firestore.collection('books');
 
-    List<Future<Book>> bookFutures = snapshot.docs.map((doc) async {
-      Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
-      List<String> authorIds = List<String>.from(data['authors_id']);
-      List<String> authorNames = [];
+    // Apply search filters if the query is not empty
+    if (query.isNotEmpty) {
+      print("Search Query: $query");
+      collectionQuery = collectionQuery
+          .where('title', isGreaterThanOrEqualTo: query)
+          .where('title', isLessThanOrEqualTo: '$query\uf8ff');
+    }
+    try {
+      // Execute the query only once with the potentially modified collectionQuery
+      QuerySnapshot snapshot = await collectionQuery.get();
+      print("Fetched ${snapshot.docs.length} documents after query.");
 
-      for (String authorId in authorIds) {
-        String name = await fetchAuthorNameById(authorId);
-        authorNames.add(name);
-      }
+      List<Future<Book>> bookFutures = snapshot.docs.map((doc) async {
+        Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
+        List<String> authorIds = List<String>.from(data['authors_id']);
+        List<String> authorNames = [];
 
-      return Book(
-        title: data['title'],
-        authors: authorNames,
-        summary: data['synopsis'],
-        imagePath: data['book_cover'],
-        isBookmarked: data['isBookmarked'] ?? false,
-        bookId: doc.id,
-        genre: List<String>.from(data['genre']),
-      );
-    }).toList();
+        for (String authorId in authorIds) {
+          String name = await fetchAuthorNameById(authorId);
+          authorNames.add(name);
+        }
 
-    return await Future.wait(bookFutures);
+        return Book(
+          title: data['title'],
+          authors: authorNames,
+          summary: data['synopsis'],
+          imagePath: data['book_cover'],
+          isBookmarked: data['isBookmarked'] ?? false,
+          bookId: doc.id,
+          genre: List<String>.from(data['genre']),
+        );
+      }).toList();
+
+      return await Future.wait(bookFutures);
+    } catch (e) {
+      print('Error fetching data: ${e.toString()}');
+      return [];
+    }
+  }
+
+  void searchBooks(String query) {
+    setState(() {
+      // Update the booksFuture to fetch based on the search query
+      booksFuture = fetchBooksFromFirebase(query: query.trim());
+    });
   }
 
   @override
   Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: TextField(
+          controller: searchController,
+          decoration: InputDecoration(
+            hintText: 'Search Books',
+            suffixIcon: IconButton(
+              icon: const Icon(Icons.search),
+              onPressed: () => searchBooks(searchController.text),
+            ),
+          ),
+          onSubmitted: (value) => searchBooks(value),
+        ),
+      ),
+      body: buildBookGrid(),
+    );
+  }
+
+  Widget buildBookGrid() {
     return FutureBuilder(
-      future: fetchBooksFromFirebase(),
+      future: booksFuture,
       builder: (context, AsyncSnapshot<List<Book>> snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return const Center(child: CircularProgressIndicator());

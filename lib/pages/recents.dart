@@ -75,6 +75,7 @@ class _RecentsPageState extends State<RecentsPage> {
           'authors': authorNames,
           'synopsis': bookData['synopsis'],
           'book_cover': bookData['book_cover'],
+          'genre': bookData['genre'].join(", ") ?? 'No genre',
         });
       }
     }
@@ -126,6 +127,7 @@ class _RecentsPageState extends State<RecentsPage> {
                       'https://via.placeholder.com/150',
                   isBookmarked: isBookmarked,
                   bookId: bookData['id'],
+                  genre: bookData['genre'],
                 );
               },
             ),
@@ -161,6 +163,7 @@ class _RecentsPageState extends State<RecentsPage> {
     required String imagePath,
     required bool isBookmarked,
     required String bookId,
+    required String genre,
   }) {
     bool isBookmarked = bookmarkedIds.contains(bookId);
     return GestureDetector(
@@ -175,6 +178,7 @@ class _RecentsPageState extends State<RecentsPage> {
               imagePath: imagePath,
               isBookmarked: isBookmarked,
               bookId: bookId,
+              genre: genre
             ),
           ),
         );
