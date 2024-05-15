@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:mcl_user/components/book.dart';
+import '../models/book.dart';
+import '../services/book_repo.dart';
 import '../utils/get_doc_id.dart';
 
 class RecentsPage extends StatefulWidget {
@@ -12,7 +14,8 @@ class RecentsPage extends StatefulWidget {
 
 class _RecentsPageState extends State<RecentsPage> {
   final DocIDService docIDService = DocIDService();
-  List<Map<String, dynamic>> recentBooks = [];
+  final BookRepository bookRepository = BookRepository();
+  List<Book> recentBooks = [];
   Set<String> bookmarkedIds = {};
   bool isLoading = true;
   Map<String, dynamic>? userData;
@@ -37,51 +40,10 @@ class _RecentsPageState extends State<RecentsPage> {
       return;
     }
 
-    DocumentSnapshot userDoc =
-        await FirebaseFirestore.instance.collection('users').doc(docId).get();
-    Map<String, dynamic>? userData = userDoc.data() as Map<String, dynamic>?;
-    List<dynamic> bookIds = userData?['recents'] ?? [];
-
-    if (userData != null && userData.containsKey('recents')) {
-      bookmarkedIds = Set.from(bookIds);
-    }
-
-    List<Map<String, dynamic>> booksWithAuthors = [];
-    for (var bookId in bookIds) {
-      DocumentSnapshot bookDoc = await FirebaseFirestore.instance
-          .collection('books')
-          .doc(bookId)
-          .get();
-      if (bookDoc.data() != null) {
-        Map<String, dynamic> bookData = bookDoc.data() as Map<String, dynamic>;
-        List<dynamic> authorsIds = List.from(bookData['authors_id'] ?? []);
-
-        List<String> authorNames = [];
-        for (var authorId in authorsIds) {
-          DocumentSnapshot authorDoc = await FirebaseFirestore.instance
-              .collection('authors')
-              .doc(authorId)
-              .get();
-          if (authorDoc.data() != null) {
-            Map<String, dynamic> authorData =
-                authorDoc.data() as Map<String, dynamic>;
-            authorNames.add(authorData['name']);
-          }
-        }
-
-        booksWithAuthors.add({
-          'id': bookDoc.id,
-          'title': bookData['title'],
-          'authors': authorNames,
-          'synopsis': bookData['synopsis'],
-          'book_cover': bookData['book_cover'],
-          'genre': bookData['genre'].join(", ") ?? 'No genre',
-        });
-      }
-    }
+    recentBooks = await bookRepository.fetchRecents(docId);
     if (mounted) {
       setState(() {
-        recentBooks = booksWithAuthors;
+        // recentBooks = booksWithAuthors;
         isLoading = false;
       });
     }
@@ -116,18 +78,17 @@ class _RecentsPageState extends State<RecentsPage> {
                     ),
                   );
                 }
-                Map<String, dynamic> bookData = recentBooks[index - 1];
-                bool isBookmarked =
-                    userData?['favorites'].contains(bookData['id']) ?? false;
+                Book bookData = recentBooks[index - 1];
+                bool isBookmarked = bookmarkedIds.contains(bookData.bookId);
+                
                 return bookItem(
-                  title: bookData['title'] ?? 'No title',
-                  authors: bookData['authors'].join(", ") ?? 'No authors',
-                  summary: bookData['synopsis'] ?? 'No summary available',
-                  imagePath: bookData['book_cover'] ??
-                      'https://via.placeholder.com/150',
+                  title: bookData.title,
+                  authors: bookData.authors.join(", "),
+                  summary: bookData.summary,
+                  imagePath: bookData.imagePath,
                   isBookmarked: isBookmarked,
-                  bookId: bookData['id'],
-                  genre: bookData['genre'],
+                  bookId: bookData.bookId,
+                  genre: bookData.genre.join(", "),
                 );
               },
             ),
@@ -152,7 +113,7 @@ class _RecentsPageState extends State<RecentsPage> {
       await FirebaseFirestore.instance
           .collection('users')
           .doc(docId)
-          .update({'recents': updatedFavorites});
+          .update({'favorites': updatedFavorites});
     }
   }
 

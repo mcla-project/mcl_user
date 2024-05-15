@@ -42,9 +42,9 @@ class _FavoritesPageState extends State<FavoritesPage> {
     }
 
     favoriteBooks = await bookRepository.fetchFavorites(docId);
+    bookmarkedIds = Set.from(favoriteBooks.map((book) => book.bookId));
     if (mounted) {
       setState(() {
-        // favoriteBooks = booksWithAuthors;
         isLoading = false;
       });
     }
@@ -80,7 +80,8 @@ class _FavoritesPageState extends State<FavoritesPage> {
                   );
                 }
                 Book bookData = favoriteBooks[index - 1];
-                bool isBookmarked = true;
+                bool isBookmarked = bookmarkedIds.contains(bookData.bookId);
+
                 return bookItem(
                   title: bookData.title,
                   authors: bookData.authors.join(", "),
@@ -126,7 +127,7 @@ class _FavoritesPageState extends State<FavoritesPage> {
     required String bookId,
     required String genre,
   }) {
-    bool isBookmarked = bookmarkedIds.contains(bookId);
+    // bool isBookmarked = bookmarkedIds.contains(bookId);
     return GestureDetector(
       onTap: () {
         Navigator.push(
