@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../components/book.dart';
 import '../../models/book.dart';
 import '../../services/book_service.dart';
 
@@ -25,7 +26,9 @@ class GenreBooksPageState extends State<GenreBooksPage> {
   void fetchBooks() async {
     var fetchedBooks = await _bookService.fetchBooksFromFirebase();
     setState(() {
-      books = fetchedBooks.where((book) => book.genre.contains(widget.genre)).toList();
+      books = fetchedBooks
+          .where((book) => book.genre.contains(widget.genre))
+          .toList();
       isLoading = false;
     });
   }
@@ -39,16 +42,73 @@ class GenreBooksPageState extends State<GenreBooksPage> {
       ),
       body: isLoading
           ? const Center(child: CircularProgressIndicator())
-          : ListView.builder(
-              itemCount: books.length,
-              itemBuilder: (context, index) {
-                return ListTile(
-                  title: Text(books[index].title),
-                  subtitle: Text(books[index].authors.join(', ')),
-                  leading: Image.network(books[index].imagePath, width: 56, height: 56, fit: BoxFit.cover),
-                );
-              },
+          : GestureDetector(
+              onTap: () {},
+              child: GridView.builder(
+                padding: const EdgeInsets.all(10),
+                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 3,
+                  childAspectRatio: 0.7,
+                  crossAxisSpacing: 5,
+                  mainAxisSpacing: 7,
+                ),
+                itemCount: books.length,
+                itemBuilder: (context, index) {
+                  Book book = books[index];
+                  return GestureDetector(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => BookScreen(
+                            title: book.title,
+                            authors: book.authors.join(", "),
+                            summary: book.summary,
+                            imagePath: book.imagePath,
+                            isBookmarked: book.isBookmarked,
+                            bookId: book.bookId,
+                            genre: book.genre.join(", "),
+                          ),
+                        ),
+                      );
+                    },
+                    child: Padding(
+                      padding: const EdgeInsets.all(5.0),
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: <Widget>[
+                          ClipRRect(
+                            borderRadius: BorderRadius.circular(8.0),
+                            child: Image.network(
+                              book.imagePath,
+                              fit: BoxFit.cover,
+                              width: 100,
+                              height: 140,
+                            ),
+                          ),
+                          const SizedBox(height: 0),
+                          Flexible(
+                            child: Text(
+                              book.title,
+                              style:
+                                  TextStyle(fontSize: _getFontSize(book.title)),
+                              textAlign: TextAlign.center,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  );
+                },
+              ),
             ),
     );
+  }
+
+  double _getFontSize(String title) {
+    if (title.length < 10) return 16; // Large size for short titles
+    if (title.length < 20) return 14; // Medium size for medium-length titles
+    return 12; // Small size for long titles
   }
 }
