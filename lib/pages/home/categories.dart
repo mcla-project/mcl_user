@@ -1,36 +1,63 @@
 import 'package:flutter/material.dart';
+import '../../services/book_service.dart';
+import 'genre_page.dart';
 
-class Genre {
-  final String name;
-  final String description;
-  final String imagePath;
+class CategoriesPage extends StatefulWidget {
+  const CategoriesPage({super.key});
 
-  Genre({required this.name, required this.description, required this.imagePath});
+  @override
+  CategoriesPageState createState() => CategoriesPageState();
 }
 
+class CategoriesPageState extends State<CategoriesPage> {
+  final BookService _bookService = BookService();
+  List<String> genres = [];
 
-class CategoriesPage extends StatelessWidget {
-  final List<Genre> genres = [
-    Genre(name: "Science Fiction", description: "Explore new worlds and futuristic scenarios.", imagePath: "images/mnlcitylib_logo.png"),
-    Genre(name: "Autobiography", description: "Delve into the stories of extraordinary lives.", imagePath: "images/mnlcitylib_logo.png"),
-    Genre(name: "Philippine Literature", description: "Discover the rich literary heritage of the Philippines.", imagePath: "images/mnlcitylib_logo.png"),
-    Genre(name: "Romance", description: "Dive into tales of love and passion.", imagePath: "images/mnlcitylib_logo.png"),
-  ];
+  @override
+  void initState() {
+    super.initState();
+    fetchGenres();
+  }
+
+  void fetchGenres() async {
+    var fetchedGenres = await _bookService.fetchUniqueGenres();
+    setState(() {
+      genres = fetchedGenres;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Genres'),
+        title: const Text('Genres'),
+        backgroundColor: Colors.white60,
       ),
       body: ListView.builder(
         itemCount: genres.length,
         itemBuilder: (context, index) {
           return Card(
-            child: ListTile(
-              leading: Image.asset(genres[index].imagePath, width: 50, height: 50),
-              title: Text(genres[index].name),
-              subtitle: Text(genres[index].description),
+            clipBehavior: Clip.antiAlias,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(10.0),
+            ),
+            elevation: 4,
+            margin: const EdgeInsets.all(10),
+            child: InkWell(
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => GenreBooksPage(genre: genres[index])),
+                );
+              },
+              child: Container(
+                color: Colors.white60,
+                child: ListTile(
+                  leading: const Icon(Icons.book, size: 56),
+                  title: Text(genres[index], style: const TextStyle(fontSize: 15.0, fontWeight: FontWeight.bold)),
+                  subtitle: Text('Explore this genre', style: TextStyle(color: Colors.grey[600])),
+                ),
+              ),
             ),
           );
         },

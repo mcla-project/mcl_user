@@ -127,7 +127,7 @@ class GenreList extends StatelessWidget {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => CategoriesPage(),
+                        builder: (context) => const CategoriesPage(),
                       ),
                     );
                   },

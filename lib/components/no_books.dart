@@ -38,7 +38,6 @@ class NoBooksFoundWidget extends StatelessWidget {
             children: recommendations
                 .map((title) => ElevatedButton(
                       onPressed: () {
-                        print('Recommendation tapped: $title');
                       },
                       style: ElevatedButton.styleFrom(),
                       child: Text(title),

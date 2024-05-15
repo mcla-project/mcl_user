@@ -16,7 +16,6 @@ class BookService {
         return "Unknown Author";
       }
     } catch (e) {
-      print("Error fetching author name: ${e.toString()}");
       return "Error in data";
     }
   }
@@ -40,7 +39,6 @@ class BookService {
         for (String authorId in authorIds) {
           String name = await fetchAuthorNameById(authorId);
           authorNames.add(name);
-          print("Fetched author name: $name for ID: $authorId"); // Debug log
         }
 
         return Book(
@@ -56,7 +54,22 @@ class BookService {
 
       return await Future.wait(bookFutures);
     } catch (e) {
-      print('Error fetching data: ${e.toString()}');
+      return [];
+    }
+  }
+
+    Future<List<String>> fetchUniqueGenres() async {
+    try {
+      QuerySnapshot snapshot = await _firestore.collection('books').get();
+      // Using a Set to ensure uniqueness
+      Set<String> genres = {};
+      for (var doc in snapshot.docs) {
+        var data = doc.data() as Map<String, dynamic>;
+        List<String> bookGenres = List<String>.from(data['genre']);
+        genres.addAll(bookGenres);  // Add all genres from the book to the Set
+      }
+      return genres.toList(); // Convert Set to List
+    } catch (e) {
       return [];
     }
   }
