@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:mcl_user/components/book.dart';
 import '../components/book_item.dart';
 import '../models/book.dart';
 import '../services/book_repo.dart';

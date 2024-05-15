@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
+import 'book.dart';
 
-// Define a callback type for bookmark toggling
+// Callback type for bookmark toggling
 typedef ToggleBookmarkCallback = void Function(String bookId);
 
 class BookItem extends StatelessWidget {
@@ -29,7 +30,20 @@ class BookItem extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        // Define what should happen on tap, if necessary
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => BookScreen(
+              title: title,
+              authors: authors,
+              summary: summary,
+              imagePath: imagePath,
+              isBookmarked: isBookmarked,
+              bookId: bookId,
+              genre: genre,
+            ),
+          ),
+        );
       },
       child: Column(
         children: [
