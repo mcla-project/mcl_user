@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../components/book.dart';
+import '../../components/book_list.dart';
 import '../../models/book.dart';
 import '../../services/book_repo.dart';
 import '../../utils/get_doc_id.dart';
@@ -49,6 +50,24 @@ class _FavoriteBooksState extends State<FavoriteBooks> {
     }
   }
 
+  void handleBookTap(Book book) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => BookScreen(
+          title: book.title,
+          authors: book.authors.join(", "),
+          summary: book.summary,
+          imagePath: book.imagePath,
+          isBookmarked:
+              bookmarkedIds.contains(book.bookId),
+          bookId: book.bookId,
+          genre: book.genre.join(", "),
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -65,53 +84,10 @@ class _FavoriteBooksState extends State<FavoriteBooks> {
               ? const CircularProgressIndicator()
               : SizedBox(
                   height: 180,
-                  child: ListView.builder(
-                    scrollDirection: Axis.horizontal,
-                    itemCount: favoriteBooks.length,
-                    itemBuilder: (context, index) {
-                      final book = favoriteBooks[index];
-                      return GestureDetector(
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => BookScreen(
-                                title: book.title,
-                                authors: book.authors.join(", "),
-                                summary: book.summary,
-                                imagePath: book.imagePath,
-                                isBookmarked: bookmarkedIds.contains(
-                                    book.bookId),
-                                bookId: book.bookId,
-                                genre: book.genre.join(", "),
-                              ),
-                            ),
-                          );
-                        },
-                        child: Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Column(
-                            children: <Widget>[
-                              ClipRRect(
-                                borderRadius: BorderRadius.circular(8.0),
-                                child: Image.network(
-                                  book.imagePath,
-                                  fit: BoxFit.cover,
-                                  width: 100,
-                                  height: 140,
-                                ),
-                              ),
-                              const SizedBox(height: 5),
-                              Text(
-                                book.title,
-                                style: const TextStyle(fontSize: 12),
-                                textAlign: TextAlign.center,
-                              ),
-                            ],
-                          ),
-                        ),
-                      );
-                    },
+                  child: BooksListView(
+                    books: favoriteBooks,
+                    bookmarkedIds: bookmarkedIds,
+                    onBookTap: handleBookTap,
                   ),
                 ),
         ],
