@@ -18,7 +18,6 @@ class _FavoritesPageState extends State<FavoritesPage> {
   List<Book> favoriteBooks = [];
   Set<String> bookmarkedIds = {};
   bool isLoading = true;
-  Map<String, dynamic>? userData;
 
   @override
   void initState() {
