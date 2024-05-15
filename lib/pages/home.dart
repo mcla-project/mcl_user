@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'home/favorites.dart';
-import '../utils/get_doc_id.dart';
 import 'home/all_books.dart';
-
+import 'home/favorites.dart';
+import 'home/categories.dart';
+import '../utils/get_doc_id.dart';
 
 class Genre {
   final String name;
@@ -54,7 +54,7 @@ class _HomePageState extends State<HomePage> {
               ),
             ),
             GenreList(),
-            FavoriteBooks(),
+            const FavoriteBooks(),
           ],
         ),
       ),
@@ -93,13 +93,13 @@ class GenreList extends StatelessWidget {
               children: [
                 Text('Available Genres',
                     style: Theme.of(context).textTheme.titleSmall),
-                const Spacer(), // Add some space between the texts
+                const Spacer(),
                 GestureDetector(
                   onTap: () {
                     Navigator.of(context).push(
-                          MaterialPageRoute(
-                              builder: (context) => const AllBooksPage()),
-                        );
+                      MaterialPageRoute(
+                          builder: (context) => const AllBooksPage()),
+                    );
                   },
                   child: Text('View All',
                       style: Theme.of(context).textTheme.titleSmall),
@@ -123,7 +123,14 @@ class GenreList extends StatelessWidget {
                       style: const TextStyle(fontWeight: FontWeight.bold)),
                   subtitle: Text(genres[index].description),
                   trailing: const Icon(Icons.arrow_forward_ios),
-                  onTap: () {},
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => CategoriesPage(),
+                      ),
+                    );
+                  },
                 ),
               );
             },

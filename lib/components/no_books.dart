@@ -40,8 +40,8 @@ class NoBooksFoundWidget extends StatelessWidget {
                       onPressed: () {
                         print('Recommendation tapped: $title');
                       },
-                      child: Text(title),
                       style: ElevatedButton.styleFrom(),
+                      child: Text(title),
                     ))
                 .toList(),
           ),

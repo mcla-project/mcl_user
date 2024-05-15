@@ -4,7 +4,6 @@ import '../../components/no_books.dart';
 import '../../models/book.dart';
 import '../../services/book_service.dart';
 
-
 class AllBooksPage extends StatefulWidget {
   const AllBooksPage({super.key});
 
@@ -15,13 +14,14 @@ class AllBooksPage extends StatefulWidget {
 class _AllBooksPageState extends State<AllBooksPage> {
   late Future<List<Book>> booksFuture;
   TextEditingController searchController = TextEditingController();
-   final BookService _bookService = BookService();
+  final BookService _bookService = BookService();
 
   @override
   void initState() {
     super.initState();
     booksFuture = _bookService.fetchBooksFromFirebase();
   }
+
   void searchBooks(String query) {
     setState(() {
       // Update the booksFuture to fetch based on the search query
@@ -68,7 +68,7 @@ class _AllBooksPageState extends State<AllBooksPage> {
                 crossAxisCount: 3,
                 childAspectRatio: 0.7,
                 crossAxisSpacing: 5,
-                mainAxisSpacing: 5,
+                mainAxisSpacing: 7,
               ),
               itemCount: snapshot.data!.length,
               itemBuilder: (context, index) {
@@ -90,33 +90,33 @@ class _AllBooksPageState extends State<AllBooksPage> {
                       ),
                     );
                   },
-                  child: Card(
+                  child: Padding(
+                    padding: const EdgeInsets.all(5.0),
                     child: Column(
-                      children: [
-                        Expanded(
-                          child:
-                              Image.network(book.imagePath, fit: BoxFit.cover),
+                      mainAxisSize: MainAxisSize
+                          .min,
+                      children: <Widget>[
+                        ClipRRect(
+                          borderRadius: BorderRadius.circular(8.0),
+                          child: Image.network(
+                            book.imagePath,
+                            fit: BoxFit.cover,
+                            width: 100,
+                            height: 140,
+                          ),
                         ),
-                        Padding(
-                          padding: const EdgeInsets.all(1.0),
+                        const SizedBox(height: 0),
+                        Flexible(
                           child: Text(
                             book.title,
                             style: TextStyle(
-                                fontSize: _getFontSize(book.title),
-                                fontWeight: FontWeight.bold),
-                            overflow: TextOverflow.ellipsis,
+                                fontSize: _getFontSize(book
+                                    .title)),
+                            textAlign: TextAlign.center,
+                            overflow: TextOverflow
+                                .ellipsis,
                           ),
                         ),
-                        Text(
-                          book.authors.join(", "),
-                          style: TextStyle(
-                            fontSize: _getFontSize(
-                              book.authors.join(", "),
-                            ),
-                          ),
-                          overflow: TextOverflow.ellipsis,
-                          maxLines: 1,
-                        )
                       ],
                     ),
                   ),
