@@ -90,8 +90,8 @@ class _AllBooksPageState extends State<AllBooksPage> {
           .where('title', isGreaterThanOrEqualTo: query)
           .where('title', isLessThanOrEqualTo: '$query\uf8ff');
     }
+
     try {
-      // Execute the query only once with the potentially modified collectionQuery
       QuerySnapshot snapshot = await collectionQuery.get();
       print("Fetched ${snapshot.docs.length} documents after query.");
 
@@ -158,6 +158,9 @@ class _AllBooksPageState extends State<AllBooksPage> {
           return const Center(child: CircularProgressIndicator());
         } else if (snapshot.hasError) {
           return Center(child: Text("Error: ${snapshot.error}"));
+        } else if (snapshot.hasData && snapshot.data!.isEmpty) {
+          // Check if the data list is empty and handle it
+          return const Center(child: Text("No books found"));
         } else if (snapshot.hasData) {
           return GestureDetector(
             onTap: () {},
