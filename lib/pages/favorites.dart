@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:mcl_user/components/book.dart';
+import '../models/book.dart';
+import '../services/book_repo.dart';
 import '../utils/get_doc_id.dart';
 
 class FavoritesPage extends StatefulWidget {
@@ -12,7 +14,8 @@ class FavoritesPage extends StatefulWidget {
 
 class _FavoritesPageState extends State<FavoritesPage> {
   final DocIDService docIDService = DocIDService();
-  List<Map<String, dynamic>> favoriteBooks = [];
+  final BookRepository bookRepository = BookRepository();
+  List<Book> favoriteBooks = [];
   Set<String> bookmarkedIds = {};
   bool isLoading = true;
   Map<String, dynamic>? userData;
@@ -38,52 +41,10 @@ class _FavoritesPageState extends State<FavoritesPage> {
       return;
     }
 
-    DocumentSnapshot userDoc =
-        await FirebaseFirestore.instance.collection('users').doc(docId).get();
-    Map<String, dynamic>? userData = userDoc.data() as Map<String, dynamic>?;
-    List<dynamic> bookIds = userData?['favorites'] ?? [];
-
-    if (userData != null && userData.containsKey('favorites')) {
-      bookmarkedIds = Set.from(bookIds);
-    }
-
-    List<Map<String, dynamic>> booksWithAuthors = [];
-    for (var bookId in bookIds) {
-      DocumentSnapshot bookDoc = await FirebaseFirestore.instance
-          .collection('books')
-          .doc(bookId)
-          .get();
-      if (bookDoc.data() != null) {
-        Map<String, dynamic> bookData = bookDoc.data() as Map<String, dynamic>;
-        List<dynamic> authorsIds = List.from(bookData['authors_id'] ?? []);
-
-        List<String> authorNames = [];
-        for (var authorId in authorsIds) {
-          DocumentSnapshot authorDoc = await FirebaseFirestore.instance
-              .collection('authors')
-              .doc(authorId)
-              .get();
-          if (authorDoc.data() != null) {
-            Map<String, dynamic> authorData =
-                authorDoc.data() as Map<String, dynamic>;
-            authorNames.add(authorData['name']);
-          }
-        }
-
-        booksWithAuthors.add({
-          'id': bookDoc.id,
-          'title': bookData['title'],
-          'authors': authorNames,
-          'synopsis': bookData['synopsis'],
-          'book_cover': bookData['book_cover'],
-          'genre': bookData['genre'],
-        });
-      }
-    }
-
+    favoriteBooks = await bookRepository.fetchFavorites(docId);
     if (mounted) {
       setState(() {
-        favoriteBooks = booksWithAuthors;
+        // favoriteBooks = booksWithAuthors;
         isLoading = false;
       });
     }
@@ -118,19 +79,16 @@ class _FavoritesPageState extends State<FavoritesPage> {
                     ),
                   );
                 }
-                // Use the fetched book data directly
-                Map<String, dynamic> bookData = favoriteBooks[index - 1];
-                bool isBookmarked =
-                    userData?['favorites'].contains(bookData['id']) ?? false;
+                Book bookData = favoriteBooks[index - 1];
+                bool isBookmarked = true;
                 return bookItem(
-                  title: bookData['title'] ?? 'No title',
-                  authors: bookData['authors'].join(", ") ?? 'No authors',
-                  summary: bookData['synopsis'] ?? 'No summary available',
-                  imagePath: bookData['book_cover'] ??
-                      'https://via.placeholder.com/150',
+                  title: bookData.title,
+                  authors: bookData.authors.join(", "),
+                  summary: bookData.summary,
+                  imagePath: bookData.imagePath,
                   isBookmarked: isBookmarked,
-                  bookId: bookData['id'],
-                  genre: bookData['genre'].join(", ") ?? 'No genre',
+                  bookId: bookData.bookId,
+                  genre: bookData.genre.join(", "),
                 );
               },
             ),
@@ -144,7 +102,6 @@ class _FavoritesPageState extends State<FavoritesPage> {
       } else {
         bookmarkedIds.add(bookId);
       }
-      // Update the Firestore document asynchronously
       updateFavoritesInFirestore(bookId);
     });
   }
@@ -285,7 +242,6 @@ class SearchBarState extends State<SearchBar> {
         prefixIcon: IconButton(
           icon: const Icon(Icons.arrow_back),
           onPressed: () {
-            // Handle arrow button press here
             Navigator.of(context).pop();
           },
         ),

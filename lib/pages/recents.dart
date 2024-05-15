@@ -152,7 +152,7 @@ class _RecentsPageState extends State<RecentsPage> {
       await FirebaseFirestore.instance
           .collection('users')
           .doc(docId)
-          .update({'favorites': updatedFavorites});
+          .update({'recents': updatedFavorites});
     }
   }
 
