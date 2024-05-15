@@ -1,42 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import '../../components/book.dart';
+import '../../components/no_books.dart';
+import '../../models/book.dart';
+import '../../services/book_service.dart';
 
-class Book {
-  final String title;
-  final List<String> authors;
-  final String summary;
-  final String imagePath;
-  final bool isBookmarked;
-  final String bookId;
-  final List<String> genre;
-
-  Book({
-    required this.title,
-    required this.authors,
-    required this.summary,
-    required this.imagePath,
-    required this.isBookmarked,
-    required this.bookId,
-    required this.genre,
-  });
-
-  factory Book.fromFirestore(Map<String, dynamic> data, String id) {
-    return Book(
-      title: data['title'] ?? 'No Title',
-      authors: data['authors_id'] != null
-          ? List<String>.from(data['authors_id'])
-          : ['Unknown'],
-      summary: data['synopsis'] ?? 'No Summary Available',
-      imagePath: data['book_cover'] ?? 'images/mnlcitylib_logo.png',
-      isBookmarked: data['isBookmarked'] ?? false,
-      bookId: id,
-      genre: data['genre'] != null
-          ? List<String>.from(data['genre'])
-          : ['No Genre'],
-    );
-  }
-}
 
 class AllBooksPage extends StatefulWidget {
   const AllBooksPage({super.key});
@@ -45,88 +12,20 @@ class AllBooksPage extends StatefulWidget {
   State<AllBooksPage> createState() => _AllBooksPageState();
 }
 
-// Fetch author names from firebase
 class _AllBooksPageState extends State<AllBooksPage> {
   late Future<List<Book>> booksFuture;
   TextEditingController searchController = TextEditingController();
+   final BookService _bookService = BookService();
 
   @override
   void initState() {
     super.initState();
-    booksFuture = fetchBooksFromFirebase();
+    booksFuture = _bookService.fetchBooksFromFirebase();
   }
-
-  Future<String> fetchAuthorNameById(String authorId) async {
-    try {
-      DocumentSnapshot authorDoc = await FirebaseFirestore.instance
-          .collection('authors')
-          .doc(authorId)
-          .get();
-      if (authorDoc.exists && authorDoc.data() != null) {
-        Map<String, dynamic> authorData =
-            authorDoc.data()! as Map<String, dynamic>;
-        if (authorData.containsKey('name')) {
-          return authorData['name'];
-        } else {
-          return "Name not available";
-        }
-      } else {
-        return "Unknown Author";
-      }
-    } catch (e) {
-      return "Error in data";
-    }
-  }
-
-  // Fetch all books from firebase
-  Future<List<Book>> fetchBooksFromFirebase({String query = ''}) async {
-    FirebaseFirestore firestore = FirebaseFirestore.instance;
-    Query collectionQuery = firestore.collection('books');
-
-    // Apply search filters if the query is not empty
-    if (query.isNotEmpty) {
-      print("Search Query: $query");
-      collectionQuery = collectionQuery
-          .where('title', isGreaterThanOrEqualTo: query)
-          .where('title', isLessThanOrEqualTo: '$query\uf8ff');
-    }
-
-    try {
-      QuerySnapshot snapshot = await collectionQuery.get();
-      print("Fetched ${snapshot.docs.length} documents after query.");
-
-      List<Future<Book>> bookFutures = snapshot.docs.map((doc) async {
-        Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
-        List<String> authorIds = List<String>.from(data['authors_id']);
-        List<String> authorNames = [];
-
-        for (String authorId in authorIds) {
-          String name = await fetchAuthorNameById(authorId);
-          authorNames.add(name);
-        }
-
-        return Book(
-          title: data['title'],
-          authors: authorNames,
-          summary: data['synopsis'],
-          imagePath: data['book_cover'],
-          isBookmarked: data['isBookmarked'] ?? false,
-          bookId: doc.id,
-          genre: List<String>.from(data['genre']),
-        );
-      }).toList();
-
-      return await Future.wait(bookFutures);
-    } catch (e) {
-      print('Error fetching data: ${e.toString()}');
-      return [];
-    }
-  }
-
   void searchBooks(String query) {
     setState(() {
       // Update the booksFuture to fetch based on the search query
-      booksFuture = fetchBooksFromFirebase(query: query.trim());
+      booksFuture = _bookService.fetchBooksFromFirebase(query: query.trim());
     });
   }
 
@@ -159,8 +58,7 @@ class _AllBooksPageState extends State<AllBooksPage> {
         } else if (snapshot.hasError) {
           return Center(child: Text("Error: ${snapshot.error}"));
         } else if (snapshot.hasData && snapshot.data!.isEmpty) {
-          // Check if the data list is empty and handle it
-          return const Center(child: Text("No books found"));
+          return const NoBooksFoundWidget();
         } else if (snapshot.hasData) {
           return GestureDetector(
             onTap: () {},
@@ -227,7 +125,7 @@ class _AllBooksPageState extends State<AllBooksPage> {
             ),
           );
         } else {
-          return const Center(child: Text("No books found"));
+          return const NoBooksFoundWidget();
         }
       },
     );
