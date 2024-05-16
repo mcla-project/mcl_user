@@ -1,75 +1,110 @@
 import 'package:flutter/material.dart';
-// import 'package:mobile_scanner/mobile_scanner.dart';
+import 'package:mobile_scanner/mobile_scanner.dart';
+import 'scanner/scanned_barcode_label.dart';
+// import 'scanner/scanner_button_widgets.dart';
+import 'scanner/scanner_error_widget.dart';
 
-class ScannerPage extends StatelessWidget {
-  // final Function(String) onCodeScanned;
-  // required this.onCodeScanned
+class ScannerPage extends StatefulWidget {
+  @override
+  ScannerPageState createState() => ScannerPageState();
+}
 
-  const ScannerPage({Key? key}) : super(key: key);
+class ScannerPageState extends State<ScannerPage> {
+  final MobileScannerController controller = MobileScannerController(
+    formats: const [BarcodeFormat.qrCode],
+  );
 
   @override
   Widget build(BuildContext context) {
+    // Define the size of the scan window
+    final scanWindow = Rect.fromCenter(
+      center: Offset(MediaQuery.of(context).size.width * 0.375, MediaQuery.of(context).size.height * 0.20),
+      width: MediaQuery.of(context).size.width * 0.75,
+      height: MediaQuery.of(context).size.height * 0.42,
+    );
+
     return Scaffold(
+      backgroundColor: Colors.white, // Lighter background color
       appBar: AppBar(
-        title: const Text('QR READER'),
-        centerTitle: true,
+        title: const Center(child: Text('QR Scanner')),
       ),
-      body: Column(
-        children: [
-          Expanded(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                AspectRatio(
-                  aspectRatio: 1,
-                  child: Container(
-                    margin: const EdgeInsets.all(40),
-                    decoration: BoxDecoration(
-                      color: Colors.grey.shade200,
-                      border: Border.all(width: 3),
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    child: Center(
-                      child: Icon(
-                        Icons.qr_code,
-                        color: Colors.grey.shade800,
-                        size: 128,
-                      ),
-                    ),
-                  ),
+      body: Center( 
+        child: SizedBox(  
+          width: MediaQuery.of(context).size.width * 0.75,
+          height: MediaQuery.of(context).size.height * 0.45,
+          child: Stack(
+            children: [
+              MobileScanner(
+                fit: BoxFit.contain,
+                controller: controller,
+                scanWindow: scanWindow,
+                errorBuilder: (context, error, child) {
+                  return ScannerErrorWidget(error: error);
+                },
+              ),
+              CustomPaint(
+                painter: ScannerOverlay(scanWindow: scanWindow),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Align(
+                  alignment: Alignment.bottomCenter,
+                  child: ScannedBarcodeLabel(barcodes: controller.barcodes),
                 ),
-                const Text('Place the QR code within the frame to scan',
-                    textAlign: TextAlign.center),
-              ],
-            ),
+              ),
+            ],
           ),
-          Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                ElevatedButton.icon(
-                  icon: const Icon(Icons.qr_code_2, color: Colors.white),
-                  label: const Text(
-                    'Generate QR Code',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 18,
-                      fontFamily: 'Nunito',
-                      fontWeight: FontWeight.w800,
-                    ),
-                  ),
-                  onPressed: () {
-                    // TODO: Add generate QR code logic
-                  },
-                  style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color(0xFF013822)),
-                ),
-              ],
-            ),
-          )
-        ],
+        ),
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () => controller.toggleTorch(),
+        child: const Icon(Icons.flashlight_on),
       ),
     );
+  }
+
+  @override
+  Future<void> dispose() async {
+    super.dispose();
+    await controller.dispose();
+  }
+}
+
+class ScannerOverlay extends CustomPainter {
+  final Rect scanWindow;
+  final double borderRadius = 12.0;
+
+  ScannerOverlay({required this.scanWindow});
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final backgroundPath = Path()..addRect(Rect.largest);
+    final cutoutPath = Path()
+      ..addRRect(
+        RRect.fromRectAndCorners(
+          scanWindow,
+          topLeft: Radius.circular(borderRadius),
+          topRight: Radius.circular(borderRadius),
+          bottomLeft: Radius.circular(borderRadius),
+          bottomRight: Radius.circular(borderRadius),
+        ),
+      );
+    final backgroundPaint = Paint()
+      ..color = Colors.black.withOpacity(0.5)
+      ..style = PaintingStyle.fill
+      ..blendMode = BlendMode.dstOut;
+
+    final borderPaint = Paint()
+      ..color = Colors.white
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = 4.0;
+
+    canvas.drawPath(Path.combine(PathOperation.difference, backgroundPath, cutoutPath), backgroundPaint);
+    canvas.drawRRect(RRect.fromRectAndCorners(scanWindow, topLeft: Radius.circular(borderRadius), topRight: Radius.circular(borderRadius), bottomLeft: Radius.circular(borderRadius), bottomRight: Radius.circular(borderRadius)), borderPaint);
+  }
+
+  @override
+  bool shouldRepaint(covariant CustomPainter oldDelegate) {
+    return true; 
   }
 }
