@@ -28,4 +28,6 @@ class Book {
       genre: data['genre'] != null ? List<String>.from(data['genre']) : ['No Genre'],
     );
   }
+
+  get publicationYear => null;
 }

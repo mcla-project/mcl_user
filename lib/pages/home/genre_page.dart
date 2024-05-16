@@ -6,7 +6,7 @@ import '../../services/book_service.dart';
 class GenreBooksPage extends StatefulWidget {
   final String genre;
 
-  const GenreBooksPage({required this.genre, super.key});
+  const GenreBooksPage({required this.genre, Key? key}) : super(key: key);
 
   @override
   GenreBooksPageState createState() => GenreBooksPageState();
@@ -37,8 +37,12 @@ class GenreBooksPageState extends State<GenreBooksPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.genre),
-        backgroundColor: Colors.deepPurple,
+        title: Text(
+          widget.genre,
+          style: TextStyle(color: Colors.white),
+          // Set text color to white
+        ),
+        backgroundColor: Color(0xFF013822),
       ),
       body: isLoading
           ? const Center(child: CircularProgressIndicator())
