@@ -620,8 +620,7 @@ class SignUpScreenState extends State<SignUpScreen> {
         );
       }
     } catch (e) {
-      // Handle errors in case of a failure
-      print('Failed to sign up: $e'); // For debugging, print the error
+      return null; 
     }
   }
 

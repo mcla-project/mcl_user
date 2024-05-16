@@ -90,7 +90,7 @@ class WelcomeScreen extends StatelessWidget {
                       padding: const EdgeInsets.all(20),
                       child: Column(
                         children: [
-                          Container(
+                          SizedBox(
                             width: 200, // Set the width of the button
                             height: 50, // Set the height of the button
                             child: ElevatedButton(
@@ -116,7 +116,7 @@ class WelcomeScreen extends StatelessWidget {
                             ),
                           ),
                           const SizedBox(height: 10),
-                          Container(
+                          SizedBox(
                             width: 200, // Set the width of the button
                             height: 50, // Set the height of the button
                             child: ElevatedButton(
