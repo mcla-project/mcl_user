@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../components/app_bar.dart';
 import '../../components/book.dart';
 import '../../components/no_books.dart';
 import '../../models/book.dart';
@@ -32,20 +33,35 @@ class _AllBooksPageState extends State<AllBooksPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: TextField(
-          controller: searchController,
-          decoration: InputDecoration(
-            hintText: 'Search Books',
-            suffixIcon: IconButton(
-              icon: const Icon(Icons.search),
-              onPressed: () => searchBooks(searchController.text),
+      appBar: const CustomAppBar(),
+      body: Column(
+        children: <Widget>[
+          Padding(
+            padding:
+                const EdgeInsets.all(8.0), // Add padding for better spacing
+            child: TextField(
+              controller: searchController,
+              decoration: InputDecoration(
+                hintText: 'Search Books',
+                suffixIcon: IconButton(
+                  icon: const Icon(Icons.search),
+                  onPressed: () => searchBooks(searchController.text),
+                ),
+                border: const OutlineInputBorder(),
+                contentPadding: const EdgeInsets.symmetric(
+                    vertical: 10.0, horizontal: 20.0),
+                fillColor: const Color(0x4D808080),
+                filled: true,
+              ),
+              onSubmitted: (value) => searchBooks(value),
             ),
           ),
-          onSubmitted: (value) => searchBooks(value),
-        ),
+          Expanded(
+            child:
+                buildBookGrid(),
+          ),
+        ],
       ),
-      body: buildBookGrid(),
     );
   }
 

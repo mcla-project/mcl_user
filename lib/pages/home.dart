@@ -43,11 +43,11 @@ class _HomePageState extends State<HomePage> {
       body: SingleChildScrollView(
         child: Column(
           children: [
-            const SizedBox(height: 20),
+            const SizedBox(height: 10),
             const Padding(
               padding: EdgeInsets.all(10.0),
               child: SizedBox(
-                width: 400, // Adjust the width as per your requirement
+                width: 400,
                 child: TextField(
                   decoration: InputDecoration(
                     labelText: 'Search for books',
@@ -90,101 +90,103 @@ class GenreList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 8.0),
-            child: Row(
-              children: [
-                Text('Available Genres',
-                    style: Theme.of(context).textTheme.titleSmall),
-                const Spacer(),
-                GestureDetector(
-                  onTap: () {
-                    Navigator.of(context).push(
-                      MaterialPageRoute(
-                          builder: (context) => const AllBooksPage()),
-                    );
-                  },
-                  child: Text('View All',
+    return SingleChildScrollView(
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 8.0),
+              child: Row(
+                children: [
+                  Text('Available Genres',
                       style: Theme.of(context).textTheme.titleSmall),
-                ),
-              ],
-            ),
-          ),
-          ListView.builder(
-            shrinkWrap: true,
-            physics: const NeverScrollableScrollPhysics(),
-            itemCount: genres.length,
-            itemBuilder: (context, index) {
-              return Card(
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(
-                      12), // Set the card's border radius to 12
-                ),
-                elevation: 4,
-                margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 10),
-                child: Container(
-                  decoration: BoxDecoration(
-                    color: genres[index].name == 'History'
-                        ? Color(
-                            0xFFF1F1F1) // Set the background color for 'History' to #F1F1F1
-                        : Color(
-                            0xFF013822), // Set the default background color to #013822
-                    borderRadius: BorderRadius.circular(
-                        12), // Set the border radius to 12
-                    border: Border.all(
-                      color: Colors.grey, // Set border color
-                      width: 1, // Set border width
-                    ),
-                  ),
-                  child: ListTile(
-                    title: Text(
-                      genres[index].name,
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        color: genres[index].name == 'History'
-                            ? Colors
-                                .black // Set text color to black for 'History'
-                            : Colors
-                                .white, // Set text color to white for other genres
-                      ),
-                    ),
-                    subtitle: Text(
-                      genres[index].description,
-                      style: TextStyle(
-                        color: genres[index].name == 'History'
-                            ? Colors
-                                .black54 // Set subtitle color to black54 for 'History'
-                            : Colors
-                                .white70, // Set subtitle color to white70 for other genres
-                      ),
-                    ),
-                    trailing: Icon(
-                      Icons.arrow_forward_ios,
-                      color: genres[index].name == 'History'
-                          ? Colors
-                              .black // Set icon color to black for 'History'
-                          : Colors
-                              .white, // Set icon color to white for other genres
-                    ),
+                  const Spacer(),
+                  GestureDetector(
                     onTap: () {
-                      Navigator.push(
-                        context,
+                      Navigator.of(context).push(
                         MaterialPageRoute(
-                          builder: (context) => const CategoriesPage(),
-                        ),
+                            builder: (context) => const AllBooksPage()),
                       );
                     },
+                    child: Text('View All',
+                        style: Theme.of(context).textTheme.titleSmall),
                   ),
-                ),
-              );
-            },
-          ),
-        ],
+                ],
+              ),
+            ),
+            ListView.builder(
+              shrinkWrap: true,
+              physics: const NeverScrollableScrollPhysics(),
+              itemCount: genres.length,
+              itemBuilder: (context, index) {
+                return Card(
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(
+                        12),
+                  ),
+                  elevation: 4,
+                  margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 10),
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: genres[index].name == 'History'
+                          ? const Color(
+                              0xFFF1F1F1)
+                          : const Color(
+                              0xFF013822),
+                      borderRadius: BorderRadius.circular(
+                          12),
+                      border: Border.all(
+                        color: Colors.grey, 
+                        width: 1,
+                      ),
+                    ),
+                    child: ListTile(
+                      title: Text(
+                        genres[index].name,
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          color: genres[index].name == 'History'
+                              ? Colors
+                                  .black 
+                              : Colors
+                                  .white, 
+                        ),
+                      ),
+                      subtitle: Text(
+                        genres[index].description,
+                        style: TextStyle(
+                          color: genres[index].name == 'History'
+                              ? Colors
+                                  .black54
+                              : Colors
+                                  .white70, 
+                        ),
+                      ),
+                      trailing: Icon(
+                        Icons.arrow_forward_ios,
+                        color: genres[index].name == 'History'
+                            ? Colors
+                                .black 
+                            : Colors
+                                .white, 
+                      ),
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const CategoriesPage(),
+                          ),
+                        );
+                      },
+                    ),
+                  ),
+                );
+              },
+            ),
+          ],
+        ),
       ),
     );
   }

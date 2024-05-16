@@ -7,10 +7,10 @@ class VisitsPage extends StatefulWidget {
   const VisitsPage({super.key});
 
   @override
-  _VisitsPageState createState() => _VisitsPageState();
+  VisitsPageState createState() => VisitsPageState();
 }
 
-class _VisitsPageState extends State<VisitsPage> {
+class VisitsPageState extends State<VisitsPage> {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   String? docId;
   final DocIDService docIDService = DocIDService();
@@ -51,12 +51,12 @@ class _VisitsPageState extends State<VisitsPage> {
               Map<String, dynamic> data =
                   document.data()! as Map<String, dynamic>;
               return visitItem(
-                timeIn: data['time_in'], // This is a Timestamp type
+                timeIn: data['time_in'],
                 checkIn: DateFormat.jm().format(
-                    data['time_in'].toDate()), // Format time for display
+                    data['time_in'].toDate()),
                 checkOut: data['time_out'] != null
                     ? DateFormat.jm().format(data['time_out'].toDate())
-                    : 'N/A', // Check if time_out exists and format
+                    : 'N/A',
                 iconPath: 'assets/icon.png',
               );
             }).toList(),
