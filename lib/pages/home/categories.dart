@@ -30,8 +30,23 @@ class CategoriesPageState extends State<CategoriesPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Genres'),
-        backgroundColor: Colors.white60,
+        title: const Text(
+          'Genres',
+          style: TextStyle(
+            color: Colors.white, // Set text color to white
+            fontWeight: FontWeight.bold, // Make text bold
+          ),
+        ),
+        backgroundColor: const Color.fromARGB(255, 27, 63, 49), // Set background color
+        leading: IconButton(
+          icon: const Icon(
+            Icons.arrow_back,
+            color: Colors.white, // Set button color to white
+          ),
+          onPressed: () {
+            Navigator.of(context).pop(); // Navigate back to the recent page
+          },
+        ),
       ),
       body: ListView.builder(
         itemCount: genres.length,

@@ -24,8 +24,7 @@ class SignUpScreenState extends State<SignUpScreen> {
   final TextEditingController _firstnameController = TextEditingController();
   final TextEditingController _lastnameController = TextEditingController();
   final TextEditingController _phoneController = TextEditingController();
-  final TextEditingController _confirmpasswordController =
-      TextEditingController();
+  final TextEditingController _confirmpasswordController = TextEditingController();
   final TextEditingController _addressController = TextEditingController();
   final TextEditingController _occupationController = TextEditingController();
   final TextEditingController _officeController = TextEditingController();
@@ -78,13 +77,6 @@ class SignUpScreenState extends State<SignUpScreen> {
         onPopInvoked: (bool didPop) async {},
         child: Scaffold(
             appBar: AppBar(
-              leading: IconButton(
-                icon: const Icon(Icons.arrow_back),
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-              ),
-              title: const Text('Sign Up'),
             ),
             body: Padding(
               padding: const EdgeInsets.all(20.0),
