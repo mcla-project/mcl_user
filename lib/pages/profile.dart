@@ -6,6 +6,7 @@ import 'package:mcl_user/pages/profile_page/about_us.dart';
 import 'package:mcl_user/pages/profile_page/feedback.dart';
 import 'package:mcl_user/pages/profile_page/visits.dart';
 import 'package:mcl_user/pages/splash_screen/login.dart';
+import 'profile_page/chatbot.dart';
 import 'profile_page/personal_info.dart';
 import 'profile_page/view_card.dart';
 import '../utils/get_user_information.dart';
@@ -193,7 +194,21 @@ class _ProfilePageState extends State<ProfilePage> {
                             navigateToPage: widget.navigateToPage,
                           ),
                         );
-                        // Navigate to Feedback page
+                      },
+                    ),
+                  ),
+                  Container(
+                    decoration: BoxDecoration(
+                      color: Colors.grey[200],
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    child: ListTile(
+                      leading: const Icon(Icons.feedback),
+                      title: const Text('chatbot'),
+                      onTap: () {
+                        Navigator.of(context).pushReplacement(
+                          MaterialPageRoute(builder: (context) => const ChatPage()),
+                        );
                       },
                     ),
                   ),
