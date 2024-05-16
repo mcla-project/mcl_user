@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import '../components/book_item.dart';
-import '../models/book.dart';
-import '../services/book_repo.dart';
+import 'package:mcl_user/components/book.dart';
 import '../utils/get_doc_id.dart';
 
 class RecentsPage extends StatefulWidget {
@@ -14,9 +12,7 @@ class RecentsPage extends StatefulWidget {
 
 class _RecentsPageState extends State<RecentsPage> {
   final DocIDService docIDService = DocIDService();
-  final BookRepository bookRepository = BookRepository();
-  List<Book> favoriteBooks = [];
-  List<Book> recentBooks = [];
+  List<Map<String, dynamic>> recentBooks = [];
   Set<String> bookmarkedIds = {};
   bool isLoading = true;
   Map<String, dynamic>? userData;
@@ -41,12 +37,50 @@ class _RecentsPageState extends State<RecentsPage> {
       return;
     }
 
-    recentBooks = await bookRepository.fetchRecents(docId);
-    favoriteBooks = await bookRepository.fetchFavorites(docId);
-    bookmarkedIds = Set.from(favoriteBooks.map((book) => book.bookId));
+    DocumentSnapshot userDoc =
+        await FirebaseFirestore.instance.collection('users').doc(docId).get();
+    Map<String, dynamic>? userData = userDoc.data() as Map<String, dynamic>?;
+    List<dynamic> bookIds = userData?['recents'] ?? [];
 
+    if (userData != null && userData.containsKey('recents')) {
+      bookmarkedIds = Set.from(bookIds);
+    }
+
+    List<Map<String, dynamic>> booksWithAuthors = [];
+    for (var bookId in bookIds) {
+      DocumentSnapshot bookDoc = await FirebaseFirestore.instance
+          .collection('books')
+          .doc(bookId)
+          .get();
+      if (bookDoc.data() != null) {
+        Map<String, dynamic> bookData = bookDoc.data() as Map<String, dynamic>;
+        List<dynamic> authorsIds = List.from(bookData['authors_id'] ?? []);
+
+        List<String> authorNames = [];
+        for (var authorId in authorsIds) {
+          DocumentSnapshot authorDoc = await FirebaseFirestore.instance
+              .collection('authors')
+              .doc(authorId)
+              .get();
+          if (authorDoc.data() != null) {
+            Map<String, dynamic> authorData =
+                authorDoc.data() as Map<String, dynamic>;
+            authorNames.add(authorData['name']);
+          }
+        }
+
+        booksWithAuthors.add({
+          'id': bookDoc.id,
+          'title': bookData['title'],
+          'authors': authorNames,
+          'synopsis': bookData['synopsis'],
+          'book_cover': bookData['book_cover'],
+        });
+      }
+    }
     if (mounted) {
       setState(() {
+        recentBooks = booksWithAuthors;
         isLoading = false;
       });
     }
@@ -81,18 +115,17 @@ class _RecentsPageState extends State<RecentsPage> {
                     ),
                   );
                 }
-                Book bookData = recentBooks[index - 1];
-                bool isBookmarked = bookmarkedIds.contains(bookData.bookId);
-
-                return BookItem(
-                  title: bookData.title,
-                  authors: bookData.authors.join(", "),
-                  summary: bookData.summary,
-                  imagePath: bookData.imagePath,
+                Map<String, dynamic> bookData = recentBooks[index - 1];
+                bool isBookmarked =
+                    userData?['favorites'].contains(bookData['id']) ?? false;
+                return bookItem(
+                  title: bookData['title'] ?? 'No title',
+                  authors: bookData['authors'].join(", ") ?? 'No authors',
+                  summary: bookData['synopsis'] ?? 'No summary available',
+                  imagePath: bookData['book_cover'] ??
+                      'https://via.placeholder.com/150',
                   isBookmarked: isBookmarked,
-                  bookId: bookData.bookId,
-                  genre: bookData.genre.join(", "),
-                  onBookmarkToggle: toggleBookmark,
+                  bookId: bookData['id'],
                 );
               },
             ),
@@ -106,6 +139,7 @@ class _RecentsPageState extends State<RecentsPage> {
       } else {
         bookmarkedIds.add(bookId);
       }
+      // Update the Firestore document asynchronously
       updateFavoritesInFirestore(bookId);
     });
   }
@@ -119,6 +153,87 @@ class _RecentsPageState extends State<RecentsPage> {
           .doc(docId)
           .update({'favorites': updatedFavorites});
     }
+  }
+
+  Widget bookItem({
+    required String title,
+    required String authors,
+    required String summary,
+    required String imagePath,
+    required bool isBookmarked,
+    required String bookId,
+  }) {
+    bool isBookmarked = bookmarkedIds.contains(bookId);
+    return GestureDetector(
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => const BookScreen(),
+          ),
+        );
+      },
+      child: Column(
+        children: [
+          const SizedBox(height: 20),
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Container(
+                width: 80,
+                height: 100,
+                decoration: BoxDecoration(
+                  image: DecorationImage(
+                    image: NetworkImage(imagePath),
+                    fit: BoxFit.fill,
+                  ),
+                ),
+              ),
+              const SizedBox(width: 20),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      title,
+                      style: const TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                    const SizedBox(height: 2),
+                    Text(
+                      authors,
+                      style: const TextStyle(
+                        fontSize: 12,
+                        fontWeight: FontWeight.w400,
+                      ),
+                    ),
+                    const SizedBox(height: 5),
+                    Text(
+                      summary,
+                      style: const TextStyle(
+                        fontSize: 10,
+                        fontWeight: FontWeight.w500,
+                      ),
+                      overflow: TextOverflow.ellipsis,
+                      maxLines: 4,
+                    ),
+                  ],
+                ),
+              ),
+              IconButton(
+                icon: Icon(
+                  isBookmarked ? Icons.bookmark : Icons.bookmark_border,
+                  color: Colors.yellowAccent[700],
+                ),
+                onPressed: () => toggleBookmark(bookId),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
   }
 }
 

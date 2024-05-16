@@ -11,8 +11,10 @@ class FirebaseAuthService {
       );
       return credential.user;
     } catch (e) {
-      return null;
+      print(e);
     }
+
+    return null;
   }
 
   Future<User?> sigInWithEmailAndPassword(String email, String password) async {
@@ -23,7 +25,9 @@ class FirebaseAuthService {
       );
       return credential.user;
     } catch (e) {
-      return null;
+      print(e);
     }
+
+    return null;
   }
 }
