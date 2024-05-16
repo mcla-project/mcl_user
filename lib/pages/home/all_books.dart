@@ -93,8 +93,7 @@ class _AllBooksPageState extends State<AllBooksPage> {
                   child: Padding(
                     padding: const EdgeInsets.all(5.0),
                     child: Column(
-                      mainAxisSize: MainAxisSize
-                          .min,
+                      mainAxisSize: MainAxisSize.min,
                       children: <Widget>[
                         ClipRRect(
                           borderRadius: BorderRadius.circular(8.0),
@@ -109,12 +108,10 @@ class _AllBooksPageState extends State<AllBooksPage> {
                         Flexible(
                           child: Text(
                             book.title,
-                            style: TextStyle(
-                                fontSize: _getFontSize(book
-                                    .title)),
+                            style:
+                                TextStyle(fontSize: _getFontSize(book.title)),
                             textAlign: TextAlign.center,
-                            overflow: TextOverflow
-                                .ellipsis,
+                            overflow: TextOverflow.ellipsis,
                           ),
                         ),
                       ],
