@@ -96,6 +96,12 @@ class ScannedBarcodeLabel extends StatelessWidget {
     var booksCollection = userDoc.collection('borrows');
     var now = DateTime.now();
 
+    if (lastWriteTime != null &&
+        now.difference(lastWriteTime!).inSeconds < 30) {
+      isProcessing = false;
+      return;
+    }
+
     var querySnapshot = await booksCollection
         .where('book_id', isEqualTo: bookId)
         .orderBy('time_borrowed', descending: true)
@@ -103,7 +109,7 @@ class ScannedBarcodeLabel extends StatelessWidget {
         .get();
 
     if (querySnapshot.docs.isNotEmpty &&
-        querySnapshot.docs.first.data()['time_returned'] == null) {
+        !querySnapshot.docs.first.data().containsKey('time_returned')) {
       await querySnapshot.docs.first.reference.update({'time_returned': now});
       showConfirmationDialog(context, "Book returned: $bookTitle");
     } else {
@@ -120,6 +126,7 @@ class ScannedBarcodeLabel extends StatelessWidget {
       // Add bookId and bookTitle to the 'recents' array in the user's document
     }
 
+    lastWriteTime = now;
     isProcessing = false;
   }
 
