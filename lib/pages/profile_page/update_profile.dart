@@ -87,7 +87,7 @@ class _UpdateProfilePageState extends State<UpdateProfilePage> {
                             return;
                           }
                         } catch (error) {
-                          return;
+                          print(error);
                         }
                       },
                       child: const CircleAvatar(
@@ -307,10 +307,10 @@ class _UpdateProfilePageState extends State<UpdateProfilePage> {
           MaterialPageRoute(builder: (context) => const BaseLayout()),
         );
       }).catchError((error) {
-        return;
+        print('Failed to update profile: $error');
       });
     } catch (e) {
-      return;
+      print(e);
     }
   }
 }

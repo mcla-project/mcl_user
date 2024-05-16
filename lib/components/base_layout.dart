@@ -28,6 +28,13 @@ class BaseLayoutState extends State<BaseLayout> {
         ProfilePage(
           navigateToPage: navigateToPage,
           changePage: changePage,
+          // userInfo: UserInfo(
+          //   name: 'Merlin',
+          //   username: 'merlin123',
+          //   schoolOffice: 'PLM School',
+          //   address: '123 Main Street',
+          //   contactNumber: '555-1234',
+          // ),
         ), // Navigate to the profile page subpages
         UpdateProfilePage(
             navigateToPage:

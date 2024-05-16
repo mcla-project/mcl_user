@@ -433,6 +433,7 @@ class SignUpScreenState extends State<SignUpScreen> {
                                       style: const TextStyle(
                                         color: Colors
                                             .black, // Change to your desired color
+
                                       ),
                                     ),
                                   );
@@ -609,7 +610,8 @@ class SignUpScreenState extends State<SignUpScreen> {
         );
       }
     } catch (e) {
-      return null; 
+      // Handle errors in case of a failure
+      print('Failed to sign up: $e'); // For debugging, print the error
     }
   }
 
