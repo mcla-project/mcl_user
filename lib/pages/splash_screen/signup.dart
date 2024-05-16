@@ -508,7 +508,8 @@ class SignUpScreenState extends State<SignUpScreen> {
                             child: ElevatedButton(
                               onPressed: _acceptedTerms ? _signUp : null,
                               style: ElevatedButton.styleFrom(
-                                backgroundColor: const Color.fromRGBO(27, 94, 32, 1),
+                                backgroundColor:
+                                    const Color.fromRGBO(27, 94, 32, 1),
                                 shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(10),
                                 ),
@@ -605,11 +606,14 @@ class SignUpScreenState extends State<SignUpScreen> {
       if (mounted) {
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => const EmailPage()),
+          MaterialPageRoute(
+            builder: (context) =>
+                EmailPage(email: _emailController.text.trim()),
+          ),
         );
       }
     } catch (e) {
-      return null; 
+      return null;
     }
   }
 

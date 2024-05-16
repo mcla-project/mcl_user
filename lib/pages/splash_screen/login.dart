@@ -32,7 +32,7 @@ class LoginScreenState extends State<LoginScreen> {
       if (userCredential.user != null && mounted) {
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => const EmailPage()),
+          MaterialPageRoute(builder: (context) => EmailPage(email: email)),
         );
       } else {
         if (mounted) {
