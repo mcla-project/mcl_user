@@ -19,7 +19,6 @@ class DocIDService {
       }
       return null;  // Return null if no document is found
     } catch (e) {
-      print('Error fetching user document ID: $e');
       return null;  // Handle exceptions and return null on error
     }
   }
