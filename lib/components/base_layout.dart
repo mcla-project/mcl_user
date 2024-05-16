@@ -23,7 +23,7 @@ class BaseLayoutState extends State<BaseLayout> {
   List<Widget> get _pages => [
         const HomePage(),
         const RecentsPage(),
-        ScannerPage(),
+        const ScannerPage(),
         const FavoritesPage(),
         ProfilePage(
           navigateToPage: navigateToPage,
