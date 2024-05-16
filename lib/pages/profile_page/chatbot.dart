@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:mcl_user/components/app_bar.dart';
 
 class ChatPage extends StatefulWidget {
   static const routeName = '/chat';
@@ -53,16 +54,10 @@ class _ChatPageState extends State<ChatPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text(
-          "Chat",
-          style: TextStyle(fontWeight: FontWeight.bold),
-        ),
-      ),
+      appBar: const CustomAppBar(),
       body: Stack(
         children: [
           SizedBox(
-            //get max height
             height: MediaQuery.of(context).size.height - 160,
             child: ListView.builder(
               itemCount: _chatHistory.length,
@@ -72,8 +67,8 @@ class _ChatPageState extends State<ChatPage> {
               physics: const BouncingScrollPhysics(),
               itemBuilder: (context, index) {
                 return Container(
-                  padding:
-                      const EdgeInsets.only(left: 14, right: 14, top: 10, bottom: 10),
+                  padding: const EdgeInsets.only(
+                      left: 14, right: 14, top: 10, bottom: 10),
                   child: Align(
                     alignment: (_chatHistory[index]["isSender"]
                         ? Alignment.topRight
@@ -166,8 +161,8 @@ class _ChatPageState extends State<ChatPage> {
                             begin: Alignment.topLeft,
                             end: Alignment.bottomRight,
                             colors: [
-                              Color(0xFFF69170),
-                              Color(0xFF7D96E6),
+                              Color.fromRGBO(27, 94, 32, 1),
+                              Colors.green,
                             ]),
                         borderRadius: BorderRadius.all(Radius.circular(50.0)),
                       ),

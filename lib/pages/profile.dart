@@ -168,7 +168,7 @@ class _ProfilePageState extends State<ProfilePage> {
                       borderRadius: BorderRadius.circular(10),
                     ),
                     child: ListTile(
-                      leading: const Icon(Icons.feedback),
+                      leading: const Icon(Icons.feedback_rounded),
                       title: const Text('Feedback'),
                       onTap: () {
                         widget.navigateToPage(
@@ -176,7 +176,6 @@ class _ProfilePageState extends State<ProfilePage> {
                             navigateToPage: widget.navigateToPage,
                           ),
                         );
-                        // Navigate to Feedback page
                       },
                     ),
                   ),
@@ -186,7 +185,7 @@ class _ProfilePageState extends State<ProfilePage> {
                       borderRadius: BorderRadius.circular(10),
                     ),
                     child: ListTile(
-                      leading: const Icon(Icons.feedback),
+                      leading: const Icon(Icons.menu_book_rounded),
                       title: const Text('FAQs'),
                       onTap: () {
                         widget.navigateToPage(
@@ -203,8 +202,8 @@ class _ProfilePageState extends State<ProfilePage> {
                       borderRadius: BorderRadius.circular(10),
                     ),
                     child: ListTile(
-                      leading: const Icon(Icons.feedback),
-                      title: const Text('chatbot'),
+                      leading: const Icon(Icons.android_outlined),
+                      title: const Text('MCLA Chatbot'),
                       onTap: () {
                         Navigator.of(context).pushReplacement(
                           MaterialPageRoute(builder: (context) => const ChatPage()),
