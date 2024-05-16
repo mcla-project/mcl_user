@@ -1,6 +1,7 @@
 import 'package:email_otp/email_otp.dart';
 import 'package:flutter/material.dart';
 import 'package:mcl_user/pages/home.dart';
+import 'dart:async';
 
 class OtpPage extends StatefulWidget {
   final EmailOTP myauth;
@@ -13,20 +14,48 @@ class OtpPage extends StatefulWidget {
 
 class _OtpPageState extends State<OtpPage> {
   late String _otp;
-  bool _isOtpInvalid = false; // State variable to track if OTP is invalid
+  late Timer _timer;
+  int _start = 180;
 
   @override
   void initState() {
     super.initState();
     _otp = '';
+    startTimer();
+  }
+
+  void startTimer() {
+    _timer = Timer.periodic(
+      const Duration(seconds: 1),
+      (Timer timer) {
+        if (_start == 0) {
+          setState(() {
+            timer.cancel();
+          });
+        } else {
+          setState(() {
+            _start--;
+          });
+        }
+      },
+    );
   }
 
   Future<void> _resendOtp() async {
-    // Logic to resend the OTP
     await widget.myauth.sendOTP();
     ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
       content: Text("A new OTP has been sent to your email."),
     ));
+    setState(() {
+      _start = 180;
+      startTimer();
+    });
+  }
+
+  @override
+  void dispose() {
+    _timer.cancel();
+    super.dispose();
   }
 
   @override
@@ -61,8 +90,7 @@ class _OtpPageState extends State<OtpPage> {
               TextField(
                 onChanged: (value) {
                   setState(() {
-                    _otp =
-                        value.trim(); // Remove leading and trailing whitespaces
+                    _otp = value.trim();
                   });
                 },
                 decoration: const InputDecoration(
@@ -81,15 +109,12 @@ class _OtpPageState extends State<OtpPage> {
                     ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
                       content: Text("Please enter OTP"),
                     ));
-                    return; // Exit early if OTP is empty
+                    return;
                   }
 
-                  // Debug print
                   final isVerified = await widget.myauth.verifyOTP(otp: _otp);
-                  // Debug print
 
                   if (isVerified) {
-                    // Debug print
                     ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
                       content: Text("OTP is verified"),
                     ));
@@ -101,10 +126,6 @@ class _OtpPageState extends State<OtpPage> {
                     ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
                       content: Text("Invalid OTP"),
                     ));
-                    setState(() {
-                      _isOtpInvalid =
-                          true; // Show the resend button if OTP is invalid
-                    });
                   }
                 },
                 style: ElevatedButton.styleFrom(
@@ -117,20 +138,23 @@ class _OtpPageState extends State<OtpPage> {
                 ),
               ),
               const SizedBox(height: 20),
-              if (_isOtpInvalid) // Show the resend button if OTP is invalid
-                TextButton(
-                  onPressed: () async {
-                    await _resendOtp();
-                    setState(() {
-                      _isOtpInvalid =
-                          false; // Hide the resend button after resending the OTP
-                    });
-                  },
-                  child: const Text(
-                    'Resend Code',
-                    style: TextStyle(color: Color(0xFF1B5E20)),
+              Text(
+                'Time remaining: ${_start ~/ 60}:${(_start % 60).toString().padLeft(2, '0')}',
+              ),
+              TextButton(
+                onPressed: _start > 0 ? null : _resendOtp,
+                style: ButtonStyle(
+                  foregroundColor: MaterialStateProperty.resolveWith<Color>(
+                    (Set<MaterialState> states) {
+                      if (states.contains(MaterialState.disabled)) return Colors.grey;
+                      return const Color(0xFF1B5E20); // Use the original color when enabled
+                    },
                   ),
                 ),
+                child: const Text(
+                  'Resend Code',
+                ),
+              ),
             ],
           ),
         ),
