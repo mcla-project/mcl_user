@@ -2,24 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:mcl_user/components/app_bar.dart';
 
 class BookScreen extends StatefulWidget {
-  final String title;
-  final String authors;
-  final String summary;
-  final String imagePath;
-  final bool isBookmarked;
-  final String bookId;
-  final String genre;
-
-  const BookScreen({
-    Key? key,
-    required this.title,
-    required this.authors,
-    required this.summary,
-    required this.imagePath,
-    required this.isBookmarked,
-    required this.bookId,
-    required this.genre,
-  }) : super(key: key);
+  const BookScreen({super.key});
 
   @override
   State<BookScreen> createState() => _BookScreenState();
@@ -37,26 +20,28 @@ class _BookScreenState extends State<BookScreen> {
             const SizedBox(height: 20),
             Container(
               padding: const EdgeInsets.symmetric(vertical: 20.0),
-              color: const Color.fromARGB(255, 27, 63, 49),
-              child: Center(
+              color: Color.fromARGB(255, 27, 63, 49),               child: Center(
                 child: Container(
                   decoration: BoxDecoration(
                     boxShadow: [
                       BoxShadow(
-                        color: Colors.black.withOpacity(0.5),
+                        color: Colors.black
+                            .withOpacity(0.5),
                         spreadRadius: 5,
-                        blurRadius: 10,
-                        offset: const Offset(0, 3),
+                        blurRadius: 10, 
+                        offset: Offset(0, 3),
                       ),
                     ],
                   ),
                   child: ClipRRect(
-                    borderRadius: BorderRadius.circular(20.0),
+                    borderRadius: BorderRadius.circular(
+                        20.0), // Adjust the radius as needed
                     child: Image.network(
-                      widget.imagePath,
+                      'https://upload.wikimedia.org/wikipedia/en/4/41/PlaceCalledFreedom.jpg',
                       width: 200,
                       height: 240,
                       fit: BoxFit.fitWidth,
+                      
                     ),
                   ),
                 ),
@@ -68,16 +53,16 @@ class _BookScreenState extends State<BookScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
-                  Text(
-                    widget.title,
-                    style: const TextStyle(
+                  const Text(
+                    "Frankenstein",
+                    style: TextStyle(
                       fontWeight: FontWeight.bold,
                       fontSize: 24,
                     ),
                   ),
                   const SizedBox(height: 5),
                   Text(
-                    'by: ${widget.authors}',
+                    "by Mary Shelley (1818)",
                     style: TextStyle(
                       fontWeight: FontWeight.w500,
                       fontSize: 16,
@@ -105,9 +90,9 @@ class _BookScreenState extends State<BookScreen> {
                     ),
                   ),
                   const SizedBox(height: 10),
-                  Text(
-                    widget.summary,
-                    style: const TextStyle(
+                  const Text(
+                    "Mary Shelley started writing classic gothic thriller Frankenstein when she was 18 years old. Two centuries later, it is a major ancestor of both the science fiction and horror genres, tackling huge themes like the nature of life and death, immortality and genetic engineering. It is a pro-science novel that at its heart shows Dr Frankenstein as the callous fiend of the story, who created a being and was not willing to accept responsibility for his actions. In an age where the space between technical life and death is narrower than ever, and scientists are playing with the makeup of what makes us humans, Frankenstein can still teach an important lesson: just because you can, does not mean you should.",
+                    style: TextStyle(
                       fontSize: 14,
                       height: 1.5,
                     ),

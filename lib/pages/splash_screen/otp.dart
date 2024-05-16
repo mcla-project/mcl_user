@@ -84,9 +84,12 @@ class _OtpPageState extends State<OtpPage> {
                     return; // Exit early if OTP is empty
                   }
 
+                  print("OTP entered: $_otp"); // Debug print
                   final isVerified = await widget.myauth.verifyOTP(otp: _otp);
+                  print("Is OTP verified: $isVerified"); // Debug print
 
                   if (isVerified) {
+                    print("OTP is verified"); // Debug print
                     ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
                       content: Text("OTP is verified"),
                     ));
@@ -95,6 +98,7 @@ class _OtpPageState extends State<OtpPage> {
                       MaterialPageRoute(builder: (context) => const HomePage()),
                     );
                   } else {
+                    print("Invalid OTP");
                     ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
                       content: Text("Invalid OTP"),
                     ));
@@ -125,7 +129,7 @@ class _OtpPageState extends State<OtpPage> {
                   },
                   child: const Text(
                     'Resend Code',
-                    style: TextStyle(color: Color(0xFF1B5E20)),
+                    style: TextStyle(color: const Color(0xFF1B5E20)),
                   ),
                 ),
             ],

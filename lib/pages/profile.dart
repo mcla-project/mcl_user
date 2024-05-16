@@ -214,6 +214,7 @@ class _ProfilePageState extends State<ProfilePage> {
           .getDownloadURL();
       return imageUrl;
     } catch (e) {
+      print("Failed to load user image: $e");
       return 'https://via.placeholder.com/150'; // Fallback image URL
     }
   }

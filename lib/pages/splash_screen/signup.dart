@@ -428,11 +428,13 @@ class SignUpScreenState extends State<SignUpScreen> {
                                     .map((String value) {
                                   return DropdownMenuItem<String>(
                                     value: value,
-                                    child: Text(
-                                      value,
-                                      style: const TextStyle(
-                                        color: Colors
-                                            .black, // Change to your desired color
+                                    child: Container(
+                                      child: Text(
+                                        value,
+                                        style: TextStyle(
+                                          color: Colors
+                                              .black, // Change to your desired color
+                                        ),
                                       ),
                                     ),
                                   );
@@ -609,7 +611,8 @@ class SignUpScreenState extends State<SignUpScreen> {
         );
       }
     } catch (e) {
-      return null; 
+      // Handle errors in case of a failure
+      print('Failed to sign up: $e'); // For debugging, print the error
     }
   }
 
