@@ -108,7 +108,7 @@ class _ProfilePageState extends State<ProfilePage> {
                     ),
                     child: ListTile(
                       leading: const Icon(Icons.credit_card),
-                      title: const Text('View Card'),
+                      title: const Text('View Catalogue'),
                       onTap: () {
                         widget.navigateToPage(
                           const ViewCardPage(),
@@ -169,6 +169,24 @@ class _ProfilePageState extends State<ProfilePage> {
                     child: ListTile(
                       leading: const Icon(Icons.feedback),
                       title: const Text('Feedback'),
+                      onTap: () {
+                        widget.navigateToPage(
+                          FeedbackPage(
+                            navigateToPage: widget.navigateToPage,
+                          ),
+                        );
+                        // Navigate to Feedback page
+                      },
+                    ),
+                  ),
+                  Container(
+                    decoration: BoxDecoration(
+                      color: Colors.grey[200],
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    child: ListTile(
+                      leading: const Icon(Icons.feedback),
+                      title: const Text('FAQs'),
                       onTap: () {
                         widget.navigateToPage(
                           FeedbackPage(

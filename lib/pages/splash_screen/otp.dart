@@ -83,13 +83,9 @@ class _OtpPageState extends State<OtpPage> {
                     ));
                     return; // Exit early if OTP is empty
                   }
-
-                  print("OTP entered: $_otp"); // Debug print
                   final isVerified = await widget.myauth.verifyOTP(otp: _otp);
-                  print("Is OTP verified: $isVerified"); // Debug print
 
                   if (isVerified) {
-                    print("OTP is verified"); // Debug print
                     ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
                       content: Text("OTP is verified"),
                     ));
