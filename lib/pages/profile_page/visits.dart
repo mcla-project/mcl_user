@@ -1,36 +1,79 @@
 import 'package:flutter/material.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:intl/intl.dart';
+import '../../utils/get_doc_id.dart';
 
-class VisitsPage extends StatelessWidget {
+class VisitsPage extends StatefulWidget {
   const VisitsPage({super.key});
 
-@override
+  @override
+  _VisitsPageState createState() => _VisitsPageState();
+}
+
+class _VisitsPageState extends State<VisitsPage> {
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  String? docId;
+  final DocIDService docIDService = DocIDService();
+
+  @override
+  void initState() {
+    super.initState();
+    fetchDocId();
+  }
+
+  void fetchDocId() async {
+    docId = await docIDService.getDocId();
+    setState(() {});
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Visits'),
       ),
-      body: ListView(
-        padding: const EdgeInsets.all(20),
-        children: <Widget>[
-          visitItem(
-            date: "December 31, 2024",
-            checkIn: "01:02 PM",
-            checkOut: "03:02 PM",
-            iconPath: 'assets/icon.png',
-          ),
-          visitItem(
-            date: "December 13, 2024",
-            checkIn: "01:02 PM",
-            checkOut: "03:02 PM",
-            iconPath: 'assets/icon.png',
-          ),
-          // Add more visit items here if needed
-        ],
+      body: StreamBuilder<QuerySnapshot>(
+        stream: _firestore
+            .collection('users')
+            .doc(docId)
+            .collection('visits')
+            .snapshots(),
+        builder: (context, snapshot) {
+          if (snapshot.hasError) {
+            return Text('Error: ${snapshot.error}');
+          }
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(child: CircularProgressIndicator());
+          }
+          return ListView(
+            padding: const EdgeInsets.all(20),
+            children: snapshot.data!.docs.map((DocumentSnapshot document) {
+              Map<String, dynamic> data =
+                  document.data()! as Map<String, dynamic>;
+              return visitItem(
+                timeIn: data['time_in'], // This is a Timestamp type
+                checkIn: DateFormat.jm().format(
+                    data['time_in'].toDate()), // Format time for display
+                checkOut: data['time_out'] != null
+                    ? DateFormat.jm().format(data['time_out'].toDate())
+                    : 'N/A', // Check if time_out exists and format
+                iconPath: 'assets/icon.png',
+              );
+            }).toList(),
+          );
+        },
       ),
     );
   }
 
-  Widget visitItem({required String date, required String checkIn, required String checkOut, required String iconPath}) {
+  Widget visitItem({
+    required Timestamp timeIn,
+    required String checkIn,
+    required String checkOut,
+    required String iconPath,
+  }) {
+    String formattedDate = DateFormat('MMMM dd, yyyy').format(timeIn.toDate());
+
     return Container(
       margin: const EdgeInsets.only(bottom: 20),
       height: 100,
@@ -56,7 +99,7 @@ class VisitsPage extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
                 Text(
-                  date,
+                  formattedDate,
                   style: const TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.w500,
