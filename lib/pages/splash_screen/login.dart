@@ -30,11 +30,6 @@ class LoginScreenState extends State<LoginScreen> {
       );
 
       if (userCredential.user != null && mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text("User is successfully signed in"),
-          ),
-        );
         Navigator.push(
           context,
           MaterialPageRoute(builder: (context) => const EmailPage()),
