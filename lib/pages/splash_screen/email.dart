@@ -51,7 +51,7 @@ class _EmailPageState extends State<EmailPage> {
                   child: TextFormField(
                     controller: emailController,
                     decoration: InputDecoration(
-                      hintText: widget.email  ?? 'Enter your email',
+                      hintText: widget.email,
                       border: const OutlineInputBorder(),
                       contentPadding: const EdgeInsets.symmetric(
                         vertical: 10.0,
