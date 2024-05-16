@@ -7,10 +7,10 @@ class VisitsPage extends StatefulWidget {
   const VisitsPage({super.key});
 
   @override
-  _VisitsPageState createState() => _VisitsPageState();
+  VisitsPageState createState() => VisitsPageState();
 }
 
-class _VisitsPageState extends State<VisitsPage> {
+class VisitsPageState extends State<VisitsPage> {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   String? docId;
   final DocIDService docIDService = DocIDService();
