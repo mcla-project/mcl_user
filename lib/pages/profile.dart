@@ -206,7 +206,8 @@ class _ProfilePageState extends State<ProfilePage> {
                       title: const Text('MCLA Chatbot'),
                       onTap: () {
                         Navigator.of(context).pushReplacement(
-                          MaterialPageRoute(builder: (context) => const ChatPage()),
+                          MaterialPageRoute(
+                              builder: (context) => const ChatPage()),
                         );
                       },
                     ),
