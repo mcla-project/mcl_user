@@ -90,10 +90,9 @@ class _OtpPageState extends State<OtpPage> {
                   }
                   final isVerified = await widget.myauth.verifyOTP(otp: _otp);
                   if (isVerified) {
-                    Navigator.pushReplacement(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => const BaseLayout()),
+                    Navigator.of(context).pushAndRemoveUntil(
+                      MaterialPageRoute(builder: (context) => BaseLayout()),
+                      (Route<dynamic> route) => false,
                     );
                   } else {
                     setState(() {

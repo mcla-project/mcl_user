@@ -10,11 +10,8 @@ import '../../utils/get_user.dart';
 import '../../utils/get_user_information.dart';
 
 class UpdateProfilePage extends StatefulWidget {
-  final Function(Widget) navigateToPage;
-
   const UpdateProfilePage({
     Key? key,
-    required this.navigateToPage,
   }) : super(key: key);
 
   @override

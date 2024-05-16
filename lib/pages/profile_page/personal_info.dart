@@ -1,14 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:mcl_user/components/app_bar.dart';
 import '../../utils/get_user.dart';
 import '../../utils/get_user_information.dart';
 import 'update_profile.dart';
 
 class PersonalInfoPage extends StatefulWidget {
-  final Function(Widget) navigateToPage;
-
   const PersonalInfoPage({
     super.key,
-    required this.navigateToPage,
   });
 
   @override
@@ -21,9 +19,7 @@ class _PersonalInfoPageState extends State<PersonalInfoPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Personal Information'),
-      ),
+      appBar: const CustomAppBar(),
       body: SingleChildScrollView(
         child: Column(
           children: [
@@ -242,8 +238,10 @@ class _PersonalInfoPageState extends State<PersonalInfoPage> {
                           const Color(0xFF013822)),
                     ),
                     onPressed: () {
-                      widget.navigateToPage(UpdateProfilePage(
-                          navigateToPage: widget.navigateToPage));
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                            builder: (context) => const UpdateProfilePage()),
+                      );
                     },
                     child: const Text(
                       'Update Profile',

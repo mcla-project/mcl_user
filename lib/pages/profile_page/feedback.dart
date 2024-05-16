@@ -5,11 +5,8 @@ import '../../utils/get_user.dart';
 import '../../utils/get_user_information.dart';
 
 class FeedbackPage extends StatefulWidget {
-  final Function(Widget) navigateToPage;
-
   const FeedbackPage({
     super.key,
-    required this.navigateToPage,
   });
 
   @override
