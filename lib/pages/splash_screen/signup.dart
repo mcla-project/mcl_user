@@ -535,7 +535,7 @@ class SignUpScreenState extends State<SignUpScreen> {
                             child: ElevatedButton(
                               onPressed: _acceptedTerms ? _signUp : null,
                               style: ElevatedButton.styleFrom(
-                                backgroundColor: Colors.green.shade900,
+                                backgroundColor: const Color.fromRGBO(27, 94, 32, 1),
                                 shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(10),
                                 ),
