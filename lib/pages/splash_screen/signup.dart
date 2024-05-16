@@ -427,14 +427,11 @@ class SignUpScreenState extends State<SignUpScreen> {
                                 items: <String>['Male', 'Female']
                                     .map((String value) {
                                   return DropdownMenuItem<String>(
-                                    value: value,
-                                    child: Container(
-                                      child: Text(
-                                        value,
-                                        style: TextStyle(
-                                          color: Colors
-                                              .black, // Change to your desired color
-                                        ),
+                                    child: Text(
+                                      value,
+                                      style: const TextStyle(
+                                        color: Colors
+                                            .black, // Change to your desired color
                                       ),
                                     ),
                                   );
