@@ -44,7 +44,6 @@ class LoginScreenState extends State<LoginScreen> {
         }
       }
      } catch (e) {
-      // Update the error message state
       setState(() {
         _errorMessage = 'You have entered an invalid email or password.';
       });

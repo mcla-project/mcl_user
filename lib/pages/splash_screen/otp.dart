@@ -1,6 +1,6 @@
 import 'package:email_otp/email_otp.dart';
 import 'package:flutter/material.dart';
-import 'package:mcl_user/pages/home.dart';
+import '../../components/base_layout.dart';
 
 class OtpPage extends StatefulWidget {
   final EmailOTP myauth;
@@ -14,6 +14,7 @@ class OtpPage extends StatefulWidget {
 class _OtpPageState extends State<OtpPage> {
   late String _otp;
   bool _isOtpInvalid = false; // State variable to track if OTP is invalid
+  String _errorMessage = '';
 
   @override
   void initState() {
@@ -22,7 +23,6 @@ class _OtpPageState extends State<OtpPage> {
   }
 
   Future<void> _resendOtp() async {
-    // Logic to resend the OTP
     await widget.myauth.sendOTP();
     ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
       content: Text("A new OTP has been sent to your email."),
@@ -57,12 +57,17 @@ class _OtpPageState extends State<OtpPage> {
                 ),
                 textAlign: TextAlign.center,
               ),
-              const SizedBox(height: 20),
+              const SizedBox(height: 5),
+              if (_errorMessage.isNotEmpty)
+                Text(
+                  _errorMessage,
+                  style: const TextStyle(color: Colors.red),
+                ),
+              const SizedBox(height: 5),
               TextField(
                 onChanged: (value) {
                   setState(() {
-                    _otp =
-                        value.trim(); // Remove leading and trailing whitespaces
+                    _otp = value.trim();
                   });
                 },
                 decoration: const InputDecoration(
@@ -78,30 +83,21 @@ class _OtpPageState extends State<OtpPage> {
               ElevatedButton(
                 onPressed: () async {
                   if (_otp.isEmpty) {
-                    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-                      content: Text("Please enter OTP"),
-                    ));
-                    return; // Exit early if OTP is empty
+                    setState(() {
+                      _errorMessage = 'Please enter your OTP code to verify.';
+                    });
+                    return;
                   }
-
-                  // Debug print
                   final isVerified = await widget.myauth.verifyOTP(otp: _otp);
-                  // Debug print
-
                   if (isVerified) {
-                    // Debug print
-                    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-                      content: Text("OTP is verified"),
-                    ));
                     Navigator.pushReplacement(
                       context,
-                      MaterialPageRoute(builder: (context) => const HomePage()),
+                      MaterialPageRoute(
+                          builder: (context) => const BaseLayout()),
                     );
                   } else {
-                    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-                      content: Text("Invalid OTP"),
-                    ));
                     setState(() {
+                      _errorMessage = 'Invalid OTP';
                       _isOtpInvalid =
                           true; // Show the resend button if OTP is invalid
                     });
