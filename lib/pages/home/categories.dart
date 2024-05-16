@@ -36,6 +36,11 @@ class CategoriesPageState extends State<CategoriesPage> {
       body: ListView.builder(
         itemCount: genres.length,
         itemBuilder: (context, index) {
+          Color backgroundColor =
+              index % 2 == 0 ? Color(0xFF013822) : Color(0xFFF1F1F1);
+          if (index == 0)
+            backgroundColor = Color(0xFF013822); // First item is green
+
           return Card(
             clipBehavior: Clip.antiAlias,
             shape: RoundedRectangleBorder(
@@ -47,15 +52,27 @@ class CategoriesPageState extends State<CategoriesPage> {
               onTap: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => GenreBooksPage(genre: genres[index])),
+                  MaterialPageRoute(
+                    builder: (context) => GenreBooksPage(genre: genres[index]),
+                  ),
                 );
               },
               child: Container(
-                color: Colors.white60,
+                color: backgroundColor,
                 child: ListTile(
                   leading: const Icon(Icons.book, size: 56),
-                  title: Text(genres[index], style: const TextStyle(fontSize: 15.0, fontWeight: FontWeight.bold)),
-                  subtitle: Text('Explore this genre', style: TextStyle(color: Colors.grey[600])),
+                  title: Text(genres[index],
+                      style: TextStyle(
+                          fontSize: 15.0,
+                          fontWeight: FontWeight.bold,
+                          color: backgroundColor == Color(0xFF013822)
+                              ? Color(0xFFF1F1F1)
+                              : Color(0xFF49454F))),
+                  subtitle: Text('Explore this genre',
+                      style: TextStyle(
+                          color: backgroundColor == Color(0xFF013822)
+                              ? Color(0xFFF1F1F1)
+                              : Colors.grey[600])),
                 ),
               ),
             ),
