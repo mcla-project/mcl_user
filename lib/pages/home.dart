@@ -9,7 +9,6 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-
   final user = FirebaseAuth.instance.currentUser!;
 
   @override
@@ -227,7 +226,7 @@ class _HomePageState extends State<HomePage> {
                         offset: Offset(0, 1),
                         spreadRadius: 0,
                       ),
-                    ],
+                    ], //okiiii to push
                   ),
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
