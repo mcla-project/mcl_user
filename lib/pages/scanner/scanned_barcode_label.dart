@@ -23,10 +23,7 @@ class ScannedBarcodeLabel extends StatelessWidget {
     final DocIDService docIDService = DocIDService();
     var user = FirebaseAuth.instance.currentUser;
     if (user == null) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-            content: Text("No user logged in. Unable to record time.")),
-      );
+      showConfirmationDialog(context, "Unable to record time.");
       isProcessing = false;
       return;
     }
@@ -41,6 +38,8 @@ class ScannedBarcodeLabel extends StatelessWidget {
     if (lastWriteTime != null &&
         now.difference(lastWriteTime!).inSeconds < 30) {
       isProcessing = false;
+      showConfirmationDialog(
+          context, "Please wait a moment before scanning again.");
       return;
     }
 
@@ -82,9 +81,7 @@ class ScannedBarcodeLabel extends StatelessWidget {
 
     List<String> parts = barcodeValue.split(';');
     if (parts.length != 2) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("Invalid barcode format.")),
-      );
+      showConfirmationDialog(context, "Invalid Code Format.");
       isProcessing = false;
       return;
     }
@@ -99,6 +96,8 @@ class ScannedBarcodeLabel extends StatelessWidget {
     if (lastWriteTime != null &&
         now.difference(lastWriteTime!).inSeconds < 30) {
       isProcessing = false;
+      showConfirmationDialog(
+          context, "Please wait a moment before scanning again.");
       return;
     }
 
@@ -111,19 +110,18 @@ class ScannedBarcodeLabel extends StatelessWidget {
     if (querySnapshot.docs.isNotEmpty &&
         !querySnapshot.docs.first.data().containsKey('time_returned')) {
       await querySnapshot.docs.first.reference.update({'time_returned': now});
-      showConfirmationDialog(context, "Book returned: $bookTitle");
+      showConfirmationDialog(context,
+          "Thank you for returning our precious book titled $bookTitle! We hope you enjoyed it!");
     } else {
       await booksCollection.add({
         'book_id': bookId,
-        // 'book_title': bookTitle, // Include book title in the document
         'time_borrowed': now,
-        // 'time_returned' is not set initially
       });
       await userDoc.update({
         'recents': FieldValue.arrayUnion([bookId])
       });
-      showConfirmationDialog(context, "Book borrowed: $bookTitle");
-      // Add bookId and bookTitle to the 'recents' array in the user's document
+      showConfirmationDialog(
+          context, "You have just borrowed $bookTitle, enjoy!");
     }
 
     lastWriteTime = now;
@@ -135,7 +133,7 @@ class ScannedBarcodeLabel extends StatelessWidget {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: const Text("Action Recorded"),
+          title: const Center(child: Text("Scan Completed!")),
           content: Text(message),
           actions: <Widget>[
             TextButton(
