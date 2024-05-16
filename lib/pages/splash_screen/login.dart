@@ -13,6 +13,7 @@ class LoginScreen extends StatefulWidget {
 
 class LoginScreenState extends State<LoginScreen> {
   bool _obscureText = true;
+  String _errorMessage = '';
 
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
@@ -47,14 +48,11 @@ class LoginScreenState extends State<LoginScreen> {
           );
         }
       }
-    } catch (e) {
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text("Error signing in: $e"),
-          ),
-        );
-      }
+     } catch (e) {
+      // Update the error message state
+      setState(() {
+        _errorMessage = 'You have entered an invalid email or password.';
+      });
     }
   }
 
@@ -78,15 +76,6 @@ class LoginScreenState extends State<LoginScreen> {
       canPop: true,
       onPopInvoked: (bool didPop) async {},
       child: Scaffold(
-        appBar: AppBar(
-          leading: IconButton(
-            icon: const Icon(Icons.arrow_back),
-            onPressed: () {
-              Navigator.of(context).pop();
-            },
-          ),
-          title: const Text('Login'),
-        ),
         body: SingleChildScrollView(
           padding: const EdgeInsets.all(20.0),
           child: Column(
@@ -96,6 +85,7 @@ class LoginScreenState extends State<LoginScreen> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
+                  const SizedBox(height: 100),
                   Center(
                     child: Image.asset(
                       'images/mnlcitylib_logo.png',
@@ -108,9 +98,15 @@ class LoginScreenState extends State<LoginScreen> {
                     'WELCOME BACK',
                     style: TextStyle(
                       fontSize: 20,
-                      fontWeight: FontWeight.bold,
+                      fontWeight: FontWeight.bold,            
                     ),
                   ),
+                  const SizedBox(height: 20),
+                  if (_errorMessage.isNotEmpty)
+                    Text(
+                      _errorMessage,
+                      style: const TextStyle(color: Colors.red),
+                    ),
                 ],
               ),
               const SizedBox(height: 20),
@@ -184,12 +180,12 @@ class LoginScreenState extends State<LoginScreen> {
                                 color: Colors.blue,
                                 fontWeight: FontWeight.bold,
                               ))
-                        ]),
+                          ]),
+                    ),
                   ),
                 ),
-              ),
-            ],
-          ),
+              ],
+            ),
         ),
       ),
     );

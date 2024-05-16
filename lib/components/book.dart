@@ -20,7 +20,7 @@ class _BookScreenState extends State<BookScreen> {
             const SizedBox(height: 20),
             Container(
               padding: const EdgeInsets.symmetric(vertical: 20.0),
-              color: Color.fromARGB(255, 27, 63, 49),               child: Center(
+              color: const Color.fromARGB(255, 27, 63, 49),               child: Center(
                 child: Container(
                   decoration: BoxDecoration(
                     boxShadow: [
@@ -29,7 +29,7 @@ class _BookScreenState extends State<BookScreen> {
                             .withOpacity(0.5),
                         spreadRadius: 5,
                         blurRadius: 10, 
-                        offset: Offset(0, 3),
+                        offset: const Offset(0, 3),
                       ),
                     ],
                   ),
