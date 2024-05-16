@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -14,14 +15,19 @@ class ScannedBarcodeLabel extends StatelessWidget {
 
   // Static DateTime to keep track of last write time
   static DateTime? lastWriteTime;
+  static bool isProcessing = false; // Flag to prevent concurrent processing
 
   Future<void> toggleUserTimeEvent(BuildContext context) async {
+    if (isProcessing) return;
+    isProcessing = true;
+
     final DocIDService docIDService = DocIDService();
     var user = FirebaseAuth.instance.currentUser;
     if (user == null) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text("No user logged in. Unable to record time.")),
       );
+      isProcessing = false;
       return;
     }
     
@@ -31,6 +37,7 @@ class ScannedBarcodeLabel extends StatelessWidget {
 
     if (lastWriteTime != null && now.difference(lastWriteTime!).inSeconds < 30) {
       // Throttle check: do not write if last write was less than 30 seconds ago
+      isProcessing = false;
       return;
     }
 
@@ -39,7 +46,7 @@ class ScannedBarcodeLabel extends StatelessWidget {
         .limit(1)
         .get();
 
-    if (lastVisit.docs.isNotEmpty && lastVisit.docs.first.data().containsKey('time_out') == false) {
+    if (lastVisit.docs.isNotEmpty && !lastVisit.docs.first.data().containsKey('time_out')) {
       await lastVisit.docs.first.reference.update({
         'time_out': now,
       });
@@ -48,10 +55,11 @@ class ScannedBarcodeLabel extends StatelessWidget {
       await visitsCollection.add({
         'time_in': now,
       });
-      showConfirmationDialog(context, "Welcome! You are officially inside the library!.");
+      showConfirmationDialog(context, "Welcome! You are officially inside the library!");
     }
     
     lastWriteTime = now; // Update last write time
+    isProcessing = false; // Reset processing flag
   }
 
   void showConfirmationDialog(BuildContext context, String message) {
