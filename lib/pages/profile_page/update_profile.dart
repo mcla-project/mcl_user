@@ -27,7 +27,8 @@ class _UpdateProfilePageState extends State<UpdateProfilePage> {
   final TextEditingController _occupationController = TextEditingController();
   final TextEditingController _addressController = TextEditingController();
   final TextEditingController _phoneController = TextEditingController();
-  final TextEditingController _sexController = TextEditingController();
+  // final TextEditingController _sexController = TextEditingController();
+  String? _selectedSex;
 
   GlobalKey<FormState> key = GlobalKey();
   String imageUrl = '';
@@ -249,16 +250,37 @@ class _UpdateProfilePageState extends State<UpdateProfilePage> {
                   ),
                   Container(
                     margin: const EdgeInsets.only(bottom: 10.0),
-                    child: TextFormField(
-                      controller: _sexController,
-                      decoration: InputDecoration(
-                        labelText: 'Sex',
-                        fillColor: Colors.grey[200],
-                        filled: true,
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(10.0),
-                        ),
+                    child: DropdownButtonFormField<String>(
+                      value: _selectedSex,
+                      decoration: const InputDecoration(
+                        hintText: 'Sex',
+                        border: OutlineInputBorder(),
+                        contentPadding: EdgeInsets.symmetric(
+                            vertical: 10.0, horizontal: 10.0),
                       ),
+                      onChanged: (newValue) {
+                        setState(() {
+                          _selectedSex = newValue;
+                        });
+                      },
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Sex field is required';
+                        }
+                        return null;
+                      },
+                      dropdownColor: Colors.white,
+                      items: <String>['Male', 'Female'].map((String value) {
+                        return DropdownMenuItem<String>(
+                          value: value,
+                          child: Text(
+                            value,
+                            style: const TextStyle(
+                              color: Colors.black,
+                            ),
+                          ),
+                        );
+                      }).toList(),
                     ),
                   ),
                 ],
@@ -311,7 +333,7 @@ class _UpdateProfilePageState extends State<UpdateProfilePage> {
         'address': _addressController.text.trim(),
         'birthday': _birthdateController.text.trim(),
         'phone_number': _phoneController.text.trim(),
-        'sex': _sexController.text.trim(),
+        'sex': _selectedSex,
         'photo_url': imageUrl,
       }).then((_) {
         ScaffoldMessenger.of(context).showSnackBar(
