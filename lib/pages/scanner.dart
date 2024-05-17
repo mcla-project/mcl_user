@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
 import 'scanner/scanned_barcode_label.dart';
+import 'scanner/scanner_button_widgets.dart';
 import 'scanner/scanner_error_widget.dart';
 
 class ScannerPage extends StatefulWidget {
@@ -60,7 +61,8 @@ class ScannerPageState extends State<ScannerPage> {
             fontWeight: FontWeight.bold, // Make text bold
           ),
         ),
-        backgroundColor: const Color.fromARGB(255, 27, 63, 49), // Set background color
+        backgroundColor:
+            const Color.fromARGB(255, 27, 63, 49), // Set background color
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
           onPressed: () {
@@ -99,7 +101,7 @@ class ScannerPageState extends State<ScannerPage> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: _toggleLabelVisibility,
-        child: const Icon(Icons.flashlight_on),
+        child: ToggleFlashlightButton(controller: controller),
       ),
     );
   }
