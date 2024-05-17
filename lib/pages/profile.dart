@@ -7,6 +7,7 @@ import 'package:mcl_user/pages/profile_page/about_us.dart';
 import 'package:mcl_user/pages/profile_page/feedback.dart';
 import 'package:mcl_user/pages/profile_page/visits.dart';
 import 'package:mcl_user/pages/splash_screen/login.dart';
+import 'package:mcl_user/pages/profile_page/faqs.dart';
 import 'profile_page/chatbot.dart';
 import 'profile_page/personal_info.dart';
 import 'profile_page/view_card.dart';
@@ -206,7 +207,7 @@ class _ProfilePageState extends State<ProfilePage> {
                       onTap: () {
                         Navigator.of(context).push(
                           MaterialPageRoute(
-                              builder: (context) => const FeedbackPage()),
+                              builder: (context) => const FAQPage()),
                         );
                       },
                     ),

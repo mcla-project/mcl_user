@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:email_otp/email_otp.dart';
-// import '../../components/base_layout.dart';
+import '../../components/base_layout.dart';
 import 'otp.dart'; // Importing the OTP page
 
 class EmailPage extends StatefulWidget {
@@ -103,26 +103,26 @@ class _EmailPageState extends State<EmailPage> {
                   ),
                 ),
                 const SizedBox(height: 30),
-                // SizedBox(
-                //   width: 350,
-                //   child: ElevatedButton(
-                //     onPressed: () => Navigator.push(
-                //       context,
-                //       MaterialPageRoute(
-                //           builder: (context) => const BaseLayout()),
-                //     ),
-                //     style: ElevatedButton.styleFrom(
-                //       backgroundColor: Colors.green.shade900,
-                //       shape: RoundedRectangleBorder(
-                //         borderRadius: BorderRadius.circular(10),
-                //       ),
-                //     ),
-                //     child: const Text(
-                //       'Home',
-                //       style: TextStyle(fontSize: 20, color: Colors.white),
-                //     ),
-                //   ),
-                // )
+                SizedBox(
+                  width: 350,
+                  child: ElevatedButton(
+                    onPressed: () => Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const BaseLayout()),
+                    ),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.green.shade900,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                    ),
+                    child: const Text(
+                      'Home',
+                      style: TextStyle(fontSize: 20, color: Colors.white),
+                    ),
+                  ),
+                )
               ],
             ),
           ),

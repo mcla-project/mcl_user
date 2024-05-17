@@ -134,7 +134,7 @@ class _AllBooksPageState extends State<AllBooksPage> {
                       Flexible(
                         child: Text(
                           book.title,
-                          style: TextStyle(
+                          style: const TextStyle(
                               fontSize:
                                   12), // Adjust based on your font size needs
                           textAlign: TextAlign.center,
