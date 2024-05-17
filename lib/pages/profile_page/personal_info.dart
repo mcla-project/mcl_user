@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:mcl_user/components/app_bar.dart';
 import '../../utils/get_user.dart';
 import '../../utils/get_user_information.dart';
 import 'update_profile.dart';
@@ -27,9 +26,9 @@ class _PersonalInfoPageState extends State<PersonalInfoPage> {
             fontWeight: FontWeight.bold, // Make text bold
           ),
         ),
-        backgroundColor: Color.fromARGB(255, 27, 63, 49), // Set background color
+        backgroundColor: const Color.fromARGB(255, 27, 63, 49), // Set background color
         leading: IconButton(
-          icon: Icon(Icons.arrow_back),
+          icon: const Icon(Icons.arrow_back),
           onPressed: () {
             Navigator.of(context).pop(); // Navigate back to the previous screen
           },

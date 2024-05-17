@@ -1,5 +1,6 @@
 import 'package:email_otp/email_otp.dart';
 import 'package:flutter/material.dart';
+import 'package:mcl_user/components/base_layout.dart';
 import 'package:mcl_user/pages/home.dart';
 import 'dart:async';
 
@@ -14,6 +15,7 @@ class OtpPage extends StatefulWidget {
 
 class _OtpPageState extends State<OtpPage> {
   late String _otp;
+  final String _errorMessage = '';
   late Timer _timer;
   int _start = 180;
 
@@ -126,7 +128,7 @@ class _OtpPageState extends State<OtpPage> {
                     ));
                     Navigator.pushReplacement(
                       context,
-                      MaterialPageRoute(builder: (context) => const HomePage()),
+                      MaterialPageRoute(builder: (context) => const BaseLayout()),
                     );
                   } else {
                     ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
