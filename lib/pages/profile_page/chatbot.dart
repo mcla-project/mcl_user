@@ -60,19 +60,33 @@ class _ChatPageState extends State<ChatPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: const CustomAppBar(),
+      appBar: AppBar(
+        title: const Text(
+          'Chat with Me!',
+          style: TextStyle(
+            color: Colors.white,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        backgroundColor: const Color.fromARGB(255, 27, 63, 49),
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () => Navigator.of(context).pop(),
+          color: Colors.white,
+        ),
+      ),
       body: Stack(
         children: [
           // Background image
-        Positioned.fill(
-          child: Opacity(
-            opacity: 0.2,
-            child: Image.asset(
-              'images/mnlcitylib_logo.png',
-              fit: BoxFit.cover,
+          Positioned.fill(
+            child: Opacity(
+              opacity: 0.2,
+              child: Image.asset(
+                'images/mnlcitylib_logo.png',
+                fit: BoxFit.cover,
+              ),
             ),
           ),
-        ),
           SizedBox(
             height: MediaQuery.of(context).size.height - 160,
             child: ListView.builder(
@@ -169,9 +183,7 @@ class _ChatPageState extends State<ChatPage> {
                       ),
                       child: Container(
                           constraints: const BoxConstraints(
-                              minWidth: 88.0,
-                              minHeight:
-                                  36.0),
+                              minWidth: 88.0, minHeight: 36.0),
                           alignment: Alignment.center,
                           child: const Icon(
                             Icons.send,
@@ -189,39 +201,37 @@ class _ChatPageState extends State<ChatPage> {
   }
 
   List<Widget> _userMessage(int index) {
-  return [
-    Flexible(
-      child: DecoratedBox(
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(20),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.grey.withOpacity(0.5),
-              spreadRadius: 2,
-              blurRadius: 5,
-              offset: const Offset(0, 3),
-            ),
-          ],
-          gradient: const LinearGradient(
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-            colors: [
-              Color.fromRGBO(27, 94, 32, 1),
-              Colors.green,
+    return [
+      Flexible(
+        child: DecoratedBox(
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(20),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.grey.withOpacity(0.5),
+                spreadRadius: 2,
+                blurRadius: 5,
+                offset: const Offset(0, 3),
+              ),
             ],
+            gradient: const LinearGradient(
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+              colors: [
+                Color.fromRGBO(27, 94, 32, 1),
+                Colors.green,
+              ],
+            ),
+          ),
+          child: Padding(
+            padding: const EdgeInsets.all(16),
+            child: Text(_chatHistory[index]["message"],
+                style: const TextStyle(fontSize: 15, color: Colors.white)),
           ),
         ),
-        child: Padding(
-          padding: const EdgeInsets.all(16),
-          child: Text(_chatHistory[index]["message"],
-              style: const TextStyle(
-                  fontSize: 15,
-                  color: Colors.white)),
-        ),
       ),
-    ),
-  ];
-}
+    ];
+  }
 
   List<Widget> _botMessage(int index) {
     return [
@@ -247,9 +257,7 @@ class _ChatPageState extends State<ChatPage> {
           ),
           padding: const EdgeInsets.all(16),
           child: Text(_chatHistory[index]["message"],
-              style: const TextStyle(
-                  fontSize: 15,
-                  color: Colors.black)),
+              style: const TextStyle(fontSize: 15, color: Colors.black)),
         ),
       ),
     ];

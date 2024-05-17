@@ -1,8 +1,18 @@
 import 'package:flutter/material.dart';
+import '../../utils/get_user.dart';
+import '../../utils/get_user_information.dart';
 
-class AboutUsPage extends StatelessWidget {
+class AboutUsPage extends StatefulWidget {
 
   const AboutUsPage({super.key});
+
+  @override
+  State<AboutUsPage> createState() => _AboutUsPageState();
+}
+
+class _AboutUsPageState extends State<AboutUsPage> {
+
+  UserDataService userDataService = UserDataService();
 
   @override
   Widget build(BuildContext context) {
@@ -33,28 +43,34 @@ class AboutUsPage extends StatelessWidget {
                 color: const Color(0xFF013822),
                 borderRadius: BorderRadius.circular(10),
               ),
-              child: const Padding(
-                padding: EdgeInsets.all(16.0),
+              child: Padding(
+                padding: const EdgeInsets.all(16.0),
                 child: Row(
                   children: [
-                    CircleAvatar(
-                      radius: 40,
-                      backgroundImage: NetworkImage('https://via.placeholder.com/150'),
-                    ),
-                    SizedBox(width: 20),
+                    UserInfoWidget(
+                        getDocData: userDataService.getDocData,
+                        fieldName: 'photo_url',
+                        color: Colors.white),
+                    const SizedBox(width: 20),
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(
-                          "userInfo.name",
-                          style: TextStyle(
-                              fontSize: 20,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.white),
+                        Row(
+                          children: [
+                            UserInfoWidget(
+                                getDocData: userDataService.getDocData,
+                                fieldName: 'first_name',
+                                color: Colors.white),
+                            UserInfoWidget(
+                                getDocData: userDataService.getDocData,
+                                fieldName: 'last_name',
+                                color: Colors.white),
+                          ],
                         ),
-                        Text("userInfo.username",
-                            style: TextStyle(
-                                fontSize: 16, color: Colors.white)),
+                        UserInfoWidget(
+                            getDocData: userDataService.getDocData,
+                            fieldName: 'library_card_number',
+                            color: Colors.white),
                       ],
                     ),
                   ],
