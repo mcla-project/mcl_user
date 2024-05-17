@@ -10,7 +10,7 @@ import 'package:mcl_user/pages/splash_screen/login.dart';
 import 'package:mcl_user/pages/profile_page/faqs.dart';
 import 'profile_page/chatbot.dart';
 import 'profile_page/personal_info.dart';
-import 'profile_page/view_card.dart';
+import 'home/all_books.dart';
 import '../utils/get_user_information.dart';
 import '../utils/get_user.dart';
 
@@ -125,8 +125,8 @@ class _ProfilePageState extends State<ProfilePage> {
                       title: const Text('View Catalogue'),
                       onTap: () {
                         Navigator.of(context).push(
-                          MaterialPageRoute(
-                              builder: (context) => const ViewCardPage()),
+                        MaterialPageRoute(
+                            builder: (context) => const AllBooksPage()),
                         );
                       },
                     ),

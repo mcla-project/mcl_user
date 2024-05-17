@@ -25,12 +25,14 @@ class GenreBooksPageState extends State<GenreBooksPage> {
 
   void fetchBooks() async {
     var fetchedBooks = await _bookService.fetchBooksFromFirebase();
-    setState(() {
-      books = fetchedBooks
-          .where((book) => book.genre.contains(widget.genre))
-          .toList();
-      isLoading = false;
-    });
+    if (mounted) {
+      setState(() {
+        books = fetchedBooks
+            .where((book) => book.genre.contains(widget.genre))
+            .toList();
+        isLoading = false;
+      });
+    }
   }
 
   @override
@@ -44,7 +46,8 @@ class GenreBooksPageState extends State<GenreBooksPage> {
             fontWeight: FontWeight.bold, // Make text bold
           ),
         ),
-        backgroundColor: const Color.fromARGB(255, 27, 63, 49), // Set background color
+        backgroundColor:
+            const Color.fromARGB(255, 27, 63, 49), // Set background color
         leading: IconButton(
           icon: const Icon(
             Icons.arrow_back,

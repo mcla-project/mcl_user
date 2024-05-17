@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'home/all_books.dart';
-import 'home/favorites.dart';
 import 'home/categories.dart';
+import 'home/favorites.dart';
+import 'home/genre_page.dart';
 import '../utils/get_doc_id.dart';
 import '../../models/book.dart';
 import '../../services/book_service.dart';
@@ -122,7 +123,7 @@ class GenreList extends StatelessWidget {
                     onTap: () {
                       Navigator.of(context).push(
                         MaterialPageRoute(
-                            builder: (context) => const AllBooksPage()),
+                            builder: (context) => const CategoriesPage()),
                       );
                     },
                     child: Text('View All',
@@ -182,7 +183,8 @@ class GenreList extends StatelessWidget {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => const CategoriesPage(),
+                            builder: (context) =>
+                                GenreBooksPage(genre: genres[index].name),
                           ),
                         );
                       },
@@ -190,7 +192,7 @@ class GenreList extends StatelessWidget {
                   ),
                 );
               },
-            ),
+            )
           ],
         ),
       ),
