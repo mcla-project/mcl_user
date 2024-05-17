@@ -15,7 +15,13 @@ class ChatPage extends StatefulWidget {
 class _ChatPageState extends State<ChatPage> {
   final TextEditingController _chatController = TextEditingController();
   final ScrollController _scrollController = ScrollController();
-  final List<Map<String, dynamic>> _chatHistory = [];
+  final List<Map<String, dynamic>> _chatHistory = [
+    {
+      "time": DateTime.now(),
+      "message": "Hello, I'm MCLA. How can I help you?",
+      "isSender": false,
+    },
+  ];
 
   void getAnswer() async {
     const url =
@@ -57,6 +63,16 @@ class _ChatPageState extends State<ChatPage> {
       appBar: const CustomAppBar(),
       body: Stack(
         children: [
+          // Background image
+        Positioned.fill(
+          child: Opacity(
+            opacity: 0.2,
+            child: Image.asset(
+              'images/mnlcitylib_logo.png',
+              fit: BoxFit.cover,
+            ),
+          ),
+        ),
           SizedBox(
             height: MediaQuery.of(context).size.height - 160,
             child: ListView.builder(
@@ -73,28 +89,13 @@ class _ChatPageState extends State<ChatPage> {
                     alignment: (_chatHistory[index]["isSender"]
                         ? Alignment.topRight
                         : Alignment.topLeft),
-                    child: Container(
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(20),
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.grey.withOpacity(0.5),
-                            spreadRadius: 2,
-                            blurRadius: 5,
-                            offset: const Offset(0, 3),
-                          ),
-                        ],
-                        color: (_chatHistory[index]["isSender"]
-                            ? const Color(0xFFF69170)
-                            : Colors.white),
-                      ),
-                      padding: const EdgeInsets.all(16),
-                      child: Text(_chatHistory[index]["message"],
-                          style: TextStyle(
-                              fontSize: 15,
-                              color: _chatHistory[index]["isSender"]
-                                  ? Colors.white
-                                  : Colors.black)),
+                    child: Row(
+                      mainAxisAlignment: _chatHistory[index]["isSender"]
+                          ? MainAxisAlignment.end
+                          : MainAxisAlignment.start,
+                      children: _chatHistory[index]["isSender"]
+                          ? _userMessage(index)
+                          : _botMessage(index),
                     ),
                   ),
                 );
@@ -170,7 +171,7 @@ class _ChatPageState extends State<ChatPage> {
                           constraints: const BoxConstraints(
                               minWidth: 88.0,
                               minHeight:
-                                  36.0), // min sizes for Material buttons
+                                  36.0),
                           alignment: Alignment.center,
                           child: const Icon(
                             Icons.send,
@@ -185,5 +186,72 @@ class _ChatPageState extends State<ChatPage> {
         ],
       ),
     );
+  }
+
+  List<Widget> _userMessage(int index) {
+  return [
+    Flexible(
+      child: DecoratedBox(
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(20),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.grey.withOpacity(0.5),
+              spreadRadius: 2,
+              blurRadius: 5,
+              offset: const Offset(0, 3),
+            ),
+          ],
+          gradient: const LinearGradient(
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            colors: [
+              Color.fromRGBO(27, 94, 32, 1),
+              Colors.green,
+            ],
+          ),
+        ),
+        child: Padding(
+          padding: const EdgeInsets.all(16),
+          child: Text(_chatHistory[index]["message"],
+              style: const TextStyle(
+                  fontSize: 15,
+                  color: Colors.white)),
+        ),
+      ),
+    ),
+  ];
+}
+
+  List<Widget> _botMessage(int index) {
+    return [
+      const Padding(
+        padding: EdgeInsets.only(right: 10.0),
+        child: CircleAvatar(
+          backgroundImage: AssetImage('images/cbot.png'),
+        ),
+      ),
+      Flexible(
+        child: Container(
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(20),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.grey.withOpacity(0.5),
+                spreadRadius: 2,
+                blurRadius: 5,
+                offset: const Offset(0, 3),
+              ),
+            ],
+            color: Colors.white,
+          ),
+          padding: const EdgeInsets.all(16),
+          child: Text(_chatHistory[index]["message"],
+              style: const TextStyle(
+                  fontSize: 15,
+                  color: Colors.black)),
+        ),
+      ),
+    ];
   }
 }
