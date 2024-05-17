@@ -1,4 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+// import '../components/book_item.dart';
+import '../models/book.dart';
+import '../services/book_repo.dart';
+import '../utils/get_doc_id.dart';
 import 'similar.dart';
 
 class BookScreen extends StatefulWidget {
@@ -26,6 +31,43 @@ class BookScreen extends StatefulWidget {
 }
 
 class _BookScreenState extends State<BookScreen> {
+  final DocIDService docIDService = DocIDService();
+  final BookRepository bookRepository = BookRepository();
+  List<Book> favoriteBooks = [];
+  Set<String> bookmarkedIds = {};
+  bool isLoading = true;
+
+  @override
+  void initState() {
+    super.initState();
+    fetchFavoriteBooks();
+  }
+
+  Future<void> fetchFavoriteBooks() async {
+    if (!mounted) return;
+
+    setState(() {
+      isLoading = true;
+    });
+
+    String? docId = await docIDService.getDocId();
+    if (docId == null) {
+      setState(() {
+        isLoading = false;
+      });
+      return;
+    }
+
+    favoriteBooks = await bookRepository.fetchFavorites(docId);
+    bookmarkedIds = Set.from(favoriteBooks.map((book) => book.bookId));
+
+    if (mounted) {
+      setState(() {
+        isLoading = false;
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -85,14 +127,27 @@ class _BookScreenState extends State<BookScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
-                  Text(
-                    widget.title,
-                    style: const TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 24,
-                    ),
+                  Row(
+                    children: <Widget>[
+                      Expanded(
+                        child: Text(
+                          widget.title,
+                          style: const TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 24,
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: 5),
+                      IconButton(
+                        icon: Icon(
+                          bookmarkedIds.contains(widget.bookId) ? Icons.bookmark : Icons.bookmark_border,
+                          color: Colors.yellowAccent[700],
+                        ),
+                        onPressed: () => toggleBookmark(widget.bookId),
+                      ),
+                    ],
                   ),
-                  const SizedBox(height: 5),
                   Text(
                     'by: ${widget.authors}',
                     style: TextStyle(
@@ -170,4 +225,33 @@ class _BookScreenState extends State<BookScreen> {
       ),
     );
   }
+
+  void toggleBookmark(String bookId) {
+    bool isCurrentlyBookmarked = bookmarkedIds.contains(bookId);
+    setState(() {
+      if (isCurrentlyBookmarked) {
+        bookmarkedIds.remove(bookId);
+      } else {
+        bookmarkedIds.add(bookId);
+      }
+    });
+    updateFavoritesInFirestore(bookId, !isCurrentlyBookmarked);
+  }
+
+  Future<void> updateFavoritesInFirestore(String bookId, bool isAdding) async {
+    String? docId = await docIDService.getDocId();
+    if (docId != null) {
+      DocumentReference userDoc = FirebaseFirestore.instance.collection('users').doc(docId);
+      if (isAdding) {
+        userDoc.update({
+          'favorites': FieldValue.arrayUnion([bookId])  // Adds the bookId to the 'favorites' array
+        });
+      } else {
+        userDoc.update({
+          'favorites': FieldValue.arrayRemove([bookId])  // Removes the bookId from the 'favorites' array
+        });
+      }
+    }
+  }
 }
+
