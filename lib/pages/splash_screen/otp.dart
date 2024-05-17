@@ -1,7 +1,6 @@
 import 'package:email_otp/email_otp.dart';
 import 'package:flutter/material.dart';
 import 'package:mcl_user/components/base_layout.dart';
-import 'package:mcl_user/pages/home.dart';
 import 'dart:async';
 
 class OtpPage extends StatefulWidget {
@@ -126,9 +125,9 @@ class _OtpPageState extends State<OtpPage> {
                     ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
                       content: Text("OTP is verified"),
                     ));
-                    Navigator.pushReplacement(
-                      context,
+                    Navigator.of(context).pushAndRemoveUntil(
                       MaterialPageRoute(builder: (context) => const BaseLayout()),
+                      (Route<dynamic> route) => false,
                     );
                   } else {
                     ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
@@ -154,8 +153,11 @@ class _OtpPageState extends State<OtpPage> {
                 style: ButtonStyle(
                   foregroundColor: MaterialStateProperty.resolveWith<Color>(
                     (Set<MaterialState> states) {
-                      if (states.contains(MaterialState.disabled)) return Colors.grey;
-                      return const Color(0xFF1B5E20); // Use the original color when enabled
+                      if (states.contains(MaterialState.disabled)) {
+                        return Colors.grey;
+                      }
+                      return const Color(
+                          0xFF1B5E20); // Use the original color when enabled
                     },
                   ),
                 ),
