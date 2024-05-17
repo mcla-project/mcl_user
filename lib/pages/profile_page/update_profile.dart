@@ -43,7 +43,8 @@ class _UpdateProfilePageState extends State<UpdateProfilePage> {
             fontWeight: FontWeight.bold, // Make text bold
           ),
         ),
-        backgroundColor: const Color.fromARGB(255, 27, 63, 49), // Set background color
+        backgroundColor:
+            const Color.fromARGB(255, 27, 63, 49), // Set background color
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
           onPressed: () {
@@ -243,7 +244,7 @@ class _UpdateProfilePageState extends State<UpdateProfilePage> {
                           borderRadius: BorderRadius.circular(10.0),
                         ),
                       ),
-                      keyboardType: TextInputType.phone,
+                      keyboardType: TextInputType.datetime,
                     ),
                   ),
                   Container(
@@ -258,7 +259,6 @@ class _UpdateProfilePageState extends State<UpdateProfilePage> {
                           borderRadius: BorderRadius.circular(10.0),
                         ),
                       ),
-                      keyboardType: TextInputType.phone,
                     ),
                   ),
                 ],

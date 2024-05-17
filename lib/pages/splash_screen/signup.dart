@@ -25,7 +25,8 @@ class SignUpScreenState extends State<SignUpScreen> {
   final TextEditingController _firstnameController = TextEditingController();
   final TextEditingController _lastnameController = TextEditingController();
   final TextEditingController _phoneController = TextEditingController();
-  final TextEditingController _confirmpasswordController = TextEditingController();
+  final TextEditingController _confirmpasswordController =
+      TextEditingController();
   final TextEditingController _addressController = TextEditingController();
   final TextEditingController _occupationController = TextEditingController();
   final TextEditingController _officeController = TextEditingController();
@@ -59,12 +60,12 @@ class SignUpScreenState extends State<SignUpScreen> {
   }
 
   Future<String> generateUniqueLibraryCardNumber() async {
-  String number = generateLibraryCardNumber();
-  
+    String number = generateLibraryCardNumber();
+
     while (await userExists(number)) {
       number = generateLibraryCardNumber();
     }
-    
+
     return number;
   }
 
@@ -77,9 +78,9 @@ class SignUpScreenState extends State<SignUpScreen> {
 
   Future<bool> userExists(String number) async {
     final result = await FirebaseFirestore.instance
-      .collection('users')
-      .where('libraryCardNumber', isEqualTo: number)
-      .get();
+        .collection('users')
+        .where('libraryCardNumber', isEqualTo: number)
+        .get();
 
     return result.docs.isNotEmpty;
   }
@@ -103,8 +104,7 @@ class SignUpScreenState extends State<SignUpScreen> {
         canPop: true,
         onPopInvoked: (bool didPop) async {},
         child: Scaffold(
-            appBar: AppBar(
-            ),
+            appBar: AppBar(),
             body: Padding(
               padding: const EdgeInsets.all(20.0),
               child: Center(
@@ -162,7 +162,7 @@ class SignUpScreenState extends State<SignUpScreen> {
                           Form(
                             key: _formKey2,
                             child: SizedBox(
-                              width: 350, 
+                              width: 350,
                               child: TextFormField(
                                   controller: _lastnameController,
                                   decoration: const InputDecoration(
@@ -189,7 +189,7 @@ class SignUpScreenState extends State<SignUpScreen> {
                           Form(
                             key: _formKey3,
                             child: SizedBox(
-                              width: 350, 
+                              width: 350,
                               child: TextFormField(
                                   controller: _phoneController,
                                   decoration: const InputDecoration(
@@ -218,7 +218,7 @@ class SignUpScreenState extends State<SignUpScreen> {
                           Form(
                             key: _formKey4,
                             child: SizedBox(
-                              width: 350, 
+                              width: 350,
                               child: TextFormField(
                                   controller: _emailController,
                                   decoration: const InputDecoration(
@@ -231,7 +231,7 @@ class SignUpScreenState extends State<SignUpScreen> {
                                     if (value == null || value.isEmpty) {
                                       return 'Email is required';
                                     }
-                                    
+
                                     if (!RegExp(
                                             r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$')
                                         .hasMatch(value)) {
@@ -421,7 +421,7 @@ class SignUpScreenState extends State<SignUpScreen> {
                           const SizedBox(height: 10),
                           Form(
                             child: SizedBox(
-                              width: 350, 
+                              width: 350,
                               child: DropdownButtonFormField<String>(
                                 value: _selectedSex,
                                 decoration: const InputDecoration(
@@ -441,8 +441,7 @@ class SignUpScreenState extends State<SignUpScreen> {
                                   }
                                   return null;
                                 },
-                                dropdownColor: Colors
-                                    .white, 
+                                dropdownColor: Colors.white,
                                 items: <String>['Male', 'Female']
                                     .map((String value) {
                                   return DropdownMenuItem<String>(
@@ -450,8 +449,7 @@ class SignUpScreenState extends State<SignUpScreen> {
                                     child: Text(
                                       value,
                                       style: const TextStyle(
-                                        color: Colors
-                                            .black,
+                                        color: Colors.black,
                                       ),
                                     ),
                                   );
@@ -463,7 +461,7 @@ class SignUpScreenState extends State<SignUpScreen> {
                           Form(
                             key: _formKey10,
                             child: SizedBox(
-                              width: 350, 
+                              width: 350,
                               child: TextFormField(
                                   controller: _birthdateController,
                                   decoration: const InputDecoration(
@@ -472,8 +470,7 @@ class SignUpScreenState extends State<SignUpScreen> {
                                     contentPadding: EdgeInsets.symmetric(
                                         vertical: 10.0, horizontal: 15.0),
                                   ),
-                                  keyboardType: TextInputType
-                                      .datetime,
+                                  keyboardType: TextInputType.datetime,
                                   validator: (value) {
                                     if (value == null || value.isEmpty) {
                                       return 'Please enter your birthday';
@@ -656,7 +653,7 @@ class SignUpScreenState extends State<SignUpScreen> {
       String sex,
       String birthdate,
       String office) async {
-      String libraryCardNumber = await generateUniqueLibraryCardNumber();
+    String libraryCardNumber = await generateUniqueLibraryCardNumber();
     await FirebaseFirestore.instance.collection('users').add({
       'first_name': firstName,
       'last_name': lastName,
