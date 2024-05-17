@@ -2,7 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'package:mcl_user/components/app_bar.dart';
+// import 'package:mcl_user/components/app_bar.dart';
 
 class ChatPage extends StatefulWidget {
   static const routeName = '/chat';
