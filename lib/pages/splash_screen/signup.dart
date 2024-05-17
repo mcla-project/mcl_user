@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import '../../components/base_layout.dart';
 import 'email.dart';
 import 'login.dart';
+import 'dart:math';
 
 class SignUpScreen extends StatefulWidget {
   const SignUpScreen({Key? key}) : super(key: key);
@@ -24,8 +25,7 @@ class SignUpScreenState extends State<SignUpScreen> {
   final TextEditingController _firstnameController = TextEditingController();
   final TextEditingController _lastnameController = TextEditingController();
   final TextEditingController _phoneController = TextEditingController();
-  final TextEditingController _confirmpasswordController =
-      TextEditingController();
+  final TextEditingController _confirmpasswordController = TextEditingController();
   final TextEditingController _addressController = TextEditingController();
   final TextEditingController _occupationController = TextEditingController();
   final TextEditingController _officeController = TextEditingController();
@@ -58,6 +58,32 @@ class SignUpScreenState extends State<SignUpScreen> {
     super.dispose();
   }
 
+  Future<String> generateUniqueLibraryCardNumber() async {
+  String number = generateLibraryCardNumber();
+  
+    while (await userExists(number)) {
+      number = generateLibraryCardNumber();
+    }
+    
+    return number;
+  }
+
+  String generateLibraryCardNumber() {
+    var rng = Random();
+    var currentYear = DateTime.now().year;
+    var number = rng.nextInt(9000) + 1000; // from 1000 to 9999
+    return '$currentYear$number';
+  }
+
+  Future<bool> userExists(String number) async {
+    final result = await FirebaseFirestore.instance
+      .collection('users')
+      .where('libraryCardNumber', isEqualTo: number)
+      .get();
+
+    return result.docs.isNotEmpty;
+  }
+
   String? _validatePhoneNumber(String? value) {
     final phoneRegExp = RegExp(r'^(\+?63|0)9\d{9}$');
     if (value == null || value.isEmpty) {
@@ -78,13 +104,6 @@ class SignUpScreenState extends State<SignUpScreen> {
         onPopInvoked: (bool didPop) async {},
         child: Scaffold(
             appBar: AppBar(
-              leading: IconButton(
-                icon: const Icon(Icons.arrow_back),
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-              ),
-              title: const Text('Sign Up'),
             ),
             body: Padding(
               padding: const EdgeInsets.all(20.0),
@@ -143,7 +162,7 @@ class SignUpScreenState extends State<SignUpScreen> {
                           Form(
                             key: _formKey2,
                             child: SizedBox(
-                              width: 350, // Adjust the width as needed
+                              width: 350, 
                               child: TextFormField(
                                   controller: _lastnameController,
                                   decoration: const InputDecoration(
@@ -170,7 +189,7 @@ class SignUpScreenState extends State<SignUpScreen> {
                           Form(
                             key: _formKey3,
                             child: SizedBox(
-                              width: 350, // Adjust the width as needed
+                              width: 350, 
                               child: TextFormField(
                                   controller: _phoneController,
                                   decoration: const InputDecoration(
@@ -199,7 +218,7 @@ class SignUpScreenState extends State<SignUpScreen> {
                           Form(
                             key: _formKey4,
                             child: SizedBox(
-                              width: 350, // Adjust the width as needed
+                              width: 350, 
                               child: TextFormField(
                                   controller: _emailController,
                                   decoration: const InputDecoration(
@@ -212,7 +231,7 @@ class SignUpScreenState extends State<SignUpScreen> {
                                     if (value == null || value.isEmpty) {
                                       return 'Email is required';
                                     }
-                                    // Use the built-in email validation provided by TextFormField
+                                    
                                     if (!RegExp(
                                             r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$')
                                         .hasMatch(value)) {
@@ -402,7 +421,7 @@ class SignUpScreenState extends State<SignUpScreen> {
                           const SizedBox(height: 10),
                           Form(
                             child: SizedBox(
-                              width: 350, // Adjust the width as needed
+                              width: 350, 
                               child: DropdownButtonFormField<String>(
                                 value: _selectedSex,
                                 decoration: const InputDecoration(
@@ -423,7 +442,7 @@ class SignUpScreenState extends State<SignUpScreen> {
                                   return null;
                                 },
                                 dropdownColor: Colors
-                                    .white, // Change the dropdown menu color to white
+                                    .white, 
                                 items: <String>['Male', 'Female']
                                     .map((String value) {
                                   return DropdownMenuItem<String>(
@@ -432,7 +451,7 @@ class SignUpScreenState extends State<SignUpScreen> {
                                       value,
                                       style: const TextStyle(
                                         color: Colors
-                                            .black, // Change to your desired color
+                                            .black,
                                       ),
                                     ),
                                   );
@@ -444,7 +463,7 @@ class SignUpScreenState extends State<SignUpScreen> {
                           Form(
                             key: _formKey10,
                             child: SizedBox(
-                              width: 350, // Adjust the width as needed
+                              width: 350, 
                               child: TextFormField(
                                   controller: _birthdateController,
                                   decoration: const InputDecoration(
@@ -454,7 +473,7 @@ class SignUpScreenState extends State<SignUpScreen> {
                                         vertical: 10.0, horizontal: 15.0),
                                   ),
                                   keyboardType: TextInputType
-                                      .datetime, // Set keyboard type to handle dates
+                                      .datetime,
                                   validator: (value) {
                                     if (value == null || value.isEmpty) {
                                       return 'Please enter your birthday';
@@ -560,7 +579,6 @@ class SignUpScreenState extends State<SignUpScreen> {
   // Sign up user and store data in Firebase
   void _signUp() async {
     if (!_acceptedTerms) {
-      // Show a dialog or a snackbar
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
             content:
@@ -638,6 +656,7 @@ class SignUpScreenState extends State<SignUpScreen> {
       String sex,
       String birthdate,
       String office) async {
+      String libraryCardNumber = await generateUniqueLibraryCardNumber();
     await FirebaseFirestore.instance.collection('users').add({
       'first_name': firstName,
       'last_name': lastName,
@@ -645,7 +664,7 @@ class SignUpScreenState extends State<SignUpScreen> {
       'phone_number': phoneNumber,
       'address': address,
       'birthday': Timestamp.fromDate(DateTime(2003, 12, 31)),
-      'library_card_number': '202103',
+      'library_card_number': libraryCardNumber,
       'occupation': occupation,
       'office': office,
       'sex': sex,
