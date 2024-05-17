@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:mcl_user/components/app_bar.dart';
+import 'similar.dart';
 
 class BookScreen extends StatefulWidget {
   final String title;
@@ -29,7 +29,24 @@ class _BookScreenState extends State<BookScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: const CustomAppBar(),
+      appBar: AppBar(
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () {
+            Navigator.of(context).pop(); // Navigate back to the recent page
+          },
+          color: Colors.white, // Set color of the icon button to white
+        ),
+        title: Text(
+          widget.title,
+          style: const TextStyle(
+            color: Colors.white, // Set text color to white
+            fontWeight: FontWeight.bold, // Make text bold
+          ),
+        ),
+        backgroundColor:
+            const Color.fromARGB(255, 27, 63, 49), // Set background color
+      ),
       body: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -121,22 +138,7 @@ class _BookScreenState extends State<BookScreen> {
                     ),
                   ),
                   const SizedBox(height: 10),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: <Widget>[
-                      bookThumbnail(
-                          "https://upload.wikimedia.org/wikipedia/en/4/41/PlaceCalledFreedom.jpg"),
-                      const SizedBox(width: 10),
-                      bookThumbnail(
-                          "https://upload.wikimedia.org/wikipedia/en/4/41/PlaceCalledFreedom.jpg"),
-                      const SizedBox(width: 10),
-                      bookThumbnail(
-                          "https://upload.wikimedia.org/wikipedia/en/4/41/PlaceCalledFreedom.jpg"),
-                      const SizedBox(width: 10),
-                      bookThumbnail(
-                          "https://upload.wikimedia.org/wikipedia/en/4/41/PlaceCalledFreedom.jpg"),
-                    ],
-                  ),
+                  const SimilarBooks(),
                   const SizedBox(height: 50),
                 ],
               ),

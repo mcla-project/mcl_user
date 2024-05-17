@@ -1,6 +1,6 @@
 import 'package:email_otp/email_otp.dart';
 import 'package:flutter/material.dart';
-import 'package:mcl_user/pages/home.dart';
+import 'package:mcl_user/components/base_layout.dart';
 import 'dart:async';
 
 class OtpPage extends StatefulWidget {
@@ -14,6 +14,7 @@ class OtpPage extends StatefulWidget {
 
 class _OtpPageState extends State<OtpPage> {
   late String _otp;
+  String _errorMessage = '';
   late Timer _timer;
   int _start = 180;
 
@@ -86,7 +87,13 @@ class _OtpPageState extends State<OtpPage> {
                 ),
                 textAlign: TextAlign.center,
               ),
-              const SizedBox(height: 20),
+              const SizedBox(height: 5),
+              if (_errorMessage.isNotEmpty)
+                Text(
+                  _errorMessage,
+                  style: const TextStyle(color: Colors.red),
+                ),
+              const SizedBox(height: 5),
               TextField(
                 onChanged: (value) {
                   setState(() {
@@ -106,26 +113,25 @@ class _OtpPageState extends State<OtpPage> {
               ElevatedButton(
                 onPressed: () async {
                   if (_otp.isEmpty) {
-                    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-                      content: Text("Please enter OTP"),
-                    ));
+                    setState(() {
+                      _errorMessage = 'Please enter your OTP.';
+                    });
                     return;
                   }
 
                   final isVerified = await widget.myauth.verifyOTP(otp: _otp);
 
                   if (isVerified) {
-                    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-                      content: Text("OTP is verified"),
-                    ));
-                    Navigator.pushReplacement(
-                      context,
-                      MaterialPageRoute(builder: (context) => const HomePage()),
+                    Navigator.of(context).pushAndRemoveUntil(
+                      MaterialPageRoute(
+                          builder: (context) => const BaseLayout()),
+                      (Route<dynamic> route) => false,
                     );
                   } else {
-                    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-                      content: Text("Invalid OTP"),
-                    ));
+                    setState(() {
+                      _errorMessage =
+                          'Invalid OTP.';
+                    });
                   }
                 },
                 style: ElevatedButton.styleFrom(
@@ -146,8 +152,11 @@ class _OtpPageState extends State<OtpPage> {
                 style: ButtonStyle(
                   foregroundColor: MaterialStateProperty.resolveWith<Color>(
                     (Set<MaterialState> states) {
-                      if (states.contains(MaterialState.disabled)) return Colors.grey;
-                      return const Color(0xFF1B5E20); // Use the original color when enabled
+                      if (states.contains(MaterialState.disabled)) {
+                        return Colors.grey;
+                      }
+                      return const Color(
+                          0xFF1B5E20); // Use the original color when enabled
                     },
                   ),
                 ),

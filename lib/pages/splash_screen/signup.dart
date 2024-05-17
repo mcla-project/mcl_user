@@ -25,8 +25,7 @@ class SignUpScreenState extends State<SignUpScreen> {
   final TextEditingController _firstnameController = TextEditingController();
   final TextEditingController _lastnameController = TextEditingController();
   final TextEditingController _phoneController = TextEditingController();
-  final TextEditingController _confirmpasswordController =
-      TextEditingController();
+  final TextEditingController _confirmpasswordController = TextEditingController();
   final TextEditingController _addressController = TextEditingController();
   final TextEditingController _occupationController = TextEditingController();
   final TextEditingController _officeController = TextEditingController();
@@ -105,13 +104,6 @@ class SignUpScreenState extends State<SignUpScreen> {
         onPopInvoked: (bool didPop) async {},
         child: Scaffold(
             appBar: AppBar(
-              leading: IconButton(
-                icon: const Icon(Icons.arrow_back),
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-              ),
-              title: const Text('Sign Up'),
             ),
             body: Padding(
               padding: const EdgeInsets.all(20.0),
@@ -535,7 +527,8 @@ class SignUpScreenState extends State<SignUpScreen> {
                             child: ElevatedButton(
                               onPressed: _acceptedTerms ? _signUp : null,
                               style: ElevatedButton.styleFrom(
-                                backgroundColor: const Color.fromRGBO(27, 94, 32, 1),
+                                backgroundColor:
+                                    const Color.fromRGBO(27, 94, 32, 1),
                                 shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(10),
                                 ),
@@ -631,11 +624,14 @@ class SignUpScreenState extends State<SignUpScreen> {
       if (mounted) {
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => const EmailPage()),
+          MaterialPageRoute(
+            builder: (context) =>
+                EmailPage(email: _emailController.text.trim()),
+          ),
         );
       }
     } catch (e) {
-      return null; 
+      return null;
     }
   }
 

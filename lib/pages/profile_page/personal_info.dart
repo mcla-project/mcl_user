@@ -4,11 +4,8 @@ import '../../utils/get_user_information.dart';
 import 'update_profile.dart';
 
 class PersonalInfoPage extends StatefulWidget {
-  final Function(Widget) navigateToPage;
-
   const PersonalInfoPage({
     super.key,
-    required this.navigateToPage,
   });
 
   @override
@@ -22,7 +19,21 @@ class _PersonalInfoPageState extends State<PersonalInfoPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Personal Information'),
+        title: const Text(
+          'Personal Information',
+          style: TextStyle(
+            color: Colors.white, // Set text color to white
+            fontWeight: FontWeight.bold, // Make text bold
+          ),
+        ),
+        backgroundColor: const Color.fromARGB(255, 27, 63, 49), // Set background color
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () {
+            Navigator.of(context).pop(); // Navigate back to the previous screen
+          },
+          color: Colors.white, // Set icon color to white
+        ),
       ),
       body: SingleChildScrollView(
         child: Column(
@@ -242,8 +253,10 @@ class _PersonalInfoPageState extends State<PersonalInfoPage> {
                           const Color(0xFF013822)),
                     ),
                     onPressed: () {
-                      widget.navigateToPage(UpdateProfilePage(
-                          navigateToPage: widget.navigateToPage));
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                            builder: (context) => const UpdateProfilePage()),
+                      );
                     },
                     child: const Text(
                       'Update Profile',

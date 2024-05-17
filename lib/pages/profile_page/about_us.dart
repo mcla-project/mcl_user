@@ -1,19 +1,28 @@
 import 'package:flutter/material.dart';
-// ignore: unused_import
-import 'package:mcl_user/components/user_info.dart';
 
 class AboutUsPage extends StatelessWidget {
-  // final UserInfo userInfo;
-  final Function(Widget) navigateToPage;
 
-  //  required this.userInfo,
-  const AboutUsPage({super.key, required this.navigateToPage,});
+  const AboutUsPage({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('About Us'),
+        title: const Text(
+          'About Us',
+          style: TextStyle(
+            color: Colors.white, // Set text color to white
+            fontWeight: FontWeight.bold, // Make text bold
+          ),
+        ),
+        backgroundColor: const Color.fromARGB(255, 27, 63, 49), // Set background color
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () {
+            Navigator.of(context).pop(); // Navigate back to the previous screen
+          },
+          color: Colors.white, // Set icon color to white
+        ),
       ),
       body: SingleChildScrollView(
         child: Column(

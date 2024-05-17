@@ -4,7 +4,9 @@ import '../../components/base_layout.dart';
 import 'otp.dart'; // Importing the OTP page
 
 class EmailPage extends StatefulWidget {
-  const EmailPage({Key? key}) : super(key: key);
+  final String email;
+
+  const EmailPage({Key? key, required this.email}) : super(key: key);
 
   @override
   State<EmailPage> createState() => _EmailPageState();
@@ -37,7 +39,7 @@ class _EmailPageState extends State<EmailPage> {
                 ),
                 const SizedBox(height: 50),
                 const Text(
-                  'Enter your email address to receive a \nverification code',
+                  'Confirm your email address to receive a \nverification code',
                   style: TextStyle(
                     fontSize: 14,
                   ),
@@ -48,10 +50,10 @@ class _EmailPageState extends State<EmailPage> {
                   width: 350,
                   child: TextFormField(
                     controller: emailController,
-                    decoration: const InputDecoration(
-                      hintText: 'Email Address',
-                      border: OutlineInputBorder(),
-                      contentPadding: EdgeInsets.symmetric(
+                    decoration: InputDecoration(
+                      hintText: widget.email,
+                      border: const OutlineInputBorder(),
+                      contentPadding: const EdgeInsets.symmetric(
                         vertical: 10.0,
                         horizontal: 15.0,
                       ),
@@ -66,7 +68,7 @@ class _EmailPageState extends State<EmailPage> {
                       myauth.setConfig(
                         appEmail: "contact@hdevcoder.com",
                         appName: "Email OTP",
-                        userEmail: emailController.text,
+                        userEmail: widget.email,
                         otpLength: 6,
                         otpType: OTPType.digitsOnly,
                       );

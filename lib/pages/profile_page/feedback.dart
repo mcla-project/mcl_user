@@ -5,11 +5,8 @@ import '../../utils/get_user.dart';
 import '../../utils/get_user_information.dart';
 
 class FeedbackPage extends StatefulWidget {
-  final Function(Widget) navigateToPage;
-
   const FeedbackPage({
     super.key,
-    required this.navigateToPage,
   });
 
   @override
@@ -47,7 +44,21 @@ class _FeedbackPageState extends State<FeedbackPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Feedback'),
+        title: const Text(
+          'Feedback',
+          style: TextStyle(
+            color: Colors.white, // Set text color to white
+            fontWeight: FontWeight.bold, // Make text bold
+          ),
+        ),
+        backgroundColor: const Color.fromARGB(255, 27, 63, 49), // Set background color
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () {
+            Navigator.of(context).pop(); // Navigate back to the previous screen
+          },
+          color: Colors.white, // Set icon color to white
+        ),
       ),
       body: SingleChildScrollView(
         child: Column(

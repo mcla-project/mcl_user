@@ -10,11 +10,8 @@ import '../../utils/get_user.dart';
 import '../../utils/get_user_information.dart';
 
 class UpdateProfilePage extends StatefulWidget {
-  final Function(Widget) navigateToPage;
-
   const UpdateProfilePage({
     Key? key,
-    required this.navigateToPage,
   }) : super(key: key);
 
   @override
@@ -25,9 +22,12 @@ class _UpdateProfilePageState extends State<UpdateProfilePage> {
   final UserDataService userDataService = UserDataService();
   final TextEditingController _firstnameController = TextEditingController();
   final TextEditingController _lastnameController = TextEditingController();
+  final TextEditingController _birthdateController = TextEditingController();
+  final TextEditingController _officeController = TextEditingController();
   final TextEditingController _occupationController = TextEditingController();
   final TextEditingController _addressController = TextEditingController();
   final TextEditingController _phoneController = TextEditingController();
+  final TextEditingController _sexController = TextEditingController();
 
   GlobalKey<FormState> key = GlobalKey();
   String imageUrl = '';
@@ -36,7 +36,21 @@ class _UpdateProfilePageState extends State<UpdateProfilePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Update Information'),
+        title: const Text(
+          'Update Information',
+          style: TextStyle(
+            color: Colors.white, // Set text color to white
+            fontWeight: FontWeight.bold, // Make text bold
+          ),
+        ),
+        backgroundColor: const Color.fromARGB(255, 27, 63, 49), // Set background color
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () {
+            Navigator.of(context).pop(); // Navigate back to the previous screen
+          },
+          color: Colors.white, // Set icon color to white
+        ),
       ),
       body: SingleChildScrollView(
         child: Column(
@@ -163,7 +177,7 @@ class _UpdateProfilePageState extends State<UpdateProfilePage> {
                   Container(
                     margin: const EdgeInsets.only(bottom: 10.0),
                     child: TextFormField(
-                      controller: _occupationController,
+                      controller: _officeController,
                       decoration: InputDecoration(
                         labelText: 'School/Office',
                         fillColor: Colors.grey[200],
@@ -220,7 +234,7 @@ class _UpdateProfilePageState extends State<UpdateProfilePage> {
                   Container(
                     margin: const EdgeInsets.only(bottom: 10.0),
                     child: TextFormField(
-                      controller: _phoneController,
+                      controller: _birthdateController,
                       decoration: InputDecoration(
                         labelText: 'Birthdate',
                         fillColor: Colors.grey[200],
@@ -235,7 +249,7 @@ class _UpdateProfilePageState extends State<UpdateProfilePage> {
                   Container(
                     margin: const EdgeInsets.only(bottom: 10.0),
                     child: TextFormField(
-                      controller: _phoneController,
+                      controller: _sexController,
                       decoration: InputDecoration(
                         labelText: 'Sex',
                         fillColor: Colors.grey[200],
@@ -293,8 +307,11 @@ class _UpdateProfilePageState extends State<UpdateProfilePage> {
         'first_name': _firstnameController.text.trim(),
         'last_name': _lastnameController.text.trim(),
         'occupation': _occupationController.text.trim(),
+        'office': _officeController.text.trim(),
         'address': _addressController.text.trim(),
+        'birthday': _birthdateController.text.trim(),
         'phone_number': _phoneController.text.trim(),
+        'sex': _sexController.text.trim(),
         'photo_url': imageUrl,
       }).then((_) {
         ScaffoldMessenger.of(context).showSnackBar(

@@ -3,6 +3,8 @@ import 'home/all_books.dart';
 import 'home/favorites.dart';
 import 'home/categories.dart';
 import '../utils/get_doc_id.dart';
+import '../../models/book.dart';
+import '../../services/book_service.dart';
 
 class Genre {
   final String name;
@@ -11,12 +13,12 @@ class Genre {
   Genre({required this.name, required this.description});
 }
 
-class Book {
-  final String title;
-  final String coverUrl;
+// class Book {
+//   final String title;
+//   final String coverUrl;
 
-  Book({required this.title, required this.coverUrl});
-}
+//   Book({required this.title, required this.coverUrl});
+// }
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -31,10 +33,14 @@ class _HomePageState extends State<HomePage> {
   Set<String> bookmarkedIds = {};
   bool isLoading = true;
   Map<String, dynamic>? userData;
+  late Future<List<Book>> bookFuture;
+  TextEditingController searchController = TextEditingController();
+  final BookService _bookService = BookService();
 
   @override
   void initState() {
     super.initState();
+    bookFuture = _bookService.fetchBooksFromFirebase();
   }
 
   @override
@@ -44,12 +50,13 @@ class _HomePageState extends State<HomePage> {
         child: Column(
           children: [
             const SizedBox(height: 10),
-            const Padding(
-              padding: EdgeInsets.all(10.0),
+            Padding(
+              padding: const EdgeInsets.all(10.0),
               child: SizedBox(
                 width: 400,
                 child: TextField(
-                  decoration: InputDecoration(
+                  controller: searchController,
+                  decoration: const InputDecoration(
                     labelText: 'Search for books',
                     suffixIcon: Icon(Icons.search),
                     border: OutlineInputBorder(),
@@ -58,6 +65,14 @@ class _HomePageState extends State<HomePage> {
                     fillColor: Color(0x4D808080),
                     filled: true,
                   ),
+                  onSubmitted: (String text) {
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                          builder: (context) => AllBooksPage(
+                                initialQuery: searchController.text.trim(),
+                              )),
+                    );
+                  },
                 ),
               ),
             ),
@@ -123,22 +138,19 @@ class GenreList extends StatelessWidget {
               itemBuilder: (context, index) {
                 return Card(
                   shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(
-                        12),
+                    borderRadius: BorderRadius.circular(12),
                   ),
                   elevation: 4,
-                  margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 10),
+                  margin:
+                      const EdgeInsets.symmetric(vertical: 8, horizontal: 10),
                   child: Container(
                     decoration: BoxDecoration(
                       color: genres[index].name == 'History'
-                          ? const Color(
-                              0xFFF1F1F1)
-                          : const Color(
-                              0xFF013822),
-                      borderRadius: BorderRadius.circular(
-                          12),
+                          ? const Color(0xFFF1F1F1)
+                          : const Color(0xFF013822),
+                      borderRadius: BorderRadius.circular(12),
                       border: Border.all(
-                        color: Colors.grey, 
+                        color: Colors.grey,
                         width: 1,
                       ),
                     ),
@@ -148,29 +160,23 @@ class GenreList extends StatelessWidget {
                         style: TextStyle(
                           fontWeight: FontWeight.bold,
                           color: genres[index].name == 'History'
-                              ? Colors
-                                  .black 
-                              : Colors
-                                  .white, 
+                              ? Colors.black
+                              : Colors.white,
                         ),
                       ),
                       subtitle: Text(
                         genres[index].description,
                         style: TextStyle(
                           color: genres[index].name == 'History'
-                              ? Colors
-                                  .black54
-                              : Colors
-                                  .white70, 
+                              ? Colors.black54
+                              : Colors.white70,
                         ),
                       ),
                       trailing: Icon(
                         Icons.arrow_forward_ios,
                         color: genres[index].name == 'History'
-                            ? Colors
-                                .black 
-                            : Colors
-                                .white, 
+                            ? Colors.black
+                            : Colors.white,
                       ),
                       onTap: () {
                         Navigator.push(
