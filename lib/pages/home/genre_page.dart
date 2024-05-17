@@ -37,8 +37,23 @@ class GenreBooksPageState extends State<GenreBooksPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.genre),
-        backgroundColor: Colors.deepPurple,
+        title: Text(
+          widget.genre,
+          style: const TextStyle(
+            color: Colors.white, // Set text color to white
+            fontWeight: FontWeight.bold, // Make text bold
+          ),
+        ),
+        backgroundColor: const Color.fromARGB(255, 27, 63, 49), // Set background color
+        leading: IconButton(
+          icon: const Icon(
+            Icons.arrow_back,
+            color: Colors.white, // Set color of the icon button to white
+          ),
+          onPressed: () {
+            Navigator.of(context).pop(); // Navigate back to the recent page
+          },
+        ),
       ),
       body: isLoading
           ? const Center(child: CircularProgressIndicator())

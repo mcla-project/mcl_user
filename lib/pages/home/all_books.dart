@@ -37,12 +37,17 @@ class _AllBooksPageState extends State<AllBooksPage> {
       body: Column(
         children: <Widget>[
           Padding(
-            padding:
-                const EdgeInsets.all(8.0), // Add padding for better spacing
+            padding: const EdgeInsets.all(8.0), // Add padding for better spacing
             child: TextField(
               controller: searchController,
               decoration: InputDecoration(
                 hintText: 'Search Books',
+                prefixIcon: IconButton(
+                  icon: const Icon(Icons.arrow_back),
+                  onPressed: () {
+                    Navigator.of(context).pop(); // Navigate back to the recent page
+                  },
+                ),
                 suffixIcon: IconButton(
                   icon: const Icon(Icons.search),
                   onPressed: () => searchBooks(searchController.text),
