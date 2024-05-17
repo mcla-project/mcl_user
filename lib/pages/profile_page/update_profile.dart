@@ -22,9 +22,12 @@ class _UpdateProfilePageState extends State<UpdateProfilePage> {
   final UserDataService userDataService = UserDataService();
   final TextEditingController _firstnameController = TextEditingController();
   final TextEditingController _lastnameController = TextEditingController();
+  final TextEditingController _birthdateController = TextEditingController();
+  final TextEditingController _officeController = TextEditingController();
   final TextEditingController _occupationController = TextEditingController();
   final TextEditingController _addressController = TextEditingController();
   final TextEditingController _phoneController = TextEditingController();
+  final TextEditingController _sexController = TextEditingController();
 
   GlobalKey<FormState> key = GlobalKey();
   String imageUrl = '';
@@ -160,7 +163,7 @@ class _UpdateProfilePageState extends State<UpdateProfilePage> {
                   Container(
                     margin: const EdgeInsets.only(bottom: 10.0),
                     child: TextFormField(
-                      controller: _occupationController,
+                      controller: _officeController,
                       decoration: InputDecoration(
                         labelText: 'School/Office',
                         fillColor: Colors.grey[200],
@@ -217,7 +220,7 @@ class _UpdateProfilePageState extends State<UpdateProfilePage> {
                   Container(
                     margin: const EdgeInsets.only(bottom: 10.0),
                     child: TextFormField(
-                      controller: _phoneController,
+                      controller: _birthdateController,
                       decoration: InputDecoration(
                         labelText: 'Birthdate',
                         fillColor: Colors.grey[200],
@@ -232,7 +235,7 @@ class _UpdateProfilePageState extends State<UpdateProfilePage> {
                   Container(
                     margin: const EdgeInsets.only(bottom: 10.0),
                     child: TextFormField(
-                      controller: _phoneController,
+                      controller: _sexController,
                       decoration: InputDecoration(
                         labelText: 'Sex',
                         fillColor: Colors.grey[200],
@@ -290,8 +293,11 @@ class _UpdateProfilePageState extends State<UpdateProfilePage> {
         'first_name': _firstnameController.text.trim(),
         'last_name': _lastnameController.text.trim(),
         'occupation': _occupationController.text.trim(),
+        'office': _officeController.text.trim(),
         'address': _addressController.text.trim(),
+        'birthday': _birthdateController.text.trim(),
         'phone_number': _phoneController.text.trim(),
+        'sex': _sexController.text.trim(),
         'photo_url': imageUrl,
       }).then((_) {
         ScaffoldMessenger.of(context).showSnackBar(

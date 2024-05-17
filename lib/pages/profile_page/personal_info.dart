@@ -19,7 +19,9 @@ class _PersonalInfoPageState extends State<PersonalInfoPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: const CustomAppBar(),
+      appBar: AppBar(
+        title: const Text('Profile Information'),
+      ),
       body: SingleChildScrollView(
         child: Column(
           children: [
