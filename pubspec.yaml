@@ -78,6 +78,7 @@ flutter:
   assets:
     - images/mnlcitylib_logo.png
     - images/no_result.png
+    - images/cbot.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware
