@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'similar.dart';
 
 class BookScreen extends StatefulWidget {
   final String title;
@@ -43,7 +44,8 @@ class _BookScreenState extends State<BookScreen> {
             fontWeight: FontWeight.bold, // Make text bold
           ),
         ),
-        backgroundColor: const Color.fromARGB(255, 27, 63, 49), // Set background color
+        backgroundColor:
+            const Color.fromARGB(255, 27, 63, 49), // Set background color
       ),
       body: SingleChildScrollView(
         child: Column(
@@ -136,22 +138,7 @@ class _BookScreenState extends State<BookScreen> {
                     ),
                   ),
                   const SizedBox(height: 10),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: <Widget>[
-                      bookThumbnail(
-                          "https://upload.wikimedia.org/wikipedia/en/4/41/PlaceCalledFreedom.jpg"),
-                      const SizedBox(width: 10),
-                      bookThumbnail(
-                          "https://upload.wikimedia.org/wikipedia/en/4/41/PlaceCalledFreedom.jpg"),
-                      const SizedBox(width: 10),
-                      bookThumbnail(
-                          "https://upload.wikimedia.org/wikipedia/en/4/41/PlaceCalledFreedom.jpg"),
-                      const SizedBox(width: 10),
-                      bookThumbnail(
-                          "https://upload.wikimedia.org/wikipedia/en/4/41/PlaceCalledFreedom.jpg"),
-                    ],
-                  ),
+                  const SimilarBooks(),
                   const SizedBox(height: 50),
                 ],
               ),

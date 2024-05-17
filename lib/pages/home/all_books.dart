@@ -6,7 +6,9 @@ import '../../models/book.dart';
 import '../../services/book_service.dart';
 
 class AllBooksPage extends StatefulWidget {
-  const AllBooksPage({super.key});
+  final String? initialQuery; // Optional parameter to pass initial search query
+
+  const AllBooksPage({super.key, this.initialQuery});
 
   @override
   State<AllBooksPage> createState() => _AllBooksPageState();
@@ -20,12 +22,17 @@ class _AllBooksPageState extends State<AllBooksPage> {
   @override
   void initState() {
     super.initState();
-    booksFuture = _bookService.fetchBooksFromFirebase();
+    if (widget.initialQuery != null) {
+      searchController.text = widget.initialQuery!;
+      booksFuture =
+          _bookService.fetchBooksFromFirebase(query: widget.initialQuery!);
+    } else {
+      booksFuture = _bookService.fetchBooksFromFirebase();
+    }
   }
 
   void searchBooks(String query) {
     setState(() {
-      // Update the booksFuture to fetch based on the search query
       booksFuture = _bookService.fetchBooksFromFirebase(query: query.trim());
     });
   }
@@ -37,7 +44,7 @@ class _AllBooksPageState extends State<AllBooksPage> {
       body: Column(
         children: <Widget>[
           Padding(
-            padding: const EdgeInsets.all(8.0), // Add padding for better spacing
+            padding: const EdgeInsets.all(8.0),
             child: TextField(
               controller: searchController,
               decoration: InputDecoration(
@@ -45,7 +52,8 @@ class _AllBooksPageState extends State<AllBooksPage> {
                 prefixIcon: IconButton(
                   icon: const Icon(Icons.arrow_back),
                   onPressed: () {
-                    Navigator.of(context).pop(); // Navigate back to the recent page
+                    Navigator.of(context)
+                        .pop(); // Navigate back to the recent page
                   },
                 ),
                 suffixIcon: IconButton(
@@ -62,8 +70,7 @@ class _AllBooksPageState extends State<AllBooksPage> {
             ),
           ),
           Expanded(
-            child:
-                buildBookGrid(),
+            child: buildBookGrid(),
           ),
         ],
       ),
@@ -81,77 +88,69 @@ class _AllBooksPageState extends State<AllBooksPage> {
         } else if (snapshot.hasData && snapshot.data!.isEmpty) {
           return const NoBooksFoundWidget();
         } else if (snapshot.hasData) {
-          return GestureDetector(
-            onTap: () {},
-            child: GridView.builder(
-              padding: const EdgeInsets.all(10),
-              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 3,
-                childAspectRatio: 0.7,
-                crossAxisSpacing: 5,
-                mainAxisSpacing: 7,
-              ),
-              itemCount: snapshot.data!.length,
-              itemBuilder: (context, index) {
-                Book book = snapshot.data![index];
-                return GestureDetector(
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => BookScreen(
-                          title: book.title,
-                          authors: book.authors.join(", "),
-                          summary: book.summary,
-                          imagePath: book.imagePath,
-                          isBookmarked: book.isBookmarked,
-                          bookId: book.bookId,
-                          genre: book.genre.join(", "),
+          return GridView.builder(
+            padding: const EdgeInsets.all(10),
+            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: 3,
+              childAspectRatio: 0.7,
+              crossAxisSpacing: 5,
+              mainAxisSpacing: 7,
+            ),
+            itemCount: snapshot.data!.length,
+            itemBuilder: (context, index) {
+              Book book = snapshot.data![index];
+              return GestureDetector(
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => BookScreen(
+                        title: book.title,
+                        authors: book.authors.join(", "),
+                        summary: book.summary,
+                        imagePath: book.imagePath,
+                        isBookmarked: book.isBookmarked,
+                        bookId: book.bookId,
+                        genre: book.genre.join(", "),
+                      ),
+                    ),
+                  );
+                },
+                child: Padding(
+                  padding: const EdgeInsets.all(5.0),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: <Widget>[
+                      ClipRRect(
+                        borderRadius: BorderRadius.circular(8.0),
+                        child: Image.network(
+                          book.imagePath,
+                          fit: BoxFit.cover,
+                          width: 100,
+                          height: 140,
                         ),
                       ),
-                    );
-                  },
-                  child: Padding(
-                    padding: const EdgeInsets.all(5.0),
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: <Widget>[
-                        ClipRRect(
-                          borderRadius: BorderRadius.circular(8.0),
-                          child: Image.network(
-                            book.imagePath,
-                            fit: BoxFit.cover,
-                            width: 100,
-                            height: 140,
-                          ),
+                      const SizedBox(height: 5),
+                      Flexible(
+                        child: Text(
+                          book.title,
+                          style: TextStyle(
+                              fontSize:
+                                  12), // Adjust based on your font size needs
+                          textAlign: TextAlign.center,
+                          overflow: TextOverflow.ellipsis,
                         ),
-                        const SizedBox(height: 0),
-                        Flexible(
-                          child: Text(
-                            book.title,
-                            style:
-                                TextStyle(fontSize: _getFontSize(book.title)),
-                            textAlign: TextAlign.center,
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                        ),
-                      ],
-                    ),
+                      ),
+                    ],
                   ),
-                );
-              },
-            ),
+                ),
+              );
+            },
           );
         } else {
           return const NoBooksFoundWidget();
         }
       },
     );
-  }
-
-  double _getFontSize(String title) {
-    if (title.length < 10) return 16; // Large size for short titles
-    if (title.length < 20) return 14; // Medium size for medium-length titles
-    return 12; // Small size for long titles
   }
 }

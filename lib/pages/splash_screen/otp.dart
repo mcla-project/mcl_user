@@ -14,7 +14,7 @@ class OtpPage extends StatefulWidget {
 
 class _OtpPageState extends State<OtpPage> {
   late String _otp;
-  final String _errorMessage = '';
+  String _errorMessage = '';
   late Timer _timer;
   int _start = 180;
 
@@ -113,26 +113,25 @@ class _OtpPageState extends State<OtpPage> {
               ElevatedButton(
                 onPressed: () async {
                   if (_otp.isEmpty) {
-                    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-                      content: Text("Please enter OTP"),
-                    ));
+                    setState(() {
+                      _errorMessage = 'Please enter your OTP.';
+                    });
                     return;
                   }
 
                   final isVerified = await widget.myauth.verifyOTP(otp: _otp);
 
                   if (isVerified) {
-                    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-                      content: Text("OTP is verified"),
-                    ));
                     Navigator.of(context).pushAndRemoveUntil(
-                      MaterialPageRoute(builder: (context) => const BaseLayout()),
+                      MaterialPageRoute(
+                          builder: (context) => const BaseLayout()),
                       (Route<dynamic> route) => false,
                     );
                   } else {
-                    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-                      content: Text("Invalid OTP"),
-                    ));
+                    setState(() {
+                      _errorMessage =
+                          'Invalid OTP.';
+                    });
                   }
                 },
                 style: ElevatedButton.styleFrom(
