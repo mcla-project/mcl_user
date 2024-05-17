@@ -2,6 +2,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:mcl_user/pages/favorites.dart';
 import 'package:mcl_user/pages/profile_page/about_us.dart';
 import 'package:mcl_user/pages/profile_page/feedback.dart';
 import 'package:mcl_user/pages/profile_page/visits.dart';
@@ -13,11 +14,9 @@ import '../utils/get_user_information.dart';
 import '../utils/get_user.dart';
 
 class ProfilePage extends StatefulWidget {
-  final Function(Widget) navigateToPage;
-  final Function(int) changePage;
-
-  const ProfilePage(
-      {super.key, required this.navigateToPage, required this.changePage});
+  const ProfilePage({
+    super.key,
+  });
 
   @override
   State<ProfilePage> createState() => _ProfilePageState();
@@ -108,11 +107,10 @@ class _ProfilePageState extends State<ProfilePage> {
                       leading: const Icon(Icons.person),
                       title: const Text('Personal Information'),
                       onTap: () {
-                        widget.navigateToPage(
-                          PersonalInfoPage(
-                            navigateToPage: widget.navigateToPage,
-                          ),
-                        ); // Navigate to Personal Information page
+                        Navigator.of(context).push(
+                          MaterialPageRoute(
+                              builder: (context) => const PersonalInfoPage()),
+                        );
                       },
                     ),
                   ),
@@ -125,9 +123,10 @@ class _ProfilePageState extends State<ProfilePage> {
                       leading: const Icon(Icons.credit_card),
                       title: const Text('View Catalogue'),
                       onTap: () {
-                        widget.navigateToPage(
-                          const ViewCardPage(),
-                        ); // Navigate to View Card page
+                        Navigator.of(context).push(
+                          MaterialPageRoute(
+                              builder: (context) => const ViewCardPage()),
+                        );
                       },
                     ),
                   ),
@@ -140,11 +139,10 @@ class _ProfilePageState extends State<ProfilePage> {
                       leading: const Icon(Icons.info),
                       title: const Text('About Us'),
                       onTap: () {
-                        widget.navigateToPage(
-                          AboutUsPage(
-                            navigateToPage: widget.navigateToPage,
-                          ),
-                        ); // Navigate to About Us page
+                        Navigator.of(context).push(
+                          MaterialPageRoute(
+                              builder: (context) => const AboutUsPage()),
+                        );
                       },
                     ),
                   ),
@@ -157,8 +155,10 @@ class _ProfilePageState extends State<ProfilePage> {
                       leading: const Icon(Icons.favorite),
                       title: const Text('Favorites'),
                       onTap: () {
-                        widget.changePage(3);
-                        // Navigate to Favorites page
+                        Navigator.of(context).push(
+                          MaterialPageRoute(
+                              builder: (context) => const FavoritesPage()),
+                        );
                       },
                     ),
                   ),
@@ -171,7 +171,10 @@ class _ProfilePageState extends State<ProfilePage> {
                       leading: const Icon(Icons.history),
                       title: const Text('Visits'),
                       onTap: () {
-                        widget.navigateToPage(const VisitsPage());
+                        Navigator.of(context).push(
+                          MaterialPageRoute(
+                              builder: (context) => const VisitsPage()),
+                        );
                         // Navigate to Visits page
                       },
                     ),
@@ -185,10 +188,9 @@ class _ProfilePageState extends State<ProfilePage> {
                       leading: const Icon(Icons.feedback_rounded),
                       title: const Text('Feedback'),
                       onTap: () {
-                        widget.navigateToPage(
-                          FeedbackPage(
-                            navigateToPage: widget.navigateToPage,
-                          ),
+                        Navigator.of(context).push(
+                          MaterialPageRoute(
+                              builder: (context) => const FeedbackPage()),
                         );
                       },
                     ),
@@ -202,10 +204,9 @@ class _ProfilePageState extends State<ProfilePage> {
                       leading: const Icon(Icons.menu_book_rounded),
                       title: const Text('FAQs'),
                       onTap: () {
-                        widget.navigateToPage(
-                          FeedbackPage(
-                            navigateToPage: widget.navigateToPage,
-                          ),
+                        Navigator.of(context).push(
+                          MaterialPageRoute(
+                              builder: (context) => const FeedbackPage()),
                         );
                       },
                     ),
@@ -219,7 +220,7 @@ class _ProfilePageState extends State<ProfilePage> {
                       leading: const Icon(Icons.android_outlined),
                       title: const Text('MCLA Chatbot'),
                       onTap: () {
-                        Navigator.of(context).pushReplacement(
+                        Navigator.of(context).push(
                           MaterialPageRoute(
                               builder: (context) => const ChatPage()),
                         );

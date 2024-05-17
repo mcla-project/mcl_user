@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:mcl_user/pages/profile_page/update_profile.dart';
 import 'app_bar.dart';
 import 'navigation_bar.dart';
 import '../pages/home.dart';
@@ -25,13 +24,7 @@ class BaseLayoutState extends State<BaseLayout> {
         const RecentsPage(),
         const ScannerPage(),
         const FavoritesPage(),
-        ProfilePage(
-          navigateToPage: navigateToPage,
-          changePage: changePage,
-        ), // Navigate to the profile page subpages
-        UpdateProfilePage(
-            navigateToPage:
-                navigateToPage), // Navigate to the UpdateProfileScreen
+        const ProfilePage(),
       ];
 
   // Handles the bottom navigation bar tap event

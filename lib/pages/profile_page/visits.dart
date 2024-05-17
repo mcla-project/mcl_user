@@ -37,9 +37,9 @@ class VisitsPageState extends State<VisitsPage> {
             fontWeight: FontWeight.bold, // Make text bold
           ),
         ),
-        backgroundColor: Color.fromARGB(255, 27, 63, 49), // Set background color
+        backgroundColor: const Color.fromARGB(255, 27, 63, 49), // Set background color
         leading: IconButton(
-          icon: Icon(Icons.arrow_back),
+          icon: const Icon(Icons.arrow_back),
           onPressed: () {
             Navigator.of(context).pop(); // Navigate back to the previous screen
           },

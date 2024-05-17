@@ -5,11 +5,8 @@ import '../../utils/get_user.dart';
 import '../../utils/get_user_information.dart';
 
 class FeedbackPage extends StatefulWidget {
-  final Function(Widget) navigateToPage;
-
   const FeedbackPage({
     super.key,
-    required this.navigateToPage,
   });
 
   @override
@@ -54,9 +51,9 @@ class _FeedbackPageState extends State<FeedbackPage> {
             fontWeight: FontWeight.bold, // Make text bold
           ),
         ),
-        backgroundColor: Color.fromARGB(255, 27, 63, 49), // Set background color
+        backgroundColor: const Color.fromARGB(255, 27, 63, 49), // Set background color
         leading: IconButton(
-          icon: Icon(Icons.arrow_back),
+          icon: const Icon(Icons.arrow_back),
           onPressed: () {
             Navigator.of(context).pop(); // Navigate back to the previous screen
           },

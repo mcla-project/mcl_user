@@ -1,6 +1,6 @@
 import 'package:email_otp/email_otp.dart';
 import 'package:flutter/material.dart';
-import 'package:mcl_user/pages/home.dart';
+import 'package:mcl_user/components/base_layout.dart';
 import 'dart:async';
 
 class OtpPage extends StatefulWidget {
@@ -14,6 +14,7 @@ class OtpPage extends StatefulWidget {
 
 class _OtpPageState extends State<OtpPage> {
   late String _otp;
+  final String _errorMessage = '';
   late Timer _timer;
   int _start = 180;
 
@@ -86,7 +87,13 @@ class _OtpPageState extends State<OtpPage> {
                 ),
                 textAlign: TextAlign.center,
               ),
-              const SizedBox(height: 20),
+              const SizedBox(height: 5),
+              if (_errorMessage.isNotEmpty)
+                Text(
+                  _errorMessage,
+                  style: const TextStyle(color: Colors.red),
+                ),
+              const SizedBox(height: 5),
               TextField(
                 onChanged: (value) {
                   setState(() {
@@ -118,9 +125,9 @@ class _OtpPageState extends State<OtpPage> {
                     ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
                       content: Text("OTP is verified"),
                     ));
-                    Navigator.pushReplacement(
-                      context,
-                      MaterialPageRoute(builder: (context) => const HomePage()),
+                    Navigator.of(context).pushAndRemoveUntil(
+                      MaterialPageRoute(builder: (context) => const BaseLayout()),
+                      (Route<dynamic> route) => false,
                     );
                   } else {
                     ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
@@ -146,8 +153,11 @@ class _OtpPageState extends State<OtpPage> {
                 style: ButtonStyle(
                   foregroundColor: MaterialStateProperty.resolveWith<Color>(
                     (Set<MaterialState> states) {
-                      if (states.contains(MaterialState.disabled)) return Colors.grey;
-                      return const Color(0xFF1B5E20); // Use the original color when enabled
+                      if (states.contains(MaterialState.disabled)) {
+                        return Colors.grey;
+                      }
+                      return const Color(
+                          0xFF1B5E20); // Use the original color when enabled
                     },
                   ),
                 ),

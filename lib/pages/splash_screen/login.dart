@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import '../../components/base_layout.dart';
 import 'email.dart';
 import 'signup.dart';
 
@@ -32,7 +31,7 @@ class LoginScreenState extends State<LoginScreen> {
       if (userCredential.user != null && mounted) {
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => const EmailPage()),
+          MaterialPageRoute(builder: (context) => EmailPage(email: email)),
         );
       } else {
         if (mounted) {
