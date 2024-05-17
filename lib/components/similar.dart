@@ -15,17 +15,17 @@ class SimilarBooks extends StatefulWidget {
 class _SimilarBooksState extends State<SimilarBooks> {
   final DocIDService docIDService = DocIDService();
   final BookRepository bookRepository = BookRepository();
-  List<Book> favoriteBooks = [];
+  List<Book> recentBooks = [];
   Set<String> bookmarkedIds = {};
   bool isLoading = true;
 
   @override
   void initState() {
     super.initState();
-    fetchFavoriteBooks();
+    fetchRecentBooks();
   }
 
-  Future<void> fetchFavoriteBooks() async {
+  Future<void> fetchRecentBooks() async {
     if (!mounted) return;
 
     setState(() {
@@ -40,8 +40,8 @@ class _SimilarBooksState extends State<SimilarBooks> {
       return;
     }
 
-    favoriteBooks = await bookRepository.fetchFavorites(docId);
-    bookmarkedIds = Set.from(favoriteBooks.map((book) => book.bookId));
+    recentBooks = await bookRepository.fetchRecents(docId);
+    bookmarkedIds = Set.from(recentBooks.map((book) => book.bookId));
 
     if (mounted) {
       setState(() {
@@ -84,7 +84,7 @@ class _SimilarBooksState extends State<SimilarBooks> {
               : SizedBox(
                   height: 180,
                   child: BooksListView(
-                    books: favoriteBooks,
+                    books: recentBooks,
                     bookmarkedIds: bookmarkedIds,
                     onBookTap: handleBookTap,
                   ),
