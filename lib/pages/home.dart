@@ -47,39 +47,41 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            const SizedBox(height: 10),
-            Padding(
-              padding: const EdgeInsets.all(10.0),
-              child: SizedBox(
-                width: 400,
-                child: TextField(
-                  controller: searchController,
-                  decoration: const InputDecoration(
-                    labelText: 'Search for books',
-                    suffixIcon: Icon(Icons.search),
-                    border: OutlineInputBorder(),
-                    contentPadding:
-                        EdgeInsets.symmetric(vertical: 3.0, horizontal: 20.0),
-                    fillColor: Color(0x4D808080),
-                    filled: true,
+      body: SafeArea(
+        child: SingleChildScrollView(
+          child: Column(
+            children: [
+              const SizedBox(height: 10),
+              Padding(
+                padding: const EdgeInsets.all(10.0),
+                child: SizedBox(
+                  width: 400,
+                  child: TextField(
+                    controller: searchController,
+                    decoration: const InputDecoration(
+                      labelText: 'Search for books',
+                      suffixIcon: Icon(Icons.search),
+                      border: OutlineInputBorder(),
+                      contentPadding:
+                          EdgeInsets.symmetric(vertical: 3.0, horizontal: 20.0),
+                      fillColor: Color(0x4D808080),
+                      filled: true,
+                    ),
+                    onSubmitted: (String text) {
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                            builder: (context) => AllBooksPage(
+                                  initialQuery: searchController.text.trim(),
+                                )),
+                      );
+                    },
                   ),
-                  onSubmitted: (String text) {
-                    Navigator.of(context).push(
-                      MaterialPageRoute(
-                          builder: (context) => AllBooksPage(
-                                initialQuery: searchController.text.trim(),
-                              )),
-                    );
-                  },
                 ),
               ),
-            ),
-            GenreList(),
-            const FavoriteBooks(),
-          ],
+              GenreList(),
+              const FavoriteBooks(),
+            ],
+          ),
         ),
       ),
     );
